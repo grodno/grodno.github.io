@@ -1,0 +1,49 @@
+/* 
+    Document   : app
+    Created on : Jan 21, 2013, 10:06:00 PM
+    Author     : Aliaksandr_Litskevic
+    Description: Purpose of the stylesheet follows.
+*/
+body {
+    padding-top: 440px;
+    padding-bottom: 40px;
+    overflow-y:scroll;
+    font-family: 'Ubuntu', sans-serif;
+}
+ul{
+    padding-left: 1em;
+}
+
+@media screen and (min-width: 768px) {
+  body {
+    padding-top: 70px;
+    
+  }
+}
+
+a:hover {
+    text-shadow: 1px 1px 1px rgba(67, 81, 188, 0.4);
+    text-decoration: none;
+}
+
+.brand, h2{
+    text-shadow: 2px 2px 2px rgba(67, 81, 188, 0.3);
+    text-decoration: none;
+}
+
+h4{
+    text-shadow: 1px 1px 1px rgba(67, 81, 188, 0.1);
+    text-decoration: none;
+}
+.main{
+    background: whiteSmoke;padding: 10px 0px 10px 10px;overflow: hidden;min-height: 100%;
+}
+
+.app{
+    background: #FAFAFA;padding: 10px 10px 10px 10px;margin-left: 0px;min-height: 100%;
+}
+
+
+
+
+

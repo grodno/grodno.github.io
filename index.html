@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+        <title>Grodno</title>
+        <meta name="keywords" content="grodno, гродно">
+        <meta name="description" content="Grodno, Belarus. Гродно.">
+
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+        <link href="app.css" rel="stylesheet">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+        <script src="libs/modernizr-2.6.1.min.js"></script>
+        <!--[if lt IE 9]>
+        <script src="libs/es5-shim.min.js"></script>
+        <script src="libs/respond.min.js"></script>
+        <![endif]-->
+        <script src="libs/axio.js"></script>
+
+        <script src="app.js"></script>
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <a class="navbar-brand" href="/"><img class="logo" src="img/logo40.png" height="20px" title="Гродно"/></a>
+            <ul class="nav navbar-nav">
+                <li><a href="/news">Naviny</a></li>
+                <li><a href="/market">Abjavy</a></li>
+                <li><a href="/calendar">Kalandar</a></li>
+                <li><a href="/gallery">Albomy</a></li>
+                <li><a href="/links">Adukacyja</a></li>
+                <li><a href="/fun">Cikavaje</a></li>
+                <li class="divider-vertical"></li>
+                <li><a href="/about" class="strong">Pra nas</a></li>
+            </ul>
+            <a type="button" class="btn btn-info navbar-btn pull-right" href="//grodno-city.tumblr.com/ask">Vodguk</a>
+        </div>
+
+        <div class="container">
+
+            <div class="jumbotron" data-widget="view" data-hidden-expression="!!${app.page}">
+                    <h2>Vitajem šanoūnaje spadarstva!</h2>
+                    <article><p>My z pryjemnascću vitaem vas na sajće Grodno.Co!</p>
+                        <p>Tut my dzelimśa sveźymi <a href="/news" target="_blank">navinami</a>, 
+                            abmjarkoūvaem <a href="/gallery" target="_blank">admetnyja padźei</a>, 
+                            stroim <a href="/calendar" target="_blank">płany</a>. 
+                        </p>
+                        <p>Spadźajomśa, što vy znojdzeće tut <a href="/links" target="_blank">karysnaje</a> i <a href="/fun" target="_blank">cikavaje</a> dla śabje. 
+                        </p>
+                        <p>Magčyma vy majeće što ćikavaje čym <a href="http://grodno.tumblr.com/submit" target="_blank">padźalicca</a>. 
+                        </p>
+                    </article>
+            </div>
+
+            <div id="main" class="row panel main">
+                <section id="app" class="col-12 col-lg-9 app" data-widget="Application"></section>
+                <aside class="col-12 col-lg-3">
+
+                    <div class="panel panel-info">
+                        <h5 class="panel-heading">Śabry</h5>
+                        <div>
+                            <a href="//www.epam.by/" target="_blank" title="Our sponsor"><img src="img/epam.png"/></a>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-warning">
+                        <h5 class="panel-heading">Spasylki</h5>
+                        <ul>
+                            <li><a target="_blank" href="//forum.grodno.net/">Forum</a></li>
+                            <li><a target="_blank" href="//s13.ru">S13</a></li>
+                        </ul>
+                        <br/>
+                    </div>
+
+                    <div class="panel">
+                        <h5 class="panel-heading">Resursy</h5>
+                        <div class="addthis_toolbox addthis_32x32_style addthis_default_style">
+                            <a class="addthis_button_facebook_follow" addthis:userid="chessInGrodno"></a>
+                            <a class="addthis_button_twitter_follow" addthis:userid="grodno-chess"></a>
+                            <a class="addthis_button_youtube_follow" addthis:userid="grodno-chess"></a>
+                            <a class="addthis_button_tumblr_follow" addthis:userid="grodno-chess"></a>
+                            <a class="addthis_button_rss_follow" addthis:userid="//grodno-chess.tumblr.com/rss"></a>
+                        </div>
+                     </div>
+
+                    <div class="panel">
+                        <h5 class="panel-heading">Padźilicca</h5>
+                        <div class="addthis_toolbox addthis_default_style " data-widget="scriptLoader" data-src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50d4749866759be8">
+                            <a class="addthis_button_preferred_1"></a>
+                            <a class="addthis_button_preferred_2"></a>
+                            <a class="addthis_button_preferred_3"></a>
+                            <a class="addthis_button_preferred_4"></a>
+                            <a class="addthis_button_compact"></a>
+                            <a class="addthis_counter addthis_bubble_style"></a>
+                        </div>
+                    </div>
+
+                </aside>
+            </div>
+            <footer id="footer" class="panel row">
+                <div class="col-12">
+                    <small class="pull-right">
+                        Thanks to: 
+                        <a target="_blank" href="//github.com/alitskevich/AxioJS">AxioJS</a> 
+                        |  <a target="_blank" href="//twitter.github.com/bootstrap/">Twitter Bootstrap</a>
+                        |  <a target="_blank" href="https://github.com/grodno">GitHub</a>
+                        |  <a target="_blank" href="//www.google.com/">Google</a>
+                        |  <a target="_blank" href="//grodno-city.tumblr.com/">Tumblr</a>
+                    </small>
+                </div>
+            </footer>
+        </div>        
+        <script>Object.dom.init();</script>
+    </body>
+</html>
