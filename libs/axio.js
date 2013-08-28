@@ -3196,8 +3196,12 @@ Object.entity.define('scriptLoader', {
  * Tumblr support.
  */
 var Tumblr = {
+    
+    ICON_DEFAULT: '/img/logo64.png'
+    ,
+    
     normalizeItemData : function(v) {
-        v.icon = 'img/logo64.png';
+        v.icon = Tumblr.ICON_DEFAULT;
         if (v.type=='video') {
                 v.name = v["video-caption"];
                 v.description = v['video-player'];
@@ -3242,7 +3246,7 @@ Object.entity.define('TumblrHtml extends html', {
 Object.entity.define('TumblrPicOfTheDay extends html', {
     htmlUrl:'script://grodno-chess.tumblr.com/tagged/pic-of-the-day/json'
     ,
-    htmlTemplate : '<hr/><h4>{photo-caption}</h4><img src="{photo-url-1280}" style="width:100%" width="100%"/>'
+    htmlTemplate : '<h4>{photo-caption}</h4><img src="{photo-url-1280}" style="width:100%" width="100%"/>'
     ,
     methods: function(_super) {
         return {

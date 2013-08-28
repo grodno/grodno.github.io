@@ -18,7 +18,9 @@ APP.LOCATION = Object.parseUri(''+window.location);
 APP.DEBUG = (APP.LOCATION.authority.indexOf('local')+1);
 
 APP.VERSION =  APP.DEBUG ? -1 : "1.0.02";
-            
+
+Tumblr.ICON_DEFAULT = '/res/logo120.png'  ;
+
 (function (global) {
 
 
@@ -83,7 +85,7 @@ APP.VERSION =  APP.DEBUG ? -1 : "1.0.02";
             h = h || '';
             this._set('page', h);
             try {
-                window.history.pushState({}, null, '/'+h);
+                window.history.pushState({}, null, h?('/#~'+h):'');
             } catch (e) {
                         
             }
