@@ -20,7 +20,7 @@ var APP = {
 
 APP.LOCATION = Object.parseUri(''+window.location);
 
-APP.DEBUG = (APP.LOCATION.authority.indexOf('local')+1);
+APP.DEBUG = (AP.LOCATION.authority.indexOf('local')+1);
 
 APP.VERSION =  APP.DEBUG ? -1 : "1.0.3";
 
