@@ -1,0 +1,29 @@
+         <div style="float:right;clear:both;"> 
+             <ul id="market_labels" data-widget="List" class="list-inline"
+                data-item-style="label label-primary margin-left"
+                data-item-template="<span>{ name}</span>"
+                data-value="latest"
+                data-data-expression="[{id:'latest', name:'Все'}, {id:'realty', name:'Недвижимость'}]"
+                ></ul> 
+        </div>
+
+         <div style="float:right;clear:both;"> 
+            <ul id="market_kind" data-widget="List" class="list-inline"
+                data-item-style="label label-primary margin-left"
+                data-item-template="<span>{ name}</span>"
+                data-value="all"
+                data-data-expression="[{id:'all', name:'Все'}, {id:'sale', name:'Продам'}, {id:'buy', name:'Куплю'}]"
+                ></ul>
+        </div>
+
+        <h2>Market</h2>
+        
+        <ul id="posts" 
+            data-widget="BloggerList"
+            data-data-url-expression="'blogger://labels=market ,'+((${ market_labels}==='latest')?'':(${ market_labels}||''))+((${ market_kind}==='all')?'':(${ market_kind}||''))"
+            data-skip-first-top="true"
+            >Загрузка...</ul>
+
+        <span style="float:right">
+            <a target="_blank" href="//grodno-co.blogspot.com/">Архив</a>
+        </span>
