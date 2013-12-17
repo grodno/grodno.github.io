@@ -1,3 +1,17 @@
-<div data-widget="TumblrPicOfTheDay"
-    data-html-url="script://grodno-city.tumblr.com/tagged/pic/json"
-    ></div>
+         <span style="float:right"> 
+            <ul id="labels" data-widget="List" class="list-inline"
+                data-item-style="label label-primary margin-left"
+                data-item-template="<span>{ name}</span>"
+                data-value="latest"
+                data-data-expression="[{id:'latest', name:'Недавние'}, {id:'tournament', name:'Турниры'}, {id:'study', name:'Учёба'}, {id:'fun', name:'Прикол'}]"
+                ></ul>
+        </span>
+
+
+        <h2>Новости</h2>
+        
+        <ul id="posts" 
+            data-widget="BloggerList"
+            data-data-url-expression="'blogger://labels='+((${ labels}==='latest')?'':(${ labels}||''))"
+            data-skip-first-top="true"
+            >Загрузка...</ul>

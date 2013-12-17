@@ -6,26 +6,31 @@ var APP = {
     COPYRIGHT : '2013 Grodno'
     ,
     SOURCES:{
+        SITE:'https://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc=0AqQx4KOOt8TGdEZWZHpBdXAtNlVSMUFMOXppQ3ZuMkE'
+        ,
         TOURNAMENTS : 'https://script.google.com/macros/s/AKfycbwAEd1uSQRIi15_OEKvhwxZUQ7Kc0NA7lP-DMmgmEp3-G17tgM4/exec'
     }
-    ,GAT :{
+    ,
+    GAT :{
         account: 'UA-37246628-1'
     }
+    ,
+    GOOGLE_API_KEY:'AIzaSyAGenobWLKI-F6MWzrHIXmviwJww43n2EM'//'AIzaSyA--IJRFbmFubpjcz5Yherycv6Vy48qBY0'
 };
 
 APP.LOCATION = Object.parseUri(''+window.location);
 
 APP.DEBUG = (APP.LOCATION.authority.indexOf('local')+1);
 
-APP.VERSION =  APP.DEBUG ? -1 : "1.0.02";
-
-Tumblr.ICON_DEFAULT = '/res/logo120.png'  ;
+APP.VERSION =  APP.DEBUG ? -1 : "1.0.3";
 
 (function (global) {
 
-
     // register async listener for cached resources
     Object.cache.createJSSource(APP.VERSION);   
+   
+    // entity type factory
+    Object.entity.ENTITY_TYPE_FACTORY_URL = 'js://{0}';
             
     // register async listener for pages
     Object.entity.create({
@@ -34,14 +39,23 @@ Tumblr.ICON_DEFAULT = '/res/logo120.png'  ;
         urlTemplate:'/page/{0}.html?v='+APP.VERSION,
         cacheDeserializer: Function.NONE
     });
- 
+
+    // register data provider for Blogger posts
+    Object.entity.create({
+        id:'CachedResourceProvider:blogger' , 
+        version: ''+Math.round((new Date()).valueOf() / 86400000),
+        scope : 'session', 
+        urlTemplate:'[jsonp]https://www.googleapis.com/blogger/v3/blogs/1638693468845489013/posts?{0}&key='+APP.GOOGLE_API_KEY
+    });
+    
     Object.entity.create("WebStorage://#settings");
-  
-    Object.entity.create(Object.update({id:'GaTracking:tracker'}, APP.GAT));
  
     // @define UI [Application] entity
     Object.entity.define('Application extends box', {
-        properties:['nonequal:page', 'content','html:html']
+        
+        siteUrl:'[jsonp]'+APP.SOURCES.SITE
+        ,
+        properties:['nonequal:page', 'content', 'site','html:html']
         , 
         contentUrlExpression : '"page://"+(${@.page}||"home")'
         ,
@@ -106,6 +120,11 @@ Tumblr.ICON_DEFAULT = '/res/logo120.png'  ;
             return '';
         }
         ,
+        siteChanged : function(ev) {
+            //Object.dom.init(this);
+            Object.log(ev.value)
+        }  
+        ,
         htmlChanged : function() {
             Object.dom.init(this);
         }
@@ -139,13 +158,13 @@ Tumblr.ICON_DEFAULT = '/res/logo120.png'  ;
                     v.icon = Object.get(v,'E');
                     this.push(v);
                 }).iterator()  
-                                ,
+                ,
                 normalizeCellsIterator: (function(v){
                     var key = Object.get(v,'title.$t'), col= key[0], row=Number(key.substring(1));
-                     ;
-                     if (!this[row]){
-                         this[row] = {};
-                     }
+                    ;
+                    if (!this[row]){
+                        this[row] = {};
+                    }
                     this[row][col] = Object.get(v,'content.$t');
                 }).iterator()  
             }

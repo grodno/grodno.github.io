@@ -6,12 +6,10 @@
         <property name="axio" value="/www/AxioJS"/>
         <concat destfile="${basedir}/libs/axio.js" force="yes">
             <fileset file="${axio}/rc/txt/header.txt"/>
-            <filelist dir="${axio}/src" files="axio-infra.js, axio-entity.js, axio-property.js"/>
+            <filelist dir="${axio}/src" files="axio-infra.js, axio-event.js,axio-entity.js, axio-property.js"/>
             <filelist dir="${axio}/src-commons" files="axio-props.js"/>
             <filelist dir="${axio}/src-webclient" files="axio-web-remote.js, axio-web-dom.js, axio-web-storage.js, axio-web-cache.js"/>
             <filelist dir="${axio}/src-webclient/ui" files="axio-ui-view.js, axio-ui-basics.js"/>
-            <filelist dir="${axio}/src-webclient/ui-extra" files="axio-ui-widgets.js"/>
-            <filelist dir="${axio}/src-webclient/plugins" files="axio-ga-tracking.js, axio-tumblr.js"/>
         </concat>
         <echo level="info" message="Build Axio.JS: done." />
     </target>

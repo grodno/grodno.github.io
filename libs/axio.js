@@ -22,39 +22,14 @@
  * Core functional over Function, Array, Object(including Uri, Events), String.
  */
 
-"use strict"; // strict mode on
-
 (function ( _undef) {
-
-    // Stub function that simply return first argument.
-    var _noop = function(x) {
-        return x;
-    }
     
-    // makes array projection
-    var _arr = function(arr, from, sz) {
-        var r = [];
-        if (arr) {
-            for (var i = from||0, l = (sz ? Math.min(i+sz, arr.length) : arr.length); i < l; r.push(arr[i++])) {}
-        }
-        return r;
-    }
-       
-    // internal object update: extras as array
-    var _update = function(obj, extra) {
-        if (obj && extra) {
-            for(var n in extra) {
-                if (extra.hasOwnProperty(n)) {
-                    obj[n] = extra[n];
-                }
-            }
-        }
-        return obj;
-    };
+    // strict mode on
+    "use strict"; 
 
     // some internal shortcuts
-    var F = _noop.constructor, P = F.prototype, A = Array, O = Object;
-    
+    var F = Function, A = Array, O = Object, _ownProp = O.prototype.hasOwnProperty;
+
     /**
      *==========================================================================
      * I. Working with Functions.
@@ -66,94 +41,173 @@
      * Widely used as a stub.
      * @return first argument
      */
-    F.NONE= _noop;
+    F.NONE = function(x) {
+        
+        return x;
+    };
+
+    /**
+     * @return non-empty {#notFoundValue} or {#ctx} otherwise.
+     * That iterator call {#fn} for each entry of {#obj} on {#ctx} passing datum, index and {#opts}.
+     */
+    F.iterate = function(fn, obj, ctx, opts, notFoundValue) {
+        
+        var r, i;
+        
+        if (obj) {
+            
+            var l = obj.length;
+            opts = opts || {};
+            
+            if (l === +l) {
+                
+                if (notFoundValue===_undef) {
+                    
+                    for (i = 0 ; i < l; i++) {
+                        fn.call(ctx, obj[i], i, opts);
+                    }
+                    
+                } else {
+                    
+                    for (i = 0; i < l; i++) {
+                        if ((r = fn.call(ctx, obj[i], i, opts))) return r;
+                    }
+                    
+                    return notFoundValue;
+                    
+                }
+            } else {
+                
+                if (notFoundValue===_undef) {
+                    
+                    for (i in obj) {
+                        if (_ownProp.call(obj, i)) {
+                            fn.call(ctx, obj[i], i, opts);
+                        }
+                    }
+                    
+                } else {
+                    
+                    for (i in obj) {
+                        if (_ownProp.call(obj, i)) {
+                            if ((r = fn.call(ctx, obj[i], i, opts))) return r;
+                        }
+                    }
+                    
+                    return notFoundValue;
+                    
+                }
+            }
+        }
+        
+        return ctx;
+        
+    };
+    
+    F.prototype.iterator = function() {
+        
+        var f = this;
+        
+        return function(obj, ctx, opts, notFoundValue) {
+            
+            return F.iterate(f, obj, ctx, opts, notFoundValue);
+        }
+    }
     
     /**
      * Function.perform([list], args... OR list...)
      * 
-     * Asynchronously performs {#list} of operations in sequence and/or parallel manner
-     * Invoke this() as callback inside each function
-     * Invoke this.cb() to obtain some more callbacks for parallel flow
+     * Performs {#list} of asynchronous operations in order.
+     * 
+     * Invoke this() as callback inside each function.
+     * Invoke this.cb() to obtain some more callbacks for parallel flow.
+     * 
      * @see test/test-event.html for sample usages
      */
     F.perform = (function(){
 
-        // error handler
-        var __err = function(e){
-            if (e) {
-                if (typeof(e)==='string') {
-                    e = {
-                        reason:e
-                    }
-                }
-                e.next = this.__error;
-                this.__error = e;
-            }
-        }
-        
         var __ok = function(e){
+            
             return (!e) ? true : (this(e), false);
         };
-        
-        var __go = function(err, v) {
-            var fn;
-            if (((--this.__pending)==0) && (fn = this.__operations.shift())){
-                    
-                var args = ((this.__error===_undef)?[]:[this.__error]).concat(this.__args);
-                    
-                this.__pending = 1;
-                this.__error = null;
-                this.__args = [null];
-                    
-                try {
-                    if ((args = fn.apply(this, args)) !== _undef) {
-                        this(null, args);
-                    }  
-                } catch (ex) {
-                    O.error.log(O.error.BAD,":"+ex,''+fn);
-                    if (this.__operations.length) {
-                        this.__pending = 1; 
-                        this(ex, null);
-                    } else {
-                        throw ex;
-                    }
-                }
-                
-            }
-        };
             
-        var __cb = function(){
-            var T=this, pos = T.__args.length;
-            T.__pending++;
-            T.__args.push(null);
-            return function(err, v) {
-                __err.call(T, err);
-                T.__args[pos] = v;
-                __go.call(T);
-            };
-        }
-        
         return function(operations, event) {
             
-            // default callback function passed as context for each operation
-            var T = function(err, v) {
-                __err.call(T, err);
-                T.__args[0] = v;
-                __go.call(T);
-            }
+            var error;
+            var pending =  1;
+            var args = [];
+             
+            var tick = function(err, v, pos) {
             
-            T.__operations = operations;
-            T.__pending = 1;
-            T.__args = [];
+                if (err) {
+                    err = O.error(err);
+                    err.next = error;
+                    error =  err;
+                }
+                
+                args[ pos || 0 ] = v || null;
+            
+                var op;
+            
+                if (((--pending) === 0) && (op = operations.shift())){
+                    
+                    // shift `err` argument for first operation.
+                    var _args = (error===_undef?[]:[error]).concat(args);
+                    
+                    pending = 1;
+                    error = null;
+                    args = [null];
+                    
+                    //try {
+                    
+                        if ((_args = op.apply(ctx, _args)) !== _undef) {
+                            ctx(null, _args);
+                        } 
+                        
+//                    } catch (ex) {
+//                    
+//                        O.error.log(O.error.BAD,''+ex,''+op);
+//                        
+//                        if (operations.length) {
+//                            pending = 1; 
+//                            ctx(ex, null);
+//                        } else {
+//                            throw ex;
+//                        }
+//                    }
+                }
+            };
+
+            // default callback function passed as context for each operation
+            var ctx = function(err, v) {
+                tick(err, v);
+            }
        
             // used to skip code if error
-            T.ok = __ok;
+            ctx.ok = __ok;
         
             // used to create parallel callback
-            T.cb = __cb;
+            ctx.cb = function() {
+            
+                var pos = args.length;
+                
+                // ensure size
+                args[pos] = _undef;
+                
+                // increment pending
+                pending++;
+            
+                return function(err, v) {
+                    
+                    // can affect only once!
+                    (args[pos] === _undef) && tick(err, v, pos);
+                    
+                };
+            };
             
             // start with first operation
-            T(null, event);
+            tick.call(null, event);
+            
         };
     })();
     
@@ -164,10 +218,15 @@
      */
     
     /**
+     * makes array-like projection
      * @return slice of {#arr} or empty array.
      * @safe for no {#arr)
      */
-    A.slice =  _arr;
+    A.slice = function(arr, from, sz) {
+        
+        return arr ? A.prototype.slice.call(arr,from,sz) : [];
+        
+    };
     
     /**
      *@return item of {#arr} at {#p=0} position or null.
@@ -175,80 +234,57 @@
      * @safe for no {#arr)
      */
     A.item = function(arr, p) {
-        // IE8: && arr.length
-        return (arr) ? ( !p ? arr[0] : ((arr.length>(p=((p>0)?0:arr.length)+p))? arr[p] :  null)) : null;
+        
+        return arr ? ( !p ? arr[0] : ((arr.length>(p=((p>0)?0:arr.length)+p))? arr[p] :  null)) : null;
+        
     };
 
     /**
-     * @return array iterator based on #this function.
-     * That iterator call #this for each item of {#arr} on {#ctx} with  current index and {#param}.
+     * @find item of {#arr} with {#key='id'} attribute value matching {#val}.
+     * @return item found or null if none
      */
-    P.iterator = function() {
-        var _fn = this;
-        return function(arr, ctx, param) {
-            if (arr) {
-                for (var i = 0, l = arr.length, f =_fn; i < l; f.call(ctx, arr[i], i++, param)) {}
-            }
-            return ctx;
+    A.findByAttr = (function(f) {
+        
+        f = function(d, i, key) {
+            
+            return (d[key]===this) ? d : null;
+            
         };
-    };
-
-    /**
-     * @search in {#arr} on {#ctx} with {#param}.
-     * @return not empty result or {#noValue} if none found.
-     */
-    P.searchArray = function(arr, ctx, param, noValue) {
-        if (arr) {
-            for (var i = 0, l = arr.length, r; i < l; i++) {
-                if ((r = this.call(ctx, arr[i], i, param))) return r;
-            }
+        
+        return function(arr, val, key) {
+            
+            return F.iterate(f, arr, val, key || 'id', null);
+            
         }
-        return noValue;
-    };
-
-    /**
-     * @find item of {#arr} with {#key*} attribute value matching {#val}.
-     * @return item found or null if none
-     */
-    var _findByAttr = A.findByAttr = function(arr, val, key) {
-        if (arr) {
-            for (var i = 0, l = arr.length; i < l; i++) {
-                if (arr[i][key]===val) {
-                    return arr[i];
-                }
-            }
-        }
-        return null;
-    };
-
-    /**
-     * @find item of {#arr} with id equals {#val}.
-     * @return item found or null if none
-     */
-    A.findById = function(arr, val) {
-        return _findByAttr(arr, val, 'id');
-    };
+        
+    })();
     
     /**
      * @sort given {#a}rray in {#dir}ection using {#getter} for criteria
      */
     A.sortBy = function(a, getter, dir) {
-        getter = getter||_noop;
+        
+        getter = getter || F.NONE;
+        
         if (!dir) {
             dir=1;
         }
-        var antidir  = dir*-1;
+        
+        var rdir  = dir*-1;
+        
         if (typeof(getter) === 'string') {
             var key = getter;
             getter = function(s) {
                 return s && s[key]
             }
         }
+        
         return a.sort( function(s1,s2,v1,v2){
             v1=getter(s1);
             v2=getter(s2);
-            return v1>v2?dir:(v1<v2?antidir:0);
+            return v1>v2?dir:(v1<v2?rdir:0);
         }
+        
         )
     }
 
@@ -261,81 +297,91 @@
     /**
      * updates {#obj*} with own key/values from {#extra}.
      */
-    O.update =  _update;
+    O.update =  function(obj, extra) {
+        
+        if (obj && extra) {
+            
+            for(var n in extra) {
+                if (_ownProp.call(extra, n)) {
+                    obj[n] = extra[n];
+                }
+            }
+        }
+        
+        return obj;
+    };
 
     // @get value of {#obj} property by {#keys} in deep.
     O.get =  function(obj, key) {
+        
         if (obj) {
+            
             var  p=-1,p1;
+            
             for (; obj && (p=key.indexOf('.',p1=p+1))>-1;obj = obj[key.substring(p1,p)] ) {}
+            
             return obj ?  obj[key.substring(p1)] : _undef; 
                         
         }
+        
         return null;
     };
 
     // @set value of {#obj} property by {#keys} in deep.
     O.set =  function(obj, key, val) {
+        
         if (obj) {
-            for(var  p=-1,p1=-1, k; (p=key.indexOf('.',p1=p+1))>-1; obj = (obj[k=key.substring(p1,p)]|| (obj[k]={}))) {};
+            
+            for(var  p=-1,p1=-1, k; (p=key.indexOf('.',p1=p+1))>-1; obj = (obj[k=key.substring(p1,p)]|| (obj[k]={}))) {}
+            
             k=key.substring(p1);
+            
             return (obj[k] = val);
         }
+        
         return null;
     };
     
     // safely @clones {#obj}.
     O.clone =  function(obj, delta) {
-        return obj ? _update(_update(new (obj.constructor)(), obj), delta) : null;
+        
+        return obj ? O.update(O.update(new (obj.constructor)(), obj), delta) : null;
+        
     };
     
     // @return object sliced from original by given keys
-    O.slice = function(obj, keys) {
-        var r = {}
-        if (obj && keys) {
-            for (var i = 0, l = keys.length; i < l; i++) {
-                var n = keys[i];
-                if (obj[n] !== _undef) {
-                    r[n] = obj[n];
-                }
-            }
-        }
-        return r;
-    };
-
-    // @return object evaluated from {#str*}.
-    // Optionally, some {#pValues} can be enclosured under {#pKeys}.
-    O.parse = function(s) {//, pKeys, pValues
-        try {
-            //pKeys?(F.apply(F, pKeys.concat("return " + str)).apply(F, pValues))
-            return s ? (F.call(F,"return " + s))() : null;
-        } catch (ex) {
-            O.error.log(O.error.BAD,'Object.parse: '+ex.message,s);
-        }
-        return null;
-    };
-    
-    // evaluates code from {#s*}
-    O.eval = function(s) {
+    O.slice = (function(f) {
         
+        f = function(n, i, obj) {
+            
+            if ((i=obj[n]) !== _undef) {
+                this[n] = i;
+            }
+            
+        }
+        
+        return function(obj, keys) {
+            
+            return obj ? F.iterate(f, keys, {}, obj) : {};
+        }
+        
+    })();
+ 
+    // @return object evaluated from {#str*}.
+    O.parse = function(s) {
         try {
-            (F.call(F, s))()
-            return true;
+            
+            return s ? (F.call(F,"return " + s))() : null;
+            
         } catch (ex) {
-            O.error.log(O.error.BAD,'Object.eval: '+ex.message,s);
+            
+            O.error.log(O.error.BAD,'Object.parse: '+ex.message,s);
+            
         }
+        
         return null;
-    }
-    
-    // narrow object from {#s*}
-    O.narrowFromString = function(obj, key, def) {
-        var r = obj;
-        if (!r || typeof(r)==='string') {
-            r = {};
-            r[key || 'id'] = obj || def;
-        }
-        return r;
-    }
+    };
+  
     /**
      *==========================================================================
      * IV. Working with URI.
@@ -347,31 +393,41 @@
     // [kind]type://id?(p1=v1)*#hash
     // id also parsed into steps and authority
     O.parseUri =  (function() {
+        
         var qFn=(function(v) {
+            
             var p;
             if ((p = v.indexOf('=')) > -1) {
                 this[v.substring(0, p)] = decodeURIComponent( v.substring(p + 1));
             }
+            
         }).iterator();
         
         var Uri = function(s) {
+            
             this.isUri =true;
             this.original = s;
             this.params = {};
+            
         }
         
         Uri.prototype.constructor = Uri;
         
         Uri.prototype.toString = function() { 
+            
             var q = '';
             for (var n in this.params) {
                 q+=((q?'&':'?') + n + '=' + encodeURIComponent(this.params[n]));
             }
+            
             return ((this.type ? (this.type + ':') : '') +  this.id + q + (this.hash ? ('#' + this.hash) : ''));
+            
         };
         
         return function (s) {
+            
             var r = new Uri(s), p;
+            
             if (!s)  return r;
             
             if (!s.substring) {
@@ -404,19 +460,26 @@
             r.path = p = s.split('/'); 
             
             if (s[0]==='/') {
+                
                 r.isAbsolutePath=true;
                 if (s[1]==='/') {
+                    
                     r.host = r.path[2];
                     r.path = r.path.slice(3);
+                    
                 } else {
+                    
                     r.path.shift();
+                    
                 }
             }
             
             for (;(p[0]==='');p.shift()){}
+            
             r.steps = p;
             r.authority = p[0];
             r.step = p[1];
+            
             return r;
         }
     })();
@@ -440,21 +503,32 @@
             }
             
             var  posB, posE = -27,  path, s0=s;
+            
             s = s.replace(_RE_QUOTE,'"');
             
             while ( ((posB = s.indexOf('{', posE+27)) > -1)&& ((posE = s.indexOf('}', posB)) > -1) ) {
+                
                 path = s.substring(posB + 1, posE);
-                s= s.substring(0, posB) + "'+(Object.get(this,'" + path + "')||'')+'" + s.substring(posE + 1)
+                
+                if (path[0]===' '){
+                    path = path.substring(1);
+                }
+                
+                s= s.substring(0, posB) + "'+(Object.get(this,'" + path + "')||'')+'" + s.substring(posE + 1);
+                
             }
+            
             //O.debug(s);
             return TEMPLATES[s0] = (new Function("return '" + s + "';"));
         };
         
         // memoize regexps
         var _RE = (function($R){
+            
             return function (key){
                 return $R[key] || ($R[key]=new RegExp('\\{' + key + '\\}', 'gm'))
             }
+            
         })({}), _RE_UNDERSCORE=new RegExp('_', 'gm'), _RE_QUOTE=new RegExp("'", 'gm');
 
         String.LANGUAGE = 'en';
@@ -463,69 +537,94 @@
     
         // @returns localized {#s} or ''
         String.localize = function(s) {
+            
             return String.capitalize(s).replace(_RE_UNDERSCORE,' ');
+            
         };    
         // @returns capitalized {#s} or ''
         String.capitalize = function(s) {
+            
             return s && s.length && (s.toString().charAt(0).toUpperCase() + s.substring(1)) || '';
+            
         };
         // @returns camelize {#s} or ''
         String.camelize = function(s, sep) {
+            
             if (!s || !s.length) return '';
+            
             var arr = s.split(sep||'_'), r=arr[0];
             for (var i = 1, l = arr.length; i < l; r+=String.capitalize(arr[i++])) {}
+            
             return r;
+            
         };        
         // Returns string formatted by template filled with rest of arguments.
         // If template is a function, then it is invoked with rest of arguments passed
         // @return string result.
         String.format = function(s){
-            var type = typeof(s)
+            
+            var type = typeof(s);
+            
             if (type==="string") {
+                
                 for (var i = arguments.length-1;i>0;i--) {
                     s = s.replace(_RE(i-1), arguments[i]);
                 }
+                
                 return s;
+                
             } else if (type==="function") {
-                return s.apply(null,_arr(arguments,1));
+                
+                return s.apply(null, A.prototype.slice.call(arguments,1));
+                
             }
+            
             return null;
         };
 
         // @return string formatted by template and key/value map used for placeholder substitution.
         String.formatWithMap = function(s, map){
+            
             return compileTemplate(s).call(map);
+            
         };
     
     })();
 
     /* 
-    *==========================================================================
-    * Logging.
-    *==========================================================================
-    */
+     *==========================================================================
+     * VI. Logging.
+     *==========================================================================
+     */
     
     // Declare stub method.
-    O.log = _noop;
+    O.log = F.NONE;
     
     // debug
     O.debug =  function() {
-        O.log.apply(O,['DEBUG:'].concat(A.slice(arguments,0)));
+        
+        O.log.apply(O,['DEBUG:'].concat(A.prototype.slice.call(arguments,0)));
+        
     };
-
+    
     /* 
-    *==========================================================================
-    * Error handling.
-    *==========================================================================
-    */
+     *==========================================================================
+     * VII. Error handling.
+     *==========================================================================
+     */
 
     // narrow error to reqular form: { reason:'', message:'', info:''}
     O.error = function(err, message, info) {
+        
         if (!err) {
             return null;
         } 	   		
         
-        err = O.narrowFromString(err,'reason');
+        if (typeof(err)==='string') {
+            err = {
+                reason: err
+            };
+        }
         
         if (!err.reason) {
             err.reason = O.error.UNKNOWN;
@@ -544,8 +643,11 @@
 
     // System-level error handler
     O.error.log =  function(err, message, info) {
+        
         err = O.error(err, message, info);
+        
         O.log.apply(O,['ERROR:', err]);
+        
         return err;
     };
     
@@ -553,214 +655,112 @@
     O.error.NOT_FOUND = 'not-found';
     O.error.ACCESS_DENIED = 'access-denied';
     O.error.BAD = 'bad-code';
-    
-})();
-/**
- * Axio:Entity. Entity framework.
- * 
- *  It allows define types, create entity instances and get them by id:
- *      Object.entity('id')
- *      Object.entity.define(meta)
- *      Object.entity.create(meta)
- * 
- */
-( function() {
-    
-    var O = Object
 
-    ,
-    // parses meta info for entity
-    _parseMeta =  function(url) {
-        if (url[0]=='{') {
-            return O.parse(url);
-        }
-        var u = O.parseUri(url), id= u.hash;
-        var r = O.update({
-            id : (u.type||"box") +(id?(':'+id):'')
-        }, u.params);
-        if (u.steps.length) {
-            r.style =u.steps.join(' ');
-        }
-        if (u.kind) {
-            r.domNodeType = u.kind;
-        }
-        return  r;
-    }
-    ,
-    //@creates a new one entity constructor.
-    _applyMethods = function(ftor)  {  
-        if (ftor) {
-            var _super = {}, methods = ftor(_super);
-            for (var n in methods) {
-                _super[n] = this[n] || Function.NONE;
-                this[n] = methods[n];
-            }
-        }    
-    }
-    ,
-    // internal registries
-    ALL={}
-    ,
-    TYPES={}
-    ,
-    TOTAL=0
-    ,
-    REMOVE_FROM_ALL = function(T){
-        delete ALL[T.id];
-    }
-    ,
-    //@get entity constructor or creates/register a new one.
-    _getType = function(id, superTypeId) {
-        if (!id) return null;
-        
-        var type = TYPES[id];
-        if (!type){
-            if (id[0]==='[') {
-                var arr = id.substring(1, type.length-1).split(',');
-                type = _getType(arr[0])
-                for(var i=1, l=arr.length; i<l ;i++) {
-                    type.ctor  = _createCtor(TYPES[arr[i]], type);
-                }
-                TYPES[id] = type;
-            } else {
-                throw new Error('ERROR: No such entity type: '+id);
-            }
-        }
-        
-        if (!type.ctor) {
-            type.ctor  = _createCtor(type, _getType(superTypeId || type.superTypeId));
-        }
-        
-        return type;
-    }
-    ,
-    //@creates a new one entity constructor.
-    _createCtor = function(type, superType)  {
-        var ctor = function(){
-            this.__finalizers = [];
-        }, _proto = ctor.prototype =  {}, superCtor =  null;
-        
-        ctor.applyMethods = _applyMethods;
-        ctor.propList = [];
-        ctor.properties = {};
-        
-        if (superType) {
-            superCtor = superType.ctor;
-            O.update(_proto, superCtor.prototype);
-            Array.prototype.push.apply(ctor.propList, superCtor.propList);
-            O.update(ctor.properties, superCtor.properties);
-        }
-        if (type.properties) {
-            for(var i=0, l=type.properties.length;i<l;i++) {
-                var id = type.properties[i], ptype = "*", v = id.split(':');
-                if (v.length>1){
-                    ptype=v[0] || v[1];
-                    id=v[1];
-                }
-                if (ctor.properties[id]) {
-                    throw new Error('ERROR: Duplicate property in entity type: '+id);
-                }
-                var prop = O.property(id, ptype);
-                ctor.propList.push(prop);
-                ctor.properties[id] = prop;
-                prop.attachToEntityCtor(ctor);
-            }
-        }
-        
-        // apply initial values
-        O.update(_proto, type.initials);
-        
-        // apply methods 
-        _applyMethods.call(_proto, type.methods);
 
-        // explicit constructor
-        ctor.prototype.constructor = ctor;
-        return ctor;
-    }
-    ;
+    /* 
+     *==========================================================================
+     * VIII. Code dependency.
+     *==========================================================================
+     */
     
-    // entity home
-    var $ = Object.entity = function(id) {
-        return id ? (id._id? id : ALL[id]) : null;
-    };
+    // Ensure all dependencies are resolved and invokes callback after..
+    O.require = function(_cache) {
+        
+        var _eachItem = (function(x) {
+        
+            // skip empty 
+            if (!x) return;
+            
+            var ctx = _cache[x] || (_cache[x]={
+                q:[]
+            });
+
+            // skip already cached
+            if (ctx.done) return;
  
-    // @define a new entity {#type}
-    // @!just register at this time. Actual type constructor will be created on demand.
-    $.define = function (id, meta) {
-        if (!meta) {
-            meta = id;
-            id  = meta.id;
-        }
-        var type = {
-            initials:meta,
-            superTypeId:meta.superType||(id==='entity'?null:'entity'), 
-            properties:meta.properties,
-            methods:meta.methods
+            // normalize/create event
+            var u = O.parseUri(x);
+        
+            // use [script] kind by default (or for http type)
+            u.kind = u.kind || ((!u.type || (u.type === 'http')) ? 'script' : u.type );
+         
+            ctx.q.push(this.cb());
+            
+            // prevent duplicate notifications
+            if (ctx.q.length === 1) {
+
+                // create callback wrapper
+                var callback = function(err){
+                    if (err) {
+                        O.error.log('Unreachable: '+x);
+                    } else {
+                        ctx.done = x;
+                    }
+                    
+                    var cb;
+                    while((cb=ctx.q.shift())) {
+                        cb.apply(this, arguments);
+                    }
+                };
+                
+                // notify with event
+                O.notify(u, callback);
+
+            }
+        
+        }).iterator();
+        
+         
+        var _starter = [function(list) {
+                
+            _eachItem(list, this);
+            
+            return true;
+            
+        }];
+
+        return function(list, cb) {
+            
+            F.perform(_starter.concat(cb), list);
+            
         };
-        var p = id.lastIndexOf(' extends ');
-        if (p !== -1) {
-            type.superTypeId = id.substring(p+9);
-            id = id.substring(0,p);
-        } 
-        delete meta.properties;
-        delete meta.methods;
-        delete meta.superType;
-        delete meta.id;
         
-        if (id) {
-            TYPES[id] = type;
-        }
-        return type;
-        
-    };
+    }({});
 
-    // @create a new entity instance.
-    // @param r - metainfo object for instance: 
-    // ex.: {id:"Type:[id]", properties:['prop1',...], prop1: initialValue,prop1Changed:function(ev, value){} }
-    $.create = function(r)
-    {
-        // parse if string notation
-        if (typeof(r)==='string') {
-            r = _parseMeta(r);
-        }
-        // identity
-        var ids = r.id.split(':'), ctor, obj, type = ids[0];
-        // prepare type and instantiate
-        if (r.properties || r.methods) {
-            // inline type
-            ctor = _createCtor($.define(type + (++TOTAL),O.clone(r)), _getType(type));
-            obj = new (ctor)();
-        } else {
-            // regular instance
-            ctor = _getType(type).ctor;
-            obj = O.update(new (ctor)(),r);  
-        }
-        // identity
-        obj._id = (type + (++TOTAL));
-        obj.id = ids[1] || obj._id;
-        // register
-        ALL[obj.id] = obj;
-        // add unregister finalizer
-        obj.addFinalizer(REMOVE_FROM_ALL);
-        // initialize
-        obj.init();
-        
-        return obj;
-    };
-
-    $.create.parseMeta = _parseMeta;
+})();
+(function($R){
     
     /**
      *==========================================================================
      * V. Event notifications.
      *==========================================================================
      */
-    var $R = {}
-    ,
-    _opArgg0 = [function(args){
+    
+    var O = Object;
+    
+    var _opArgg0 = [function(args){
         this.apply(null, args);
     }];
 
+    var _notify = function(obj, key, ev){
+        
+        if ((obj = (obj && obj[key]))) {
+            
+            // broadcast to all listeners
+            for (var rec = obj._first; rec; rec=rec.next) {
+                
+                rec.fn.call(rec.target, ev); 
+                
+            }
+            
+            return true;
+        }
+        
+        // inform that event still not handled
+        ev.callback && ev.callback(Object.error(Object.error.NOT_FOUND, ev.uri));
+        return false;
+    };
+    
     /**
      * O.listen(key, handler) 
      * @register adds an event {#handler} for {#type}
@@ -768,20 +768,28 @@
     O.listen = function(key, handler, target, cb) {
             
         var obj=$R, p=-1,p1=-1, k;
+        
         for(; (p=key.indexOf('.',p1=p+1))>-1; obj = (obj[k=key.substring(p1,p)]|| (obj[k]={}))) {}
+        
         obj = (obj[k=(p1?key.substring(p1):key)] || (obj[k]={}));
             
         var rec = {
             fn : handler,
             target : target || null
         };
-        if (obj.last) {
-            obj.last.next = rec;
-            rec.prev = obj.last;
+        
+        if (obj._last) {
+            
+            obj._last.next = rec;
+            rec.prev = obj._last;
+            
         } else {
-            obj.first=rec;
+            
+            obj._first=rec;
+            
         }
-        obj.last = rec;
+        
+        obj._last = rec;
         
         cb &&  cb.call(rec.target, rec, obj);
     };
@@ -811,60 +819,49 @@
         // ensure callback
         ev.callback = cb || ev.callback || Function.NONE;
 
-        var T = O.entity && O.entity(key);
-        if (T) {
-            // wrap array of callbacks with single one
-            if (Array.isArray(ev.callback)){
-                var cbs  = _opArgg0.concat(ev.callback);
-                ev.callback = function() {
-                    Function.perform(cbs,arguments);
-                }
+        // wrap array of callbacks with single one
+        if (Array.isArray(ev.callback)){
+
+            var cbs  = _opArgg0.concat(ev.callback);
+            
+            ev.callback = function() {
+                Function.perform(cbs, arguments);
             }
-            // handle event
-            T.handleEvent(ev);
-            return true;
         }
             
         //search bundle
         for(var obj=$R, p=-1,p1=-1; obj && (p=key.indexOf('.',p1=p+1))>-1; obj = obj[key.substring(p1,p)]) {}
+        
         if (p1) {
             key = key.substring(p1);
         }
 
-        if ((obj = obj && obj[key])) {
-            // broadcast
-            for (var rec = obj.first; rec; rec=rec.next) {
-                rec.fn.call(rec.target, ev); 
-            }
-            return true;
-        }
-        // inform that event still not handled
-        return false;
+        return _notify(obj, key, ev);
     };
         
     // @private do not use it in your code!!!
-    O.notify2 = function(key1, key2,ev){
-        var obj = $R[key1] ;
-        if ((obj = (obj && obj[key2]))) {
-            for (var rec = obj.first; rec; rec=rec.next) {
-                rec.fn.call(rec.target, ev); 
-            }
-        }
-    }
-
+    O.notify2 = function(key1, key2, ev){
+        _notify($R[key1], key2, ev);
+    };
+  
     /**
      * O.unlisten(key)
      * @unregister removes all handlers for given event type
      */
     O.unlisten = function(key) {
+        
         for(var obj=$R, p=-1,p1=-1; obj && (p=key.indexOf('.',p1=p+1))>-1; obj = obj[key.substring(p1,p)]) {}
             
         if (p1) {
+            
             key = key.substring(p1);
+            
         }
             
         if (obj && obj[key]) {
-            delete obj[key]
+            
+            delete obj[key];
+            
         }
     };
         
@@ -874,7 +871,9 @@
      * @unregister all
      */
     O.unlisten._all = function() {   
+        
         $R = {};
+        
     };
         
     /**
@@ -883,107 +882,445 @@
      * @unregister just one record from obj bundle
      */
     O.unlisten._removeRecord = function(rec, obj) {
-        if (rec.next) {
+        
+        if (rec.next) { 
+            
             rec.next.prev = rec.prev;
+            
         } else {
-            obj.last = rec.prev || null;
+            
+            obj._last = rec.prev || null;
+            
         }
+        
         if (rec.prev) {
+            
             rec.prev.next = rec.next;
+            
         } else {
-            obj.first = null;
+            
+            obj._first = null;
+            
         }
+        
+    };
+    
+})({});
+/**
+ * Axio:Entity. Entity framework.
+ * 
+ *  It allows define types, create entity instances and get them by id:
+ *      Object.entity('id')
+ *      Object.entity.define(meta)
+ *      Object.entity.create(meta)
+ * 
+ */
+( function() {
+    
+    var O = Object;
+
+    // entities registry
+    var ALL={};
+    
+    // entity types registry
+    var TYPES={};
+    
+    // entity counter used as guid
+    var TOTAL=0;
+    
+    // unregisters entity
+    var REMOVE_FROM_ALL = function(T){
+        delete ALL[T.id];
+    };
+    
+    // parses meta info for entity
+    var _parseMeta =  function(url) {
+        
+        if (url[0]==='{') {
+            return O.parse(url);
+        }
+        
+        var u = O.parseUri(url), id= u.hash;
+        
+        var r = O.update({
+            id : (u.type||"box") +(id?(':'+id):'')
+        }, u.params);
+        
+        if (u.steps.length) {
+            r.style =u.steps.join(' ');
+        }
+        
+        if (u.kind) {
+            r.domNodeType = u.kind;
+        }
+        
+        return  r;
+    };
+    
+    //overrides methods.
+    var _applyMethods = function(ftor)  {  
+        
+        if (ftor) {
+            
+            var _super = {}, methods = ftor(_super);
+            
+            for (var n in methods) {
+                
+                _super[n] = this[n] || Function.NONE;
+                this[n] = methods[n];
+                
+            }
+        }  
+        
+    };
+   
+    //@get entity constructor or creates/register a new one.
+    var _getType = function(id, superType) {
+        
+        if (!id) return null;
+        
+        var type = TYPES[id];
+        if (!type){
+            
+            return null;
+            
+        }
+        
+        if (!type.ctor && (!(superType = type.superTypeId) || (superType = _getType(superType)))) {
+            type.ctor = _createCtor(type, superType) ;
+        }
+        
+        return type;
+    };
+    
+    //@creates a new one entity constructor.
+    var _createCtor = function(type, superType)  {
+        
+        var ctor = function(){
+            this.__finalizers = [];
+        };
+        var _proto = ctor.prototype =  {};
+        var superCtor =  null;
+        
+        ctor.applyMethods = _applyMethods;
+        ctor.propList = [];
+        ctor.properties = {};
+        
+        if (superType) {
+            
+            superCtor = superType.ctor;
+            O.update(_proto, superCtor.prototype);
+            Array.prototype.push.apply(ctor.propList, superCtor.propList);
+            O.update(ctor.properties, superCtor.properties);
+            
+        }
+        if (type.properties) {
+            
+            for(var i=0, l=type.properties.length;i<l;i++) {
+                
+                var id = type.properties[i], ptype = "*", v = id.split(':');
+                
+                if (v.length>1){
+                    ptype=v[0] || v[1];
+                    id=v[1];
+                }
+                
+                if (ctor.properties[id]) {
+                    throw new Error('ERROR: Duplicate property in entity type: '+id);
+                }
+                
+                var prop = O.property(id, ptype);
+                ctor.propList.push(prop);
+                ctor.properties[id] = prop;
+                prop.attachToEntityCtor(ctor);
+                
+            }
+        }
+        
+        // apply initial values
+        O.update(_proto, type.initials);
+        
+        // apply methods 
+        _applyMethods.call(_proto, type.methods);
+
+        // explicit constructor
+        ctor.prototype.constructor = ctor;
+        
+        return ctor;
+    };
+    
+    // entity home
+    var $ = O.entity = function(id) {
+        
+        return id ? (id._id? id : ALL[id]) : null;
+        
+    };
+ 
+    // @define a new entity {#type}
+    // @!just register at this time. Actual type constructor will be created on demand.
+    $.define = function (id, meta) {
+        
+        if (!meta) {
+            
+            meta = id;
+            id  = meta.id;
+            
+        }
+        
+        var type = {
+            initials:meta,
+            superTypeId:meta.superType||(id==='entity'?null:'entity'), 
+            properties:meta.properties,
+            methods:meta.methods
+        };
+        
+        var p = id.lastIndexOf(' extends ');
+        if (p !== -1) {
+            type.superTypeId = id.substring(p+9);
+            id = id.substring(0,p);
+        } 
+        
+        delete meta.properties;
+        delete meta.methods;
+        delete meta.superType;
+        delete meta.id;
+        
+        if (id) {
+            TYPES[id] = type;
+        }
+        
+        return type;
+        
+    };
+   
+    //@get entity constructor or creates/register a new one.
+    var _resolveTypeAsync = function(type,  cb) {
+        
+        if (!$.ENTITY_TYPE_FACTORY_URL) {
+            return false;
+        }
+                
+        O.notify(String.format($.ENTITY_TYPE_FACTORY_URL, type), function(err) {
+                
+            var _type = _getType(type);
+                    
+            if (err || !(_type)){
+                    
+                cb && cb(err || O.error('ERROR: Can\'t resolve entity type: '+type));
+                    
+            } else {
+                
+                // check for super type recursively
+                if (_type.superTypeId && !_getType(_type.superTypeId)) {
+                    
+                    _resolveTypeAsync(_type.superTypeId, cb);
+                    
+                } else {
+                    
+                    cb();
+                    
+                }
+            }
+                
+        });
+                
+        return true;
+            
     };
 
+    // @create a new entity instance.
+    // @param r - metainfo object for instance: 
+    // ex.: {id:"Type:[id]", properties:['prop1',...], prop1: initialValue,prop1Changed:function(ev, value){} }
+    $.create = function(r, cb)
+    {
+        // parse if string notation
+        if (typeof(r)==='string') {
+            r = _parseMeta(r);
+        }
+        // identity
+        var ids = r.id.split(':'), obj, type = ids[0];
+        
+        var _type =  _getType(type);           
+            
+        if (!_type || !_getType(_type.superTypeId)) {
+            
+            // try to use type factory if defined
+            if (!_resolveTypeAsync(!_type ? type : _type.superTypeId, function(err){
+                if (err) {
+                    O.error.log(err);
+                } else {
+                    $.create(r, cb);
+                }
+                
+            })) {
+                
+                O.error.log('ERROR: No such entity type: '+type); 
+                
+            }
+            
+            return null;
+        }
+
+        // prepare type and instantiate
+        if (r.properties || r.methods) {
+            
+            // inline type
+            obj = new (_createCtor($.define(type + (++TOTAL),O.clone(r)), _type))();
+            
+        } else {
+            
+            // regular instance
+            obj = O.update(new (_type.ctor)(),r); 
+            
+        }
+        
+        // unique identity
+        obj.id = obj._id = (type + (++TOTAL));
+        
+        // register if has own id
+        if (ids[1]) {
+            
+            ALL[obj.id = ids[1]] = obj;
+            
+        }
+        
+        // add unregister finalizer
+        obj.addFinalizer(REMOVE_FROM_ALL);
+        
+        // initialize
+        if (obj.requires) {
+            
+            // resolve dependencies
+            Object.require(obj.requires, function(err){
+                
+                err ? Object.error.log(err) : obj.init();
+                
+                cb && cb(err, obj);
+                
+            });
+            
+        } else {
+            
+            // instant init 
+            obj.init();
+
+            cb && cb(null, obj);
+
+        }
+        
+        return obj;
+    };
+
+    $.create.parseMeta = _parseMeta;
+
     // @define The basic [entity] entity type.
-    Object.entity.define('entity', {
+    $.define('entity', {
         methods : function () {
         
-            var _undef, O = Object, $ = O.entity
-            ,
-            _referrer = function(){
+            var _undef;
+            
+            var _referrer = function(){
+                
                 var ref = this.referrer;
                 if (ref) {
-                    if (ref.split){
-                        ref = ref.split('.');
-                    }
+                    
+                    ref = ref.split ? ref.split('.') : ref;
+                    
                     var target = ((ref[0]==='parent') ? this.parentEntity : $(ref[0])), key = ref[1];
-                    //                    if (key.substring(-4)==='List') {
-                    //                        var arr = (target[key]||(target[key] = [])), index = arr.indexOf(this);
-                    //                        if (this._done ) {
-                    //                            if (index>-1) {
-                    //                                arr.splice(index, 1);
-                    //                            }
-                    //                        } else {
-                    //                            if (index===-1) {
-                    //                                arr.push(this);
-                    //                            }
-                    //                        } 
-                    //                    } else {
+                    
                     target[key]  = (this._done ? null : this);
-                //                    }
+                    
                 }
+                
+            };
+            
+            // prop init operator
+            var PROP_INIT_OP = function(p) {
+                p.init(this);
             };
                     
             return {
                 // initializes entity
                 init : function() {
+                    
                     // init all declared properties
-                    for (var i=0, ps = this.constructor.propList, l= ps.length; i<l; ps[i++].init(this)) {}
+                    Function.iterate(PROP_INIT_OP, this.constructor.propList, this);
+                    
                     // assign this for other entities
                     _referrer.call(this);
+                    
+                    this.handleEvent && O.listen(this.id, this.handleEvent, this);
                 }
                 ,
                 // done entity
                 done : function() {
+                    
                     // unlisten all
                     O.unlisten(this.id);
+                    
                     // perform all finalizers
                     for (var fzs = this.__finalizers, i= fzs.length; i; fzs[--i](this)) {}
+                    
                     delete this.__finalizers;
+                    
                     // mark done
                     this._done = true;
+                    
                     // un-assign this from other entities
                     _referrer.call(this);
                 }
                 ,
                 // add a some finalizer function to be invoked at done();
                 addFinalizer: function(f){
+                    
                     this.__finalizers.push(f);
+                    
                 }
                 ,
                 // @get property value
                 getProperty : function (key) {
+                    
                     return this._get(key);
+                    
                 }            
                 ,
                 // @set property value
                 setProperty : function (key, val) {
+                    
                     this._set(key, {
                         value:(val===_undef)?null:val
                     });
+                    
                 }
                 ,
                 // @inc property value
                 incrementProperty : function (key, inc, def) {
+                    
                     this.setProperty(key,(this.getProperty(key)||(def===_undef?0:def))+(inc||1));
+                    
                 }
                 ,
                 // internal @get property value
                 _get : function (key) {
+                    
                     return this.constructor.properties[key] ? this._prop(key).getValue(this) : this[key];
+                    
                 }
                 ,
                 // @get property instance by key
                 // Creates new one if none exists yet.
                 _prop : function (key) {
-                    return this.constructor.properties[key] || (this.constructor.properties[key] = O.property(key,"*"));
+                    
+                    return this.constructor.properties[key] || (this.constructor.properties[key] = Object.property(key,"*"));
+                    
                 }
                 ,
                 // internal @set property value
                 _set : function (key, val, asyncUrl, force) {
+                    
                     // prevent execution for finalized entity
                     if (!this._done) {
+                        
                         if (val && (val.value!==_undef)) {
                         } else {
                             // wrap value into event instance
@@ -991,55 +1328,45 @@
                                 value:val
                             };
                         }
+                        
                         this._prop(key).setValue(this, val, asyncUrl, force);
+                        
                     }
+                    
                 }
                 ,
                 // notifies about its property changed
                 notifyPropertyChanged : function(propId, ev) {
+                    
                     ev.entity = this;
                     ev.propId = propId;
-                    return Object.notify2(this.id, propId, ev);
-                }
-                ,
-                // listen for API
-                handleEvent: function(ev) {
-                    var op = this[ev.uri.host];
-                    if (op) {
-                        op.call(this,ev);
-                    } else {
-                        ev.callback(O.error.BAD, 'No operation defined: '+this.id+'.'+ev.uri.host);
-                    }
+                    
+                    Object.notify2(this.id, propId, ev);
+                    
                 }
                 ,
                 // toString
                 toString : function() {
+                    
                     return '[entity:'+(this.id)+']';
+                    
                 }
                 ,
                 // creates property binding expression
                 // !!! implicitly binds in opposite direction.
-                createExpression : function(id, options) {
-                    if (!options) {
-                        options  ={};
-                    }
-                    var propKey  = (!options.key || options.key==='value')?'':String.capitalize(options.key);
-                    if (!options.readOnly) {
-                        O.property.bind(this, id+propKey, '${'+id+'.'+(options.key || 'value')+'}')
-                    }
+                createExpression : function(id, opts) {
+                    
+                    opts  = opts || {};
+                    
+                    var propKey  = (!opts.key || opts.key==='value')?'':String.capitalize(opts.key);
+                    
+                    !opts.readOnly && Object.property.bind(this, id+propKey, '${'+id+'.'+(opts.key || 'value')+'}');
+                    
                     return '${'+this.id+'.'+id+propKey+'}'
                 }
             }
         }
     });
-    
-    // @define The basic [EventHandler] entity type.
-    Object.entity.define('EventHandler', {
-        properties:['EventHandlerReady:ready']
-        ,
-        ready: true // ready by default
-    });
-
     
 })();/**
  * Axio:Entity. Entity framework.
@@ -1048,30 +1375,40 @@
  *      Object.property.define(id, meta, entityPatcher)
  * 
  */
-( function(O) {
-  
-    var TYPES={} // property types
-    ,
+(function(O) {
+    
+    // property types
+    var TYPES={}; 
+    
     // all properties registry
-    ALL={}
-    ,
-    //
-    _applyMethods = function(ftor, id)  {  
+    var ALL={};
+    
+    // applies methods over
+    var _applyMethods = function (ftor, id)  {  
+        
         if (ftor) {
+            
             var _super = {};
+            
             var methods = ftor(id, _super);
+            
             for (var n in methods) {
+                
                 if ((typeof (methods[n]) === 'function')) {
                     _super[n] = this[n] || Function.NONE;
                 }
+                
                 this[n] = methods[n];
                 
             }
-        }    
+        } 
+        
     };
+    
     
     // property factory
     O.property = function (id, typeId) {
+        
         if (!id) return null;
         
         if (!typeId){
@@ -1079,6 +1416,7 @@
         }
         
         var prop = ALL[typeId+":"+id];
+        
         if (prop) {
             return prop;
         }
@@ -1091,29 +1429,42 @@
         prop = {
             id: id
         };
+        
         if (id.substr(id.length-3)==='Url') {
+            
             prop.asyncTarget = id.substring(0, id.length - 3);
+            
         } 
         
         if (typeId==='*') {
+            
             O.update(prop, type.factory(id));
+            
         } else {
+            
             var _super = O.property(id, type.superTypeId||'*');
+            
             O.update(prop,_super);  
+            
             _applyMethods.call(prop, type.factory, id);
             
             // accumulate entity type patchers:
             var sep = _super.type.entityPatchers, ep  =type.entityPatcher;
+            
             if (sep || ep) {
+                
                 var eps = type.entityPatchers = [];
+                
                 if (sep) {
                     eps.concat(sep); 
                 }
+                
                 if (ep) {
                     eps.push(ep); 
                 }
             }
         }
+        
         prop.type = type;
         
         return  (ALL[typeId+":"+id] = prop);
@@ -1122,15 +1473,21 @@
     
     // @define a property type
     O.property.define = function(id, factory, entityPatcher) {
+        
         var type = {
             entityPatcher: entityPatcher, 
             factory: factory
         };
+        
         var p = id.lastIndexOf(' extends ');
+        
         if (p !== -1) {
+            
             type.superTypeId = id.substring(p+9);
             id = id.substring(0,p);
+            
         }
+        
         TYPES[id] = type;
     } 
 
@@ -1143,37 +1500,58 @@
 
 // @bind property value with expression
 Object.property.bind =  (function(O) {
+    
     // parses and compile binding from expression
     var compileTemplate = function(s, tId){
+        
         var  posB, posE = 0, src = [], path, p, prop, eId;
+        
         while (	((posB = s.indexOf('${', posE)) > -1)&& ((posE = s.indexOf('}', posB)) > -1) ) {
+            
             path = s.substring(posB + 2, posE);
-            if (!Array.findById(src,path)) {
-                var req = (path[0]==='*');
-                if ((path[0]===' ') || req) {
-                    path = path.substring(1);
-                }
-                if ((p = path.lastIndexOf('.'))==-1) {
-                    eId  =path;
-                    path +='.value';
-                    prop = 'value';
-                } else {
-                    eId = path.substring(0,p);
-                    prop = path.substring(p+1);
-                }
-                if (eId==='@' || eId==='this') {
-                    eId = tId;
-                    path = eId+'.'+prop;
-                }
+
+            var req = (path[0]==='*');
+
+            if ((path[0]===' ') || req) {
+
+                path = path.substring(1);
+
+            }
+
+            if ((p = path.lastIndexOf('.'))==-1) {
+                    
+                eId  =path;
+                path +='.value';
+                prop = 'value';
+                    
+            } else {
+                    
+                eId = path.substring(0,p);
+                prop = path.substring(p+1);
+                    
+            }
+                
+            if (eId==='@' || eId==='this') {
+                    
+                eId = tId;
+                path = eId+'.'+prop;
+                    
+            }
+            
+            if (!Array.findByAttr(src,path)) {
+                
                 src.push({
                     id: path,
                     required : req,
                     entityId : eId ,
                     propName : prop
                 });
+                
             }
+            
             s= s.substring(0, posB) + '$V["' + path + '"]' + s.substring(posE + 1)
         }
+        
         return {
             sources:src,
             body : s
@@ -1181,57 +1559,79 @@ Object.property.bind =  (function(O) {
     };
 
     // collect source values
-    var fnValues = function (p)
+    var collectValuesFromSources = (function (p)
     {
+        
+        if (this.__incomplete) {
+            return;
+        }
+        
         var w = O.entity(p.entityId);
-        if (w) {
+        if (!w) {
+            
+            // if not all sources ready - prevent binding
+            this.__incomplete = true;
+            
+        } else {
+            
             this[p.id] = w._get(p.propName);
+        
             if (p.required && !(this[p.id])) {
-                return true; 
+            
+                this.__incomplete = true;
+            
             }
         }
-        return !w;
-    };
+        
+        
+    }).iterator();
     
     // subscriber callback
     var subscriberCb = function (rec, obj) {
+        
         this.addFinalizer(function() {
             O.unlisten._removeRecord(rec, obj);
         });
     };
         
     return function(T, propName, value) {
-        var bind = null;
-        if (typeof(value)==='function') {
-            
-            bind = value;
-            
-            O.listen(T.id, bind, T, subscriberCb)
-            
-        } else {
-            
-            var compiled = compileTemplate(value, T.id);
         
-            try {
-                var fn = new Function('$V', 'return ' + compiled.body + ';');
-            } catch (ex) {
+        var bind = null, fn;
+            
+        var compiled = compileTemplate(value, T.id);
+        
+        try {
+                
+            fn = new Function('$V', 'return ' + compiled.body + ';');
+            
+        } catch (ex) {
+             
+            fn = function() {
                 O.error.log(O.error.BAD,'Wrong binding expression: '+ex.message, compiled.body);
+                return ex.message;
             }
-        
-            // event handler
-            bind= function(ev){
-                var values = {};
-                // if not all sources ready - prevent binding
-                if (!fnValues.searchArray(compiled.sources,values)) {
-                    if (ev && ev.entity && !values[ev.entity.id+'.'+ev.propId]){
-                        values[ev.entity.id+'.'+ev.propId] = ev.value;
-                    }
-                    T.setProperty(propName,fn.call(T, values));
-                }
-            };
-            // subscribe all
-            for (var i=0, ps = compiled.sources, l= ps.length; i<l; O.listen(ps[i++].id, bind, T, subscriberCb)) {}
+                
         }
+        
+        // event handler
+        bind= function(ev){
+                
+            var values = collectValuesFromSources(compiled.sources, {});
+                
+            if (!values.__incomplete) {
+                    
+                if (ev && ev.entity && !values[ev.entity.id+'.'+ev.propId]){
+                        
+                    values[ev.entity.id+'.'+ev.propId] = ev.value;
+                }
+                    
+                T.setProperty(propName,fn.call(T, values));
+            }
+                
+        };
+            
+        // subscribe all
+        for (var i=0, ps = compiled.sources, l= ps.length; i<l; O.listen(ps[i++].id, bind, T, subscriberCb)) {}
         
         // perform binding immediately!!!
         bind();
@@ -1246,86 +1646,114 @@ Object.property.bind =  (function(O) {
  */ 
 Object.property.define("*", function(propId) {
     
-    var _undef, O = Object
-    ,
+    var _undef, O = Object;
+    
     // async value adapter. used in setAsyncValue() callback by default.
-    _asyncAdapter = function(err, value) { 
+    var _asyncAdapter = function(err, value) { 
         return value;
     }
-
+    
+    var OBJ_VALUE_NULL = {
+        value:null
+    };
 
     return {
+        
         // invoked when property attached to entity type
         // by default applies patches to entity type
         attachToEntityCtor: function(ctor){
-            var eps = this.type.entityPatchers;
-            if (eps) {
-                for(var i=0, l=eps.length, proto = ctor.prototype; i<l; ctor.applyMethods.call(proto, eps[i++])) {}
-            }
+            
+            Function.iterate(ctor.applyMethods, this.type.entityPatchers, ctor.prototype);
+            
         }
         ,
         // Property initialization for given entity
         // invoked at entity.init()
         // @param T  entity instance
         init : function(T) {
+            
             var v = T[propId];
+            
             // set initial value if any
             if (v !== _undef) {
+                
                 delete T[propId];
+                
                 T._set(propId,{
                     value:v
                 }, _undef, true);
+                
             }
+            
             // dynamically init async url if any
             if ((T[propId+'Url'] !== _undef) || (T[propId+'UrlExpression'] !== _undef)) {
+                
                 O.property(propId+'Url').init(T);
+                
             }
+            
             //bind expression if any
             if ((v=T[propId+'Expression']) !== _undef) {
+                
                 O.property.bind(T, propId, v);
+                
             }
+            
             T.addFinalizer(this.done);
+            
         }
         ,
         // finalizer for given property
         // invoked at entity.done()
         // @param T  entity instance
         done : function(T) {
+            
             delete T[propId];
+            
         }
         ,
         // value comparator
         comparator : function(v1, v2) {
+            
             return v1 === v2;
+            
         }
         ,
         // value setter.
         // Indirect value persisting realization.
         // @this entity instance
         setter : function(value) {
+            
             return this[propId] = value;
+            
         }
         ,
         // @get property value.
         // @param T  entity instance
         getValue : function(T) {
+            
             return T[propId];
+            
         }
         ,
         // Callback used in Sets property value from async url.
         // used in Property.setAsyncValue() as callback
         // calls event adapters: from entity or default if none
         createAsyncValueCallback : function(T) { 
+            
             return  function(err, value) {
-                if(!T._done) {
-                    T._set(propId, (T[propId+"AsyncAdapter"] || _asyncAdapter).call(T,err, value));
-                }
+                
+                !T._done && T._set(propId, (T[propId+"AsyncAdapter"] || _asyncAdapter).call(T,err, value));
+            
             };
+            
         }
         ,
         // @set async property value.
         setAsyncValue : function(T, url) {
+            
             O.notify(url, this.createAsyncValueCallback(T));
+            
         }
         ,
         // @set property value. 
@@ -1336,174 +1764,143 @@ Object.property.define("*", function(propId) {
         // @param force forces value set flow regardless comparator
         setValue : function(T, ev, url, force) {
 
-            var v = ev.value,  oldV;
-            if ((v !== _undef) && (force || !this.comparator(v, (oldV = this.getValue(T)))) ) {//
+            var v = ev.value,  oldV, hook;
+            
+            if ((v !== _undef) && (force || !this.comparator(v, (oldV = this.getValue(T)))) ) {
+                
                 ev.entity=T;
+                
                 ev.oldValue = oldV;
+                
                 // actually set
                 this.setter.call(T, v, ev);
+                
                 // async set for target property
-                if (this.asyncTarget && v) {
-                    T._set(this.asyncTarget, O.update(O.clone(ev),{
-                        value:null
-                    }), v );
-                }
+                this.asyncTarget && v && T._set(this.asyncTarget, O.clone(ev, OBJ_VALUE_NULL), v);
+                
                 // hook
-                var hook = T[propId+"Changed"];
-                hook && hook.call(T, ev, v);
+                (hook = T[propId+"Changed"]) && hook.call(T, ev, v);
+                
                 // notify dependensies
                 T.notifyPropertyChanged(propId, ev);
             }
-            if (url) {
-                this.setAsyncValue(T, url)
-            }                 
+            
+            url && this.setAsyncValue(T, url);
+                             
         }
     };
 });
-
-/**
- * Axio:Entity. Entity framework.
- * Define [EventHandlerReady] property type
- * 
- */
-Object.property.define('EventHandlerReady'
-    ,
-    null
-    ,
-    function(_super) {
-        var hIterator = (function (ev) {
-            this.handleEventImpl(ev);
-        }).iterator();
-        
-        return {
-            // handles Event 
-            handleEvent : function(ev){
-                if (!this.isReady(ev)) {
-                    // The execution stack is to buffer up events.
-                    (this.deferedEvents || (this.deferedEvents=[])).push(ev);
-                } else {
-                    this.handleEventImpl(ev);
-                }
-            }
-            ,
-            // @return true if handler is ready to perform events
-            isReady:function(ev) {
-                return this.ready;
-            }
-            ,
-            // @set ready flag to true
-            setReady:function() {
-                this.setProperty('ready', true);
-            }
-            ,
-            // @set ready flag to true
-            unsetReady:function() {
-                this.setProperty('ready', false);
-            }
-            ,
-            // evaluate defered events
-            readyChanged:function(_ev, ready) {
-                if (ready) {
-                    var evs = this.deferedEvents;
-                    this.deferedEvents = null;
-                    hIterator(evs, this);
-                }
-            }
-            ,
-            // handles Event implementation
-            handleEventImpl: function(ev) {
-                (this.eventHandlers||this)[ev.uri.host].call(this, ev);
-                this.incrementProperty('eventCounter');
-            }
-        }
-    });
 /* 
  * Axio: Basic property types.
  */
         
 // @property [nonequal].
 Object.property.define('nonequal', function(propId) { 
+    
     return {
         // value comparator
         comparator : function() {
+            
             return false; // compares to not match
+            
         }
-    }
+    };
+    
 });
 
 // @property [boolean].
 Object.property.define('boolean', function(propId) { 
+    
     return {
         // setter
         setter : function(v) {
+            
             return this[propId] = !!v;// narrow to boolean
+            
         }
         ,
         // value comparator
         comparator : function(a, b) {
+            
             return (!a)==(!b); // compares as boolean
+            
         }
     }
+    
 });
 
 // @property [number].
 Object.property.define('number', function(propId) { 
+    
     return {
 
         // setter
         setter : function(v) {
+            
             // narrow to number or 0 by default
             return this[propId] = v && Number(v) || 0;
+            
         }
         ,
         // value comparator
         comparator : function(a, b) {
+            
             return Number(a)===Number(b);
+            
         }
-    }
+    };
+    
 });
 
 // @property [date].
 Object.property.define('date', function(propId) { 
+    
     return {
 
         // value comparator
         comparator : function(a, b) {
+            
             return Date.compare(a, b)==0;
+            
         }
-    }
+    };
+    
 });
 
 // @property [value].
-Object.property.define('value'
-    ,
-    null
-    ,
-    function(_super) {
+Object.property.define('value', null, function(_super) {
     
-        return {
-            // @get value 
-            getValue : function() {
-                return this.getProperty('value');
-            }
-            ,
-            // @set value 
-            setValue : function(v) {
-                this._set('value', v);
-            }
-            ,
-            // @check if value is empty
-            isEmptyValue : function(e) {
-                return !this.getValue();
-            }
-            ,
-            // @check if value equals to 
-            hasValue : function(v){
-                return v && (this.getValue()===(''+v));
-            }
+    return {
+            
+        // @get value 
+        getValue : function() {
+                
+            return this.getProperty('value');
+                
+        }
+        ,
+        // @set value 
+        setValue : function(v) {
+                
+            this._set('value', v);
+                
+        }
+        ,
+        // @check if value is empty
+        isEmptyValue : function(e) {
+                
+            return !this.getValue();
+                
+        }
+        ,
+        // @check if value equals to 
+        hasValue : function(v){
+                
+            return v && (this.getValue()===(''+v));
+                
         }
     }
-    );
+});
         
         
 /* 
@@ -1514,7 +1911,8 @@ Object.property.define('value'
 // It provides value range logic.
 Object.property.define('valueRange'
     ,
-    function(propId) { 
+    function(propId) {
+        
         return {
 
             //patch entity type with some related methods.
@@ -1522,49 +1920,67 @@ Object.property.define('valueRange'
             ,
             // value setter
             setter : function(v) {
+                
                 var v0 = this.valueRangePartAdapter(v[0]);
                 var v1 = this.valueRangePartAdapter(v[1]);
+                
                 this._valueRangeLocked = (this._valueRangeLocked||0)+1;
+                
                 this.setProperty('valueMin', v0);
                 this.setProperty('valueMax', v1);
                 this.setProperty('value', this.valueFromParts(v0, v1));
+                
                 this._valueRangeLocked--;
+                
                 this[propId] = [v0, v1];
+                
                 return v;
             }
             ,
             // value comparator
             comparator : function(a,b) {
+                
                 return (!a && !b) || (a && b && a.length>1 && (a.length===b.length) && (a[0]===b[0]) && (a[1]===b[1]));
+                
             }
-    
         }
     }
     ,
     // patch entity type attached to
     function(_super) {
+        
         return {
         
             //@hook on [value] value is changed
             valueChanged : function(ev,v) {
+                
                 if (!this._valueRangeLocked) {
+                    
                     this._valueRangeLocked = (this._valueRangeLocked||0)+1;
+                    
                     this.setProperty('valueRange', (v && v.split && (v=v.split('-')) && (v.length>1)) ? v : [null,null] );
+                    
                     _super.valueChanged.call(this, ev, v);
+                    
                     this._valueRangeLocked--;
+                    
                 }
             }
             ,
             //@hook on [valueMin] value is changed
             valueMinChanged : function(ev, v) {
+                
                 if (!this._valueRangeLocked) {
+                    
                     this.setProperty('value', this.valueFromParts(v,this.valueMax));
                 }
             }
             ,
             //@hook on [valueMax] value is changed
             valueMaxChanged : function(ev, v) {
+                
                 if (!this._valueRangeLocked) {
+                    
                     this.setProperty('value', this.valueFromParts(this.valueMin,v) );
                 }
             }
@@ -1574,9 +1990,10 @@ Object.property.define('valueRange'
             ,
             // @get value from parts
             valueFromParts : function(min,max) {
+                
                 return ''+(min||'') + '-' + (max||'');
+                
             }
-
         }
     });
 
@@ -1589,46 +2006,72 @@ Object.property.define('multiValue'
     , 
     // patch entity type attached to
     function(_super) {
+        
         return {
+            
             valueChanged : function(ev, v) {
+                
                 this.setProperty('mvalue',  v ? ((v.split && v.length) ? v.split(this.mvalueSeparator||",") : [''+v]) : []);
+                
                 _super.valueChanged.call(this, ev, v);
+                
             }
             ,
             getMultiValue : function(){
+                
                 return this.mvalue || [];
+                
             }
             ,
             hasValue : function(v){
+                
                 return v && (this.getMultiValue().indexOf(''+v) != -1);
+                
             }
             ,
             putIntoMultiValue : function(pk, v){
-                if (!pk)
+                
+                if (!pk) {
                     return;
+                }
+                
                 var mv = this.getMultiValue();
+                
                 pk = '' + pk;
+                
                 var contained = (mv.indexOf(pk) != -1);
                 var changed = false;
+                
                 if (v === -1){
+                    
                     v = contained ? 0 : 1;
+                    
                 }
+                
                 if ((v) && !contained){
+                    
                     mv.push(pk);
                     changed = true;
+                    
                 }
+                
                 if ((!v) && contained){
+                    
                     for ( var i = 0, l = mv.length; i < l; i++){
+                        
                         if (pk === mv[i]){
+                            
                             mv.splice(i, 1);
                             changed = true;
+                            
                             break;
+                            
                         }
                     }
                 }
-                if (changed){
-                    this.setValue(mv.sort().join(this.mvalueSeparator));
-                }
+                
+                changed && this.setValue(mv.sort().join(this.mvalueSeparator));
+                
             }
         }
     });
@@ -1644,19 +2087,23 @@ Object.property.define('batchedProperties'
         var _undef;
         return  {
             init : function() {
-                //
+                
                 this._changeEvent = {
                     entity:this, 
                     counter:0, 
                     delta : {}
                 };
+                
                 _super.init.call(this);
+                
             }
             ,
             // do something inside batch
             batch : function (fn) {
+                
                 this._touch.counter++;
-                fn&& fn.apply(this, Array.slice(arguments,1));
+                fn&& fn.apply(this, Array.prototype.slice.call(arguments,1));
+                
                 if (!(--this._touch.counter)) {
                     this.changed();
                 }
@@ -1664,12 +2111,15 @@ Object.property.define('batchedProperties'
             ,
             // @hook on touch ended
             changed : function () {
+                
                 this.notifyPropertyChanged('changed',this._changeEvent);
                 this._changeEvent.delta = {};
+                
             }
             ,
             // @set property value
             _set : function (key, val, asyncUrl, force) {
+                
                 // prevent execution for finalized entity
                 if (!this._done) {
                     if (val && (val.value!==_undef || val.asyncUrl)) {
@@ -1684,13 +2134,18 @@ Object.property.define('batchedProperties'
                             value:val
                         };
                     }
+                    
                     var che = this._changeEvent;
                     che.delta[key]=val.value;
                     che.counter++;
+                    
                     this._prop(key).setValue(this, val, asyncUrl, force);
+                    
                     if (!(--che.counter)) {
+                        
                         this.changed();
-                    };
+                        
+                    }
                 }
             }
         }
@@ -1706,8 +2161,10 @@ Object.property.define('valueBundle'
     ,
     // patch entity type attached to
     function(_super) { 
+        
         var     
         __allKeys = function(obj) {
+            
             var r={};
             for (var key in obj) {
                 r[key] = null;
@@ -1730,25 +2187,35 @@ Object.property.define('valueBundle'
         ;
         
         return  {
+            
             setValue : function(d) {
+                
                 this._set('value', d||__allKeys(this.value));
+                
             }
             ,
             _get : function (key) {
+                
                 return (key==='value')?this.value:(this.value?this.value[key]:null);
+                
             }
             ,
             _set : function (key, v) {
+                
                 var _undef;
                 if (!this._done) {
+                    
                     if (!(v && (v.value!==_undef))) {
                         v = {
                             value:v
                         };
                     }
+                    
                     if (!this.write_counter) {
+                        
                         this.write_counter=1;
                         var delta;
+                        
                         if (key!=='value')
                         {
                             delta = {}
@@ -1756,19 +2223,26 @@ Object.property.define('valueBundle'
                         } else {
                             delta = v.value; 
                         }
+                        
                         this.update(delta);
                         this.write_counter--;
+                        
                     } else {
+                        
                         this.delayedDelta = this.delayedDelta||{}
                         this.delayedDelta[key] = v.value;
+                        
                     }            
                 }
             }
             ,
             update : function(dd) {
+                
                 var T=this, v = Object.clone(dd), oldV = Object.clone(T.value||{});
                 var deltaArr = __actualDelta(v, oldV);
+                
                 if (deltaArr.length) {
+                    
                     if (this.__update(v, false, oldV)) {
                         
                         var ev1 = {
@@ -1776,9 +2250,11 @@ Object.property.define('valueBundle'
                             oldValue:oldV,  
                             value: T.value
                         }
+                        
                         // hook
                         var hook = T.valueChanged;
                         hook && hook.call(T, ev1, ev1.value);
+                        
                         // notify
                         T.notifyPropertyChanged( 'value', ev1);
                     }
@@ -1786,8 +2262,10 @@ Object.property.define('valueBundle'
             }
             ,
             __update : function(delta, hasChanges, oldV) {
+                
                 this.value = this.value||{};
                 var T=this, deltaArr = __actualDelta(delta, oldV);
+                
                 for (var i=0;i<deltaArr.length;i++) {
                     var e=deltaArr[i], id=e.id;
                     var ev0 = {
@@ -1804,16 +2282,105 @@ Object.property.define('valueBundle'
                     T.notifyPropertyChanged(id, ev0);
                     hasChanges = true;
                 }
+                
                 if (this.delayedDelta) {
                     delta = T.delayedDelta;
                     T.delayedDelta = null;
                     return T.__update(delta, hasChanges, oldV);
                 }
+                
                 return hasChanges;
             }
         }
     });
 
+/**
+ * Axio:Entity. Entity framework.
+ * Define [EventHandlerReady] property type
+ * 
+ */
+Object.property.define('EventHandlerReady'
+    ,
+    null
+    ,
+    function(_super) {
+        
+        var hIterator = (function (ev) {
+            
+            this.handleEventImpl(ev);
+            
+        }).iterator();
+        
+        // no handler stub
+        var HANDLER_STUB = function(ev) {
+            ev.callback(Object.error.BAD, 'No operation defined: '+this.id+'.'+ev.uri.host)
+        }; 
+            
+        return {
+            // handles Event 
+            handleEvent : function(ev){
+                
+                if (!this.isReady(ev)) {
+                    
+                    // The execution stack is to buffer up events.
+                    (this.deferedEvents || (this.deferedEvents=[])).push(ev);
+                    
+                } else {
+                    
+                    this.handleEventImpl(ev);
+                    
+                }
+            }
+            ,
+            // @return true if handler is ready to perform events
+            isReady:function(ev) {
+                
+                return this.ready;
+                
+            }
+            ,
+            // @set ready flag to true
+            setReady:function() {
+                
+                this.setProperty('ready', true);
+            }
+            ,
+            // @set ready flag to true
+            unsetReady:function() {
+                
+                this.setProperty('ready', false);
+            }
+            ,
+            // evaluate defered events
+            readyChanged:function(_ev, ready) {
+                
+                if (ready) {
+                    
+                    var evs = this.deferedEvents;
+                    this.deferedEvents = null;
+                    hIterator(evs, this);
+                    
+                }
+            }
+            ,
+            // handles Event implementation
+            handleEventImpl: function(ev) {
+                
+                ((this.eventHandlers||this)[ev.uri.host] || HANDLER_STUB).call(this, ev);
+                
+                this.incrementProperty('eventCounter');
+                
+            }
+        }
+    });
+    
+// @define The basic [EventHandler] entity type.
+Object.entity.define('EventHandler', {
+        
+    properties:['EventHandlerReady:ready']
+    ,
+    ready: true // ready by default
+});
 
 
 /**
@@ -1834,44 +2401,6 @@ Object.parsers = {
     'json': Object.parse,
     'uri': Object.parseUri
 };
-
-//## Remoting for code modules
-Object.require = function(_cache) {
-    var _eachItem = (function(x) {
-        
-        // ship empty or already cached
-        if (!x || _cache[x]) return;
-        
-        // normalize/create event
-        var u = Object.parseUri(x);
-        
-        // use [script] source by default or with http type
-        u.kind = u.kind || ((!u.type || (u.type=='http')) ? 'script' : u.type );
-         
-        // create callback wrapper
-        var _cb = this.cb(), callback = function(err){
-            if (err) {
-                Object.error.log('Can\'t load required script: '+x);
-            } else {
-                _cache[x] = x;
-            }
-            _cb.apply(this, arguments);
-        };
-        
-        // notify with event
-        Object.notify(u, callback);
-    }).iterator()
-    , 
-    _starter = [function(list) {
-        _eachItem(list, this);
-        this();
-    }];
-
-    return function(list, cb) {
-        Function.perform(_starter.concat(cb), list);
-    };
-}({});
-
 
 //## Remoting source with XMLHttpRequest
 (function(_win) {
@@ -1951,7 +2480,7 @@ Object.require = function(_cache) {
     Object.entity.create({
         id:'EventHandler:default', 
         handleEventImpl: _perform
-    });    
+    });      
     Object.entity.create({
         id:'EventHandler:remote', 
         handleEventImpl: _perform
@@ -2050,6 +2579,7 @@ Object.require = function(_cache) {
         Object.dom.appendToHead(script);
     };
     
+  
     Object.entity.create({
         id:'EventHandler:script', 
         handleEventImpl: _handler
@@ -2326,6 +2856,7 @@ Object.dom = (function(_win){
                 meta.parentEntity = this.parentEntity;
                 try {
                     //Object.debug('widget', id, meta);
+                    
                     Object.entity.create(meta);
                 } catch (ex) {
                     Object.error.log('wrong_widget', ex.message, meta);
@@ -2369,54 +2900,70 @@ Object.dom = (function(_win){
 
 
 /* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Web Storage.
  */
-// Web Storage
-Object.entity.define('WebStorage', {
-    properties: ['valueBundle:value']
-    ,
-    storage: window.localStorage
-    ,
-    methods : function (_super) {
-        return {
-            init : function() { 
-                if (!this.storage) {
-                    this.storage = {
-                        getItem: function(key) { return this[key]; }
-                        ,
-                        setItem: function(key, value) { this[key]=value; }
-                    }
+(function(global){
+    
+    var STORAGE_STUB = {
+        getItem: function(key) {
+            return this[key];
+        }
+        ,
+        setItem: function(key, value) {
+            this[key]=value;
+        }
+    };
+
+    Object.entity.define('WebStorage', {
+        properties: ['valueBundle:value']
+        ,
+        storage: global.localStorage || STORAGE_STUB
+        ,
+        methods : function (_super) {
+        
+            return {
+                init : function() { 
+                    
+                    
+                    this.initStorage();
+                    
+                    _super.init.call(this);
+                    
                 }
-                this.initStorage();
-                _super.init.call(this);
-            }
-            ,
-            initStorage: function() {
-                var s = this.storage.getItem(this.id);
-                this.value = s && Object.parse(s) || this.value || {};
-            }
-            ,
-            valueChanged : function(ev, val) {
-                _super.valueChanged.call(this, ev, val);
-                this.persistValue(val) ;
-            }
-            ,
-            persistValue : function(s) {
-                s  = JSON.stringify(s);
-                if (this.storage[this.id] != s) {
-                    //Object.debug('Persist::'+this.id, s);
-                    try {
-                        this.storage.setItem(this.id, s);
-                    }
-                    catch (e) {
+                ,
+                initStorage: function() {
+                    
+                    var s = this.storage.getItem(this.id);
+                    this.value = s && Object.parse(s) || this.value || {};
+                    
+                }
+                ,
+                valueChanged : function(ev, val) {
+                    
+                    _super.valueChanged.call(this, ev, val);
+                    
+                    this.persistValue(val) ;
+                    
+                }
+                ,
+                persistValue : function(s) {
+                    
+                    s  = JSON.stringify(s);
+                    if (this.storage[this.id] != s) {
+                        //Object.debug('Persist::'+this.id, s);
+                        try {
+                            this.storage.setItem(this.id, s);
+                        }
+                        catch (e) {
                         //Object.error.log('Persist::'+this.id, s, e);
+                        }
                     }
-                }
-            }       
-        };
-    }
-});
+                }       
+            };
+        }
+    });
+
+})(this);
 
 /* 
  * Axio Web client: local caching.
@@ -2426,7 +2973,7 @@ Object.entity.define('WebStorage', {
 Object.createVersionedCacheSource = function (config) { 
     var  _cache = {}
     ,
-    _lstorage = window.localStorage
+    _lstorage = window[(config.scope||'local')+'Storage']
     ,
     _ver = config.version || '0'
     ,
@@ -2435,7 +2982,13 @@ Object.createVersionedCacheSource = function (config) {
     _urlTemplate = config.urlTemplate || "{0}"
     ,
     _unmarshaller = config.unmarshaller || Function.NONE; // force plain result
+
+
+    if (typeof(_ver)=='function') {
+        _ver = _ver(config);
         
+    }
+
     if ((_ver==-1) || !_lstorage){
         return config.noVersionHandler || function(ev){
             var u = ev.uri, id = u.id.substring(2);
@@ -2474,9 +3027,9 @@ Object.createVersionedCacheSource = function (config) {
                 if (err) {
                     Object.error.log('fetch data for versioned cache',id , err);
                 } else if (data) {
-                    rr = _cache[id] = _cacheDeserializer.call(id, data);
+                    rr = _cache[id] = (typeof(data)==='object')?data:_cacheDeserializer.call(id, data);
                     try {
-                        _lstorage.setItem(key, (_ver+":"+data));
+                        _lstorage.setItem(key, (_ver+":"+((typeof(data)==='object')?JSON.stringify(data):data)));
                     }
                     catch (e) {
                     // Object.log('set item of versioned cache', id,  e);
@@ -2508,7 +3061,15 @@ Object.cache = {
             handleEvent: this.createSource({
                 version: version, 
                 urlTemplate: '[remote]'+urlTemplate,
-                cacheDeserializer: Object.eval
+                cacheDeserializer: function(s) {
+                    try {
+                        (Function.call(Function, s))()
+                        return true;
+                    } catch (ex) {
+                        Object.error.log(Object.error.BAD, 'JS syntax: '+ex.message,s);
+                    }
+                    return null;
+                }
                 ,
                 noVersionHandler:function(ev) {
                     var u = ev.uri;
@@ -2548,6 +3109,8 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
     ,
     version:-1
     ,
+    scope : 'local'
+    ,
     methods : function (_super) {
         return {
             init : function() {
@@ -2556,7 +3119,8 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
                 this.handleEventImpl = Object.createVersionedCacheSource({
                     version: this.version, 
                     urlTemplate: this.urlTemplate,
-                    cacheDeserializer : this.cacheDeserializer
+                    cacheDeserializer : this.cacheDeserializer,
+                    scope: this.scope
                 });
             }
         }
@@ -2594,7 +3158,7 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
             // first value init
             init : function(T)
             {
-                 var node = T.domNode;
+                var node = T.domNode;
                 // create if none
                 if (!node) {
                     var attrs={}
@@ -2623,10 +3187,13 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
             done : function(T)
             {
                 var e = T.domNode;
+                
                 if (e)
                 {
                     $D.removeElement(e);
+                    
                     e.entity = null;
+                    
                     delete T.domNode;
                     delete T.contentNode;
                 }
@@ -2638,7 +3205,9 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
         return {
             // Sets UI style attributes
             init : function() {
+                
                 _super.init.call(this);
+                
             }
         }
     });
@@ -2653,22 +3222,29 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
             init : function(T)
             {
                 var r = T.domNode;
+                
                 if (T.css) {
                     r.style.cssText += T.css;
                 }
+                
                 if (T.styleExpression) {
                     Object.property.bind(T, this.id, T.styleExpression);
                 }
+                
                 T.updateDomNodeClass((T.style||'') +' '+(r.className||''));
+                
             }
             ,
             //@get value getter.
             getValue : function(T) {
+                
                 return T.domNode.className;
+                
             }
             ,
             //@setter value
             setter : function(v, ev) {
+                
                 if (typeof v === 'string') {
                     this.updateDomNodeClass(v);
                 } else {
@@ -2684,6 +3260,7 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
             // Sets UI style attributes
             domNodeStyle : function(delta) {
                 var v,n, st = this.domNode.style;
+                
                 if (delta) {
                     for (n in delta) {
                         v = delta[n];
@@ -2692,17 +3269,22 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
                         }
                     }
                 }
+                
                 return st;
             }
             ,
             // Updates UI style class
             updateDomNodeClass : function(delta) {
+                
                 Object.dom.updateClass(this.domNode, delta);
+                
             }
             ,
             // Sets/Unsets UI style class
             toggleDomNodeClass : function(cl, flag) {
+                
                 Object.dom.updateClass(this.domNode, (flag?cl:('!'+cl)));
+                
             }
         }
     }
@@ -2714,8 +3296,11 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
     Object.property.define('hidden', function(propId) { 
         return {
             setter : function(v) {
+                
                 this[propId] = v;
+                
                 this.domNode.style.display =  v ? "none" : (this.displayType||'');
+                
             }
         }
     }
@@ -2724,23 +3309,31 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
         return {
             // Sets an Element "display" flag.
             display : function(f,bForceParents) {
+                
                 this.setHidden(!f);
+                
                 if (f && bForceParents) {
+                    
                     var p = this;
                     while ((p = p.parentEntity)) {
                         p.display(f);
                     }
+                    
                 }
             }
             ,
             // switches an Element "display" flag.
             switchDisplay : function() {
+                
                 this.setHidden(!this.hidden);
+                
             }
             ,
             // sets an Element "visible" flag.
             setHidden : function(f) {
+                
                 this._set('hidden',f);
+                
             }
         }
     }
@@ -2754,23 +3347,44 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
     Object.property.define('children'
         ,
         function(propId, _super) { 
+            
+            var _addOp  =function(T, e, ch){
+                return function(){
+                    
+                    var cb = this.cb();
+                    
+                    T.createChild(e, function(err, e){
+                        e && ch.push(e);
+                        cb();
+                    });
+                                            
+                    return true;
+                }
+            };
+            
             return {
+                
                 // Callback used in Sets property value from async url.
                 // used in Property.setAsyncValue() as callback
                 // calls event adapters: from entity or default if none
                 createAsyncValueCallback : function(T) { 
+                    
                     return  function(err, value) {
                         if(!T._done) {
                             T.updateDomNodeClass('!ui-busy');
                             T._set(propId, T.childrenAsyncAdapter(err, value));
                         }
                     };
+                    
                 }
                 ,
                 // Sets property value from async url.
                 setAsyncValue : function(T, url) {
+                    
                     T.updateDomNodeClass('ui-busy');
+                    
                     _super.setAsyncValue.call(this,T,url);
+                    
                 }
                 ,
                 // sets value
@@ -2778,7 +3392,9 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
                 {
                     // checks if code dependencies specified
                     var requires  =ev.requires || T.childrenRequires;
+                    
                     if (requires) {
+                        
                         var p = this;
                         Object.require(requires, function (err) {
                             ev.requires = T.childrenRequires = null;
@@ -2787,25 +3403,36 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
                             }
                             p.setValue(T,ev);
                         });
+                        
                     } else {
+                        
                         if (url) {
                             this.setAsyncValue(T, url);
                         } else {
+                            
                             // removes all currently added
                             T.removeAllChildren();
                             var v = (T.childrenAdapter||Function.NONE).call(T, ev.value, ev);
                             //T.trace('set children',v);
+                            
+                            var ops = [];
+                            
                             if (v && v.length > 0) {
                                 var ch = T.getChildren();
                                 for ( var i = 0, l = v.length,e; i < l; i++) {
                                     e = v[i];
                                     if (e) {
-                                        ch.push(T.createChild(e, true));
+                                        ops.push(_addOp(T, e, ch));
                                     }
                                 }
                             }
+                            
                             // callback into entity if exists
-                            T.childrenChanged && T.childrenChanged(ev, v);
+                            ops.push(function(){
+                                T.childrenChanged && T.childrenChanged(ev, v);
+                            });
+                            
+                            Function.perform(ops);
                         }
 
 
@@ -2813,9 +3440,11 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
                 }
                 ,
                 done : function(T) {
+                    
                     // cascade done
                     T.removeAllChildren();
                     _super.done.call(this, T);
+                    
                 }
             }
         }
@@ -2824,7 +3453,7 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
         function(_super) {
             return {
                 // Creates a new child.
-                createChild : function(r, inBatch){
+                createChild : function(r, cb){
                     if (Array.isArray(r)) {
                         var ch = (r.length>1)?Array.slice(r,1):null;
                         r = (typeof(r[0])==='string')?Object.entity.create.parseMeta(r[0]):r[0]
@@ -2835,17 +3464,22 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
 
                     r = (typeof(r)==='string')?Object.entity.create.parseMeta(r):r;
 
+                    if (!cb) {
+                        var T = this;
+                        cb = function(err, e) {
+                            T.getChildren().push(e);
+                            T.childrenChanged && T.childrenChanged({
+                                value:[r]
+                            });
+                        }
+                    }
+
                     var e = Object.entity.create(Object.update({
                         id:'box', 
                         parentEntity : this
-                    },r));
+                    },r), cb);
                     
-                    if (!inBatch) {
-                        this.getChildren().push(e);
-                        this.childrenChanged && this.childrenChanged({
-                            value:[r]
-                        });
-                    }
+
                     return e;
                 }
                 ,
@@ -2856,27 +3490,35 @@ Object.entity.define('CachedResourceProvider extends EventHandler', {
                 ,
                 // invokes done() for each and then removes all children
                 removeAllChildren : (function() {
+                    
                     var _iterator_done = (function(v){
                         v.done();
                     }).iterator();
+                    
                     return function()
                     {
                         this._children = _iterator_done(this._children, []);
                     }
+                    
                 })()
                 ,
                 // creates a set of children by given {#meta}
                 setChildren : function(meta) {
+                    
                     this._set('children', meta);
+                    
                 }
                 ,
                 // @adopt async value.
                 childrenAsyncAdapter : function(err, value) {
+                    
                     if (err) {
+                        
                         value = [{
                             id:'html',
                             html:String.localize(err.reason||'unknown_error')
                         }];
+                    
                     }
                     return value;
                 }
@@ -3112,171 +3754,3 @@ Object.entity.define('List extends box',{
 
 
 
-
-// @define UI [scriptLoader] entity
-Object.entity.define('scriptLoader', {
-    methods: function(_super) {
-
-        return {
-            init : function() {
-                Object.require([this.src], function(){});
-                _super.init.apply(this, arguments);
-            }
-        }
-    }
-}
-);
-
-  (function(global) {
-     /* 
-      * GA tracking API.
-      */   
-
-    // @define [GaTracking] entity
-    Object.entity.define('GaTracking', {
-        methods : function (_super) {
-            return {
-                init : function() { 
-                    var T = this;
-                    
-                    if (!global._gaq ) {
-                        global._gaq=[];
-                    }
-        
-                    if (this.account) {
-                        global._gaq.push(function(){
-                            var tracker  = global._gat.getPropertyTracker(T.account);
-                            if (this.domainName) {
-                                tracker._setDomainName(T.domainName);
-                            }
-                            T.tracker = tracker;
-                        });
-                        this.src = (("https" == global.location.protocol) ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
-                        Object.require([this.src]);
-                        
-                        this.trackPage();
-                    }
-                    _super.init.apply(this, arguments);
-                }
-                ,
-                // page tracking
-                performOp: function(op) {
-                    var T = this;
-                    global._gaq.push(function(){
-                        op.call(T, T.tracker)
-                    });
-                }
-                ,
-                // page tracking
-                trackEvent: function(category, action, label, value, noninteraction) {
-                    this.performOp(function(tracker) {
-                        tracker._trackEvent(category, action, label, value, noninteraction);//info.join('/')
-                    });
-                }        
-                ,
-                // page tracking
-                trackPage: function(ev) {
-                    this.performOp(function(tracker) {
-                        tracker._trackPageview();//info.join('/')
-                    });            
-                }
-                ,
-                // Tracks social interactions
-                trackSocial: function(network, action, target, pagePath) {
-                    this.performOp(function(tracker) {
-                        tracker._trackSocial(network, action, target, pagePath);//info.join('/')
-                    });            
-                }
-            }
-        }
-    });
-   
-})(window)
-/* 
- * Tumblr support.
- */
-var Tumblr = {
-    
-    ICON_DEFAULT: '/img/logo64.png'
-    ,
-    
-    normalizeItemData : function(v) {
-        v.icon = Tumblr.ICON_DEFAULT;
-        if (v.type=='video') {
-                v.name = v["video-caption"];
-                v.description = v['video-player'];
-            } else if (v.type=='photo') {
-                v.name = v["photo-caption"];
-                v.description = '<img src="'+v['photo-url-400']+'"/>';
-            } else  if (v.type=='quote') {
-                v.name = "Цитата";
-                v.description = '<blockquote><p>'+v['quote-text']+'</p><small><cite>'+v['quote-source']+'</cite></small></blockquote>';
-            } else if (v.type=='link') {
-                v.name = String.formatWithMap('<a href="{link-url}">{link-text}</a>',v);
-                v.description = v['link-description'];
-            } else if (v.type=="regular"){
-                v.name = v["regular-title"];
-                v.description = (v['regular-body']||'').replace("<img ", '<img width="140" align="left" style="margin:0 0.5em;" class="img-polaroid"');
-            }
-            return v;
-    }
-    ,
-    normalizeItemDataIterator: (function(v){
-            this.push(Tumblr.normalizeItemData(v));
-    }).iterator()
-};
-
-
-Object.entity.define('TumblrHtml extends html', {
-    htmlTemplate : '<h2>{name}</h2><article>{description}</article>'
-    ,
-    methods: function(_super) {
-        return {
-            // adopt html content
-            htmlAsyncAdapter: function(err, data) {
-                var posts = Object.get(window,'tumblr_api_read.posts');
-                if (!posts || !posts.length) return '<hr/>';
-                return String.formatWithMap(this.htmlTemplate,Tumblr.normalizeItemData(posts[0]));
-            }
-        }
-    }
-});
-
-
-Object.entity.define('TumblrPicOfTheDay extends html', {
-    htmlUrl:'script://grodno-chess.tumblr.com/tagged/pic-of-the-day/json'
-    ,
-    htmlTemplate : '<h4>{photo-caption}</h4><img src="{photo-url-1280}" style="width:100%" width="100%"/>'
-    ,
-    methods: function(_super) {
-        return {
-            // adopt html content
-            htmlAsyncAdapter: function(err, data) {
-                var posts = Object.get(window,'tumblr_api_read.posts');
-                if (!posts ||!posts.length) return '<hr/>';
-                var index = Math.round(Math.random()*(posts.length-1));
-                return String.formatWithMap(this.htmlTemplate,posts[index]);
-            }
-        }
-    }
-});
-    
-Object.entity.define('TumblrNewsList extends List', {
-    itemTemplate:'<a class="pull-left" href="{url}"><img class="media-object" src="{icon}"></a><div class="media-body"><h4 class="media-header">{name}</h4><p>{description}</p></div>'
-    ,
-    itemStyle:'media panel'
-    ,
-    domNodeType:'dl'
-    ,
-    css:'list-style: none;'
-    ,
-    methods: function(_super) {
-        return {
-            // adopt html content
-            dataAsyncAdapter: function(err, data) {
-                this.domNode.innerHTML='';
-                return Tumblr.normalizeItemDataIterator(window.tumblr_api_read.posts, []);
-            }
-        }
-    }
-});
