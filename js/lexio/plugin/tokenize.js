@@ -1,11 +1,23 @@
-Object.entity.define("lexio/plugin/prepare extends lexio/Plugin",{
+// Lexio plugin
+(function () {
+    
+    var _registrator = (function(v, p){
+        this[v] || (this[v] = {
+            id: v
+        });
+    }).iterator();   
+
+    Object.entity.define("lexio/plugin/tokenize extends lexio/Plugin",{
     
     
-             performImpl:function(err, ev) {
+        performImpl:function(err, ev) {
                  
-             var tokens = ev.tokens = ev.input.split(' ');
+            var tokens = ev.tokens = ev.input.split(' ');
+        
+            ev.registry = _registrator(tokens, {});
+        
              
-             var out = ev.prepared = [];
+            var out = ev.prepared = [];
        
             var patt=/([^А-я]+)([А-я,\-]+)/g;
             var src = ev.src, x, w, c;
@@ -28,6 +40,8 @@ Object.entity.define("lexio/plugin/prepare extends lexio/Plugin",{
                     ev.all.push(ev.words[w] = new Word(w, ev));
                 }
             }
-   }
+        }
    
-});
+    });
+
+})();

@@ -28,11 +28,11 @@
             var applySourceData = function(data) {
   
                 Object.update(this, {
-                    roots : registry(data.roots)
+                    ROOTS : registry(data.roots)
                     ,
-                    complexies : registry(data.complexies)
+                    COMPLEXIES : registry(data.complexies)
                     ,
-                    hardcoded : registry(data.hardcoded)
+                    HARDCODED : registry(data.hardcoded)
                     ,
                     COMPLEXIES_TREE : data.complexies.getKeys().makeMatchingTree()
                     ,
@@ -48,7 +48,8 @@
                     CHARS : registry(data.chars)
                 });
             };
-            var META = {}
+            
+            
             return {
                 init: function(){
                 
@@ -68,7 +69,7 @@
                         }
                         ,
                         function(err){
-                            Function.iterate(applySourceData, Array.slice(arguments,2), META)
+                            Function.iterate(applySourceData, Array.slice(arguments,2), T.home)
                             T.parentEntity.setReady();
                         }
                         ], this.sources);
@@ -76,12 +77,8 @@
                 }
                 ,                
                 // implementation of perform on event
-                performImpl: function(err, ev){
-                    if (!ev.meta){
-                        
-                        ev.meta  = META;
-                        
-                    }
+                perform: function(err, ev) {
+                    return ev;
                 }
             };
             

@@ -11,7 +11,6 @@
                 init: function(){
                     
                     this.value =  ">> " + this.input;
-                    this.tokens = this.input.split(' ');
                     
                 }
                 

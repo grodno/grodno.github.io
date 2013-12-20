@@ -12,7 +12,9 @@ Object.entity.define("lexio/Plugin",{
             init: function(){
                 
                 console.log(''+this, 'init');
-                    
+                
+                this.home = this.parentEntity;
+                
                 _super.init.call(this);
                     
             }
