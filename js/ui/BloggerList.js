@@ -1,6 +1,6 @@
 (function(global){
     
-    Object.entity.define('BloggerList extends List', {
+    Object.entity.define('ui/BloggerList extends List', {
         
         itemTemplate:'<div class="media panel-body"><span class="pull-left"><a href="{url}">'+
         '<img class="img-rounded media-object" width="64" src="{icon}">{labels}</a></span>'
@@ -41,6 +41,10 @@
                 
             }).iterator();
             
+            var _htmlAsyncAdapter= function(err, ev) {
+                this.datum.content = ev.value;
+                return String.formatWithMap(this.itemTemplate, this.datum);
+            }
             return { 
                 
                 init : function() {
@@ -56,6 +60,18 @@
                     return normalizeItemDataIterator(Object.get(data,'items'),[], this);
                     
                 }
+                ,
+                childrenItemAdapter :function(datum, i) {
+                    return {
+                        id:'html',
+                        htmlUrl:'lexio://#'+datum.content,
+                        htmlAsyncAdapter: _htmlAsyncAdapter,
+                        itemTemplate: this.itemTemplate,
+                        datum : datum
+                    }
+                }
+                
+                
             }
 
         }  

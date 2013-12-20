@@ -1,7 +1,7 @@
 (function(global) {
 
     //## [] UI component:
-        Object.entity.define('TournamentsList extends List', {
+        Object.entity.define('ui/TournamentsList extends List', {
         itemTemplate:'<hr/><dt><h5>{name} <span style="float:right;" class="label">{date}, {location}</span></h5></dt><dd class="row"><div class="span2"><a href="{url}" target="_blank"><img src="{icon}" class="img-polaroid"/><br/>подробнее...</a></div>'
         ,
         methods: function(_super) {

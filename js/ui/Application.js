@@ -2,9 +2,9 @@
 
     //## [] UI component:
     // @define UI [Application] entity
-    Object.entity.define('Application extends box', {
+    Object.entity.define('ui/Application extends box', {
         
-        siteUrl:'[jsonp]'+APP.SOURCES.SITE
+        siteUrl1:'[jsonp]'+APP.SOURCES.SITE
         ,
         properties:['nonequal:page', 'content', 'site','html:html']
         , 

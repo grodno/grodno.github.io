@@ -61,7 +61,9 @@ h4{
 .margin-left {
     margin-left: 1em;
 }
-
+li.label{
+    cursor: pointer;
+}
 li.label.active{
     background-color: orangered;
 }

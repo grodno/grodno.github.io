@@ -1351,19 +1351,7 @@
                     return '[entity:'+(this.id)+']';
                     
                 }
-                ,
-                // creates property binding expression
-                // !!! implicitly binds in opposite direction.
-                createExpression : function(id, opts) {
-                    
-                    opts  = opts || {};
-                    
-                    var propKey  = (!opts.key || opts.key==='value')?'':String.capitalize(opts.key);
-                    
-                    !opts.readOnly && Object.property.bind(this, id+propKey, '${'+id+'.'+(opts.key || 'value')+'}');
-                    
-                    return '${'+this.id+'.'+id+propKey+'}'
-                }
+
             }
         }
     });
@@ -1499,19 +1487,25 @@
  */
 
 // @bind property value with expression
-Object.property.bind =  (function(O) {
+Object.property.bind =  (function(O, _undef) {
     
     // parses and compile binding from expression
     var compileTemplate = function(s, tId){
         
-        var  posB, posE = 0, src = [], path, p, prop, eId;
+        var  posB, posE = 0, src = [], path, p, prop, eId, opts, doublebind, req;
         
         while (	((posB = s.indexOf('${', posE)) > -1)&& ((posE = s.indexOf('}', posB)) > -1) ) {
             
             path = s.substring(posB + 2, posE);
+            
+            if ((p = path.lastIndexOf('|'))>-1) {
+                opts = path.substring(p+1).split(',');
+                path = path.substring(0,p);
+            }
 
-            var req = (path[0]==='*');
-
+            req = (path[0]==='*');
+            
+            
             if ((path[0]===' ') || req) {
 
                 path = path.substring(1);
@@ -1540,13 +1534,18 @@ Object.property.bind =  (function(O) {
             
             if (!Array.findByAttr(src,path)) {
                 
-                src.push({
+                var sItem = {
                     id: path,
-                    required : req,
+                    required : req || opts && opts.indexOf('required')>-1,
                     entityId : eId ,
                     propName : prop
-                });
+                };
                 
+                src.push(sItem);
+                
+                if (opts && opts.indexOf('doublebind')>-1) {
+                    doublebind = sItem;
+                }
             }
             
             s= s.substring(0, posB) + '$V["' + path + '"]' + s.substring(posE + 1)
@@ -1554,7 +1553,8 @@ Object.property.bind =  (function(O) {
         
         return {
             sources:src,
-            body : s
+            body : s,
+            doublebind: doublebind
         };
     };
 
@@ -1576,7 +1576,7 @@ Object.property.bind =  (function(O) {
             
             this[p.id] = w._get(p.propName);
         
-            if (p.required && !(this[p.id])) {
+            if ((this[p.id]===_undef) || (p.required && !(this[p.id]))) {
             
                 this.__incomplete = true;
             
@@ -1620,18 +1620,28 @@ Object.property.bind =  (function(O) {
                 
             if (!values.__incomplete) {
                     
-                if (ev && ev.entity && !values[ev.entity.id+'.'+ev.propId]){
-                        
-                    values[ev.entity.id+'.'+ev.propId] = ev.value;
-                }
+//                if (ev && ev.entity && !values[ev.entity.id+'.'+ev.propId]){
+//                        
+//                    values[ev.entity.id+'.'+ev.propId] = ev.value;
+//                }
                     
                 T.setProperty(propName,fn.call(T, values));
+                
+                var db = compiled.doublebind;
+                if (db && !db.bound){
+                        //var propKey  = (!opts.key || opts.key==='value')?'':String.capitalize(opts.key);
+                        var target = O.entity(db.entityId);
+                        Object.property.bind(target, db.propName, '${'+T.id+'.'+propName+'}');
+                        db.bound = true;
+                }
             }
                 
         };
             
         // subscribe all
         for (var i=0, ps = compiled.sources, l= ps.length; i<l; O.listen(ps[i++].id, bind, T, subscriberCb)) {}
+        
+
         
         // perform binding immediately!!!
         bind();
@@ -3578,7 +3588,7 @@ Object.property.define('html extends nonequal'
             }
             ,
             getValue : function(T) {
-            return Object.get(T,'contentNode.innerHTML');
+                return Object.get(T,'contentNode.innerHTML');
             }
             ,
             // setter
@@ -3700,14 +3710,7 @@ Object.entity.define('List extends box',{
     ,
     methods : function (_super) {
         var _childrenAdapterIterator = (function(datum, i, T) {
-            this.push({
-                id: 'html',
-                domNodeType: T.itemDomNodeType,
-                style: T.itemStyle,
-                html: String.formatWithMap(T.itemTemplate, datum),
-                value: datum[T.dataIdKey],
-                datum: datum
-            });            
+            this.push(T.childrenItemAdapter(datum, i));            
         }).iterator()
         ,
         _findItemByValueIterator = (function(w) {
@@ -3747,6 +3750,17 @@ Object.entity.define('List extends box',{
             ,
             childrenAdapter :function(data) {
                 return _childrenAdapterIterator(data, [], this);
+            }
+            ,
+            childrenItemAdapter :function(datum, i) {
+                return {
+                    id: 'html',
+                    domNodeType: this.itemDomNodeType,
+                    style: this.itemStyle,
+                    html: String.formatWithMap(this.itemTemplate, datum),
+                    value: datum[this.dataIdKey],
+                    datum: datum
+                };
             }
         }
     }

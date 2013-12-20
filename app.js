@@ -32,7 +32,35 @@
         urlTemplate:'[jsonp]https://www.googleapis.com/blogger/v3/blogs/1638693468845489013/posts?{0}&key='+APP.GOOGLE_API_KEY
     });
     
+    Object.entity.create({
+        id:'CachedResourceProvider:lexio_meta', 
+        version: '1',//''+Math.round((new Date()).valueOf() / 86400000),
+        scope1 : 'session', 
+        urlTemplate:'[jsonp]'+APP.GOOGLE_SHEETS_URI+'{0}'
+    });    
+    
     // local settings storage
     Object.entity.create("WebStorage://#settings");
+
+    
+    // local settings storage
+    Object.entity.create({
+        id:"lexio/Processor:lexio"
+        ,
+        plugins:[
+        {
+            id:'lexio/plugin/initialize'
+        }
+        ,{
+            id:'lexio/plugin/meta'
+            ,
+            sources:[
+                'lexio_meta://0AqQx4KOOt8TGdExjQ2ZJM0Q5MFBQSVRhYUw1ZHJMSFE'
+            ]
+            //var EN = GSheets.getSpreadsheetData('0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2');
+  
+        }
+        ]
+        });
 
 })(this);
