@@ -15,16 +15,20 @@ Object.entity.define("lexio/Plugin",{
                 
                 this.home = this.parentEntity;
                 
+                
                 _super.init.call(this);
-                    
+
+                this.home.setReady(1);
+
             }
             ,            
             // perform on event
             perform: function(err, ev){
                     
-                console.log(''+this, 'perform');
                     
                 this.performImpl(err,ev);
+                
+                console.log(''+this, 'perform', ev);
                     
                 return ev;
                     

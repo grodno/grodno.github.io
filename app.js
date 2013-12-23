@@ -60,6 +60,10 @@
             //var EN = GSheets.getSpreadsheetData('0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2');
   
         }
+        ,
+        {
+            id:'lexio/plugin/tokenize'
+        }
         ]
         });
 

@@ -88,13 +88,19 @@
         return v1>v2?-1:(v1<v2?1:0);
     };
      
+    var RE_TAG = new RegExp ('<[^>]+?>','gi');
+    
     Object.entity.define("lexio/plugin/initialize extends lexio/Plugin", {
         methods: function(_super){
+            
             
             return {
                 
                 // perform on event
                 performImpl : function(err, ev) {
+                    
+                    ev.input = ev.input.replace(RE_TAG,'')
+                        
                 }
                 
             };

@@ -1,5 +1,5 @@
 // register async listener for API calls
-Object.entity.define("PluginAnalyze extends EventHandler",{
+Object.entity.define("lexio/plugin/abbr extends lexio/Plugin",{
     id:':ga',
     handleEventImpl:function(ev){
         if (this.x===this.x.toUpperCase()) {

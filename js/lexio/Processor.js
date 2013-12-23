@@ -26,9 +26,12 @@ Object.entity.define("lexio/Processor extends EventHandler", {
             init: function(){
                 
                 this.children = this.plugins;
-                    
+                
+                this.pluginsCount = this.plugins.length;
+                
                 _super.init.call(this);
-                    
+                
+                
             }
             ,
             handleEventImpl:function(ev) {
@@ -51,6 +54,20 @@ Object.entity.define("lexio/Processor extends EventHandler", {
                 });
                     
                 
+            }
+            ,
+            // @set ready flag to true
+            setReady:function(c) {
+                
+                if (c) {
+                    this.pluginsCount--;
+                }
+                
+                if (this.pluginsCount === 0 && this.CHARS) {
+                    
+                    _super.setReady.call(this);
+                    
+                }
             }
         };
     }

@@ -70,7 +70,7 @@
                         ,
                         function(err){
                             Function.iterate(applySourceData, Array.slice(arguments,2), T.home)
-                            T.parentEntity.setReady();
+                            T.home.setReady();
                         }
                         ], this.sources);
                     

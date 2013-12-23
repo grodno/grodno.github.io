@@ -1,0 +1,1 @@
+{rules: {date : function(t) {return (t.chars[0].capital)&&(t.kind==="d")&&(t.size==2)}}};

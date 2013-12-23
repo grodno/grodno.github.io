@@ -1,45 +1,61 @@
 // Lexio plugin
 (function () {
     
-    var _registrator = (function(v, p){
-        this[v] || (this[v] = {
-            id: v
-        });
+    var META_UNKNOWN ={kind:null};
+    
+    var _tokenize = (function(v, p, ev) {
+        
+        var m = ev.CHARS[v] || META_UNKNOWN, id = m.origin || v;
+        
+        var e = {
+            id: id
+            , input : v
+            , index: 0
+            , size : 1
+            , chars : [m]
+            , kind: m.kind
+        };
+        
+        (ev.chars[id] || (ev.chars[id]=[])).push(e);
+        
+        e.token = e;
+        
+        var prev = p>0 && this[this.length-1];
+        
+        if (prev) {
+            
+            if (e.kind && prev.kind===e.kind) { // append to previous of same kind
+                
+                prev.input += e.input;
+                prev.id += e.id;
+                prev.chars.push(m);
+                
+                e.token = prev;
+                e.index = prev.size++;
+                
+                e=null;
+                
+            } else {
+                
+                e.prev = prev;
+                prev.next = e;
+            }
+        }
+        
+        e && this.push(e);
+        
     }).iterator();   
 
     Object.entity.define("lexio/plugin/tokenize extends lexio/Plugin",{
     
-    
         performImpl:function(err, ev) {
-                 
-            var tokens = ev.tokens = ev.input.split(' ');
-        
-            ev.registry = _registrator(tokens, {});
-        
-             
-            var out = ev.prepared = [];
-       
-            var patt=/([^А-я]+)([А-я,\-]+)/g;
-            var src = ev.src, x, w, c;
             
-            while ((x=patt.exec(src))) {
-                out.push(x = [x[1], w = x[2],'']);
-                
-                while (w.length>0 && !isLetter(c = w.charAt(0))) {
-                    x[0] += c
-                    x[1] = w = w.substr(1);
-                }
-                
-                while (w.length>0 && !isLetter(c = w.substr(-1))) {
-                    x[2] = c + x[2];
-                    x[1] = w = w.substr(0,w.length-1);
-                    console.log(c, w)
-                }
-                
-                if (w && !ev.words[w]){
-                    ev.all.push(ev.words[w] = new Word(w, ev));
-                }
-            }
+            ev.CHARS = this.home.CHARS;
+            
+            ev.chars = {};
+            
+            ev.tokens = _tokenize(ev.input.split(''), [], ev);
+            
         }
    
     });
