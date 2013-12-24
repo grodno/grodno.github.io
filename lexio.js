@@ -22,11 +22,23 @@ Object.entity.create({
     }
     ,
     {
+        id:'lexio/plugin/numbers'
+    }
+    ,
+    {
+        id:'lexio/plugin/abbr'
+    }
+    ,
+    {
         id:'lexio/plugin/lexer'
     }
     ,
     {
         id:'lexio/plugin/score'
+    }
+    ,
+    {
+        id:'lexio/plugin/translit'
     }
     ,
     {

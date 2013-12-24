@@ -4,15 +4,24 @@
     
     var _toHtml = function(t) {
         
+        if (!t.kind) return '';
+        
         var w = t.word;
+        var cl=['kind-'+t.kind], title = '';
         
-        if (!w) return t.input
+        if (w){
+            var c = w.best || w.top;
         
-        var c = w.best || w.top;
+            var sc = c.score;
+            title = (c.root||c.x) +' \n,'+w;
+            
+            cl.push(c.hardcoded? 'hardcoded' : (sc > 49 ? (sc >99 ? 'good' : 'norm'): (sc>19 ? 'weak' : 'bad')));
+        }
         
-        var sc = c.score, cl = c.hardcoded? 'hardcoded' : (sc > 49 ? (sc >99 ? 'good' : 'norm'): (sc>19 ? 'weak' : 'bad'));
-        
-        return String.format('<span title="{0} \n,{1}" class="{2}">{3}</span>', c.root||c.x, w, cl, t.input);
+        return t.kind==='s'?' ':String.format('<span title="{0}" class="{1}">{2}</span>'
+            , title
+            , cl.concat(t.tags).join(' ')
+            , t.input);
     }
             
     var _iterator = (function(d, i){

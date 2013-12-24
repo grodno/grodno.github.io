@@ -86,3 +86,11 @@ li.label.active{
 .hardcoded{
     font-size: smaller;
 }
+.numeric{
+    background-color: bisque;
+}
+
+.kind-a{
+    color:  fuchsia;
+    font-weight: bolder;
+}

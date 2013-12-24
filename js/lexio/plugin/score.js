@@ -53,6 +53,9 @@
     }).iterator();     
            
     var _iterator = (function(w, i) {
+        
+            if (w.best) return;
+        
             w.best = w.top;
             
             w.eachCase(_score);
