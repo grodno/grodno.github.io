@@ -70,17 +70,8 @@
         obj[cat].all.push(val);
     }
         
-    var TYPE_U = {
-        type:''
-    }
+
         
-    var _signature = function(ww) {
-        var r = "", l = ww.length;
-        for ( var i = 0; i < l; i++) {
-            r += (CHARS[ww.charAt(i)] || TYPE_U).type;
-        }
-        return r;
-    };
     
     var tagsSorterFn = function(s1,s2,v1,v2){
         v1=s1.value.all.length;

@@ -1,7 +1,22 @@
 // Lexio plugin
 (function () {
 
-
+    var _reg = (function(v, p){
+        this[v.id] = v;
+    }).iterator();
+            
+    var registry = (function(v){
+        var key = v.toUpperCase();
+        _reg(this[v], String[key] || (String[key]={}));
+                
+    }).iterator();
+    
+     var enums = (function(v){
+        var key = v.key.toUpperCase();
+        var b = String[key] || (String[key]={});
+        b[v.id] = v.value;
+        
+    }).iterator();
   
     Array.prototype.mirrorItems = function() {
         return (function(v){
@@ -16,24 +31,17 @@
     };
     
     Object.entity.define("lexio/plugin/meta extends lexio/Plugin", {
+        
         methods: function(_super){
             
-            var registry = function(arr, key) {
-        key = key||'id';
-        return(function(v, p){
-            this[v[key]] = v;
-        }).iterator()(arr, {});
-    }
-            
             var applySourceData = function(data) {
-  
-                Object.update(this, {
-                    ROOTS : registry(data.roots)
-                    ,
-                    COMPLEXIES : registry(data.complexies)
-                    ,
-                    HARDCODED : registry(data.hardcoded)
-                    ,
+                
+                registry(['chars','roots','complexies','hardcoded','chars'], data);
+                
+                enums(data['~']);
+                
+                Object.update(String, {
+                    
                     COMPLEXIES_TREE : data.complexies.getKeys().makeMatchingTree()
                     ,
                     PREFIXES_TREE : data.prefixes.getKeys().makeMatchingTree()
@@ -41,11 +49,7 @@
                     SUFFIXES_TREE : data.suffixes.getKeys().mirrorItems().makeMatchingTree()
                     ,
                     FLEXIES_TREE : data.flexies.getKeys().mirrorItems().makeMatchingTree()
-                    ,
-                    //vowels/consonats masks enabled for roots.Used for filter tokens as possible roots.
-                    ROOT_MASKS : registry(data.masks)
-                    ,
-                    CHARS : registry(data.chars)
+ 
                 });
             };
             

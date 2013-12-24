@@ -3,9 +3,12 @@
     
     var META_UNKNOWN ={kind:null};
     
+    var _initFirstChar = function(e){
+          e.tags = [];
+    }
     var _tokenize = (function(v, p, ev) {
         
-        var m = ev.CHARS[v] || META_UNKNOWN, id = m.origin || v;
+        var m = String.CHARS[v] || META_UNKNOWN, id = m.origin || v;
         
         var e = {
             id: id
@@ -39,7 +42,11 @@
                 
                 e.prev = prev;
                 prev.next = e;
+                _initFirstChar(e);
             }
+        } else {
+                _initFirstChar(e);
+            
         }
         
         e && this.push(e);
@@ -49,8 +56,6 @@
     Object.entity.define("lexio/plugin/tokenize extends lexio/Plugin",{
     
         performImpl:function(err, ev) {
-            
-            ev.CHARS = this.home.CHARS;
             
             ev.chars = {};
             

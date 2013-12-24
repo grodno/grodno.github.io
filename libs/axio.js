@@ -206,7 +206,7 @@
             };
             
             // start with first operation
-            tick.call(null, event);
+            tick(null, event);
             
         };
     })();

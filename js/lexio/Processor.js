@@ -1,3 +1,4 @@
+// Lexio processor
 Object.entity.define("lexio/Processor extends EventHandler", {
         
     properties:[':children']
@@ -27,8 +28,6 @@ Object.entity.define("lexio/Processor extends EventHandler", {
                 
                 this.children = this.plugins;
                 
-                this.pluginsCount = this.plugins.length;
-                
                 _super.init.call(this);
                 
                 
@@ -37,12 +36,8 @@ Object.entity.define("lexio/Processor extends EventHandler", {
             handleEventImpl:function(ev) {
                 
                 var T=this;
-                    
-                var event = Object.entity.create({
-                    id:'lexio/Event'
-                    ,
-                    input : ev.uri.hash
-                },function (err, event){
+                   
+                var cb= function (err, event){
                     
                     window.setTimeout(function(){
                         
@@ -51,19 +46,29 @@ Object.entity.define("lexio/Processor extends EventHandler", {
                     
                     }, 0);
                     
-                });
+                };
+                
+                var event = Object.entity.create({
+                    id:'lexio/Event'
+                    ,
+                    input : ev.uri.hash
+                }, cb);
                     
                 
             }
             ,
             // @set ready flag to true
+            childrenChanged:function(c) {
+                
+                this.inited = true;
+                
+                this.setReady();
+            }
+            ,
+            // @set ready flag to true
             setReady:function(c) {
                 
-                if (c) {
-                    this.pluginsCount--;
-                }
-                
-                if (this.pluginsCount === 0 && this.CHARS) {
+                if (this.inited && String.CHARS) {
                     
                     _super.setReady.call(this);
                     

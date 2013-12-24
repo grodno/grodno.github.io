@@ -1,4 +1,4 @@
-// Lexio plugin
+// Lexio Event
 (function () {
     
     Object.entity.define("lexio/Event", {
@@ -10,7 +10,8 @@
                 // init
                 init: function(){
                     
-                    this.value =  ">> " + this.input;
+                    // default result
+                    this.value = this.input;
                     
                 }
                 

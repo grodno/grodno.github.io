@@ -68,3 +68,21 @@ li.label.active{
     background-color: orangered;
 }
 
+.good{
+    color:blue;
+    font-size: smaller;
+}
+.norm{
+    color: royalblue;
+}
+.weak {
+    color: green;
+    
+}
+.bad {
+    color: orangered;
+    font-weight: bolder;
+}
+.hardcoded{
+    font-size: smaller;
+}
