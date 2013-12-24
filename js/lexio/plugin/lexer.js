@@ -356,7 +356,7 @@
         })()
     };
 
-    var _iterator = (function(d, i, ev){
+    var _op = function(d){
         
         if (d.kind==='r') {
             
@@ -368,7 +368,7 @@
             
         }
         
-    }).iterator();
+    };
     
     Object.entity.define("lexio/plugin/lexer extends lexio/Plugin", {
         
@@ -378,7 +378,7 @@
                 
                 // implementation of perform on event
                 performImpl: function(err, ev){
-                    _iterator(ev.tokens, [], ev);
+                    ev.eachToken(_op);
                 }
                 
             };

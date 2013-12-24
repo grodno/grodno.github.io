@@ -1,12 +1,9 @@
 // Lexio plugin
 (function () {
  
-    var TYPE_U = {
-        lat:''
-    }
     var _en = function(ww) {
         for ( var i = 0, r = "", l = ww.length; i < l; i++) {
-            r += (String.CHARS[ww[i]] || TYPE_U).lat;
+            r += String.CHARS[ww[i]].lat;
         }
         return r;
     };

@@ -50,7 +50,8 @@
             h = h || '';
             this._set('page', h);
             try {
-                global.history.pushState({}, null, h?('/#~'+h):'');
+                console.log(h);
+                //global.history.pushState({}, null, h?((APP.LOCATION.hash = '~'+h), ''+APP.LOCATION):'');
             } catch (e) {
                         
             }

@@ -13,7 +13,7 @@
                 
                 // implementation of perform on event
                 performImpl: function(err, ev){
-                    _iterator(ev.tokens, ev);
+                    _iterator(ev.arr, ev);
                 }
                 
             };

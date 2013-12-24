@@ -1,52 +1,59 @@
 // Lexio plugin
 (function () {
     
-    var META_UNKNOWN ={kind:null};
-    
-    var _initFirstChar = function(e){
-          e.tags = [];
+    var Token = function(v, m, prev) {
+       
+        this.id = m.origin || v;
+        this.input = v;
+        
+        this.chars = [m];
+        this.size = 1;
+        
+        this.kind = m.kind;
+        this.tags = [];
+        
+        // sequence refs
+        if (prev){
+            this.prev = prev;
+             prev.next = this;
+        }
     }
+    
+    Token.prototype = {
+        remove : function(){
+            this.kind = null;
+            this.prev && (this.prev.next = this.next);
+            this.next && (this.next.prev = this.prev);
+        }
+    }
+    
     var _tokenize = (function(v, p, ev) {
-        
-        var m = String.CHARS[v] || META_UNKNOWN, id = m.origin || v;
-        
-        var e = {
-            id: id
-            , input : v
-            , index: 0
-            , size : 1
-            , chars : [m]
-            , kind: m.kind
-        };
-        
-        (ev.chars[id] || (ev.chars[id]=[])).push(e);
-        
-        e.token = e;
-        
-        var prev = p>0 && this[this.length-1];
-        
-        if (prev) {
+
+        // metadata
+        var m = String.CHARS[v] || (String.CHARS[v] = {kind:'x', lat:'', id:v, type:v, origin:v});
+
+        var e = null;
+
+        if (p===0) {
             
-            if (e.kind && prev.kind===e.kind) { // append to previous of same kind
+            ev.firstToken = ev.lastToken = e = new Token(v, m, null);
+            
+        } else {
+            
+            var prev = ev.lastToken;
+           
+            if (prev.kind===m.kind) { // append to previous of same kind
                 
-                prev.input += e.input;
-                prev.id += e.id;
+                prev.input += v;
+                prev.id += m.origin || v;
                 prev.chars.push(m);
-                
-                e.token = prev;
-                e.index = prev.size++;
-                
-                e=null;
-                
+                prev.size++;
+
             } else {
                 
-                e.prev = prev;
-                prev.next = e;
-                _initFirstChar(e);
+                ev.lastToken = e = new Token(v, m, prev);
+                
             }
-        } else {
-                _initFirstChar(e);
-            
         }
         
         e && this.push(e);
@@ -57,9 +64,7 @@
     
         performImpl:function(err, ev) {
             
-            ev.chars = {};
-            
-            ev.tokens = _tokenize(ev.input.split(''), [], ev);
+            _tokenize(ev.input.split(''), [], ev);
             
         }
    

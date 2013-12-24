@@ -1,7 +1,7 @@
 // Lexio plugin
 (function () {
             
-    var _iterator = (function(t, i){
+    var _op = function(t){
         if (t.kind==='d'){
             
             var prev = t.prev;
@@ -29,7 +29,7 @@
             t.tags.push('numeric');
         }
         
-    }).iterator();
+    };
     
     Object.entity.define("lexio/plugin/numbers extends lexio/Plugin", {
         
@@ -39,7 +39,7 @@
                 
                 // implementation of perform on event
                 performImpl: function(err, ev){
-                    _iterator(ev.tokens, ev);
+                    ev.eachToken(_op);;
                 }
                 
             };

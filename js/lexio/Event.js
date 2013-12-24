@@ -14,7 +14,15 @@
                     this.value = this.input;
                     
                 }
-                
+                ,
+                eachToken: function(op, extra){
+                    for(var t=this.firstToken, r; t; t = t.next){
+                        if((r = op.call(this, t, extra))){
+                            return r;
+                        };
+                    }
+                    return null;
+                }
             };
             
         }

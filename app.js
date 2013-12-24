@@ -4,14 +4,14 @@
 
     APP.DEBUG = (APP.LOCATION.authority.indexOf('local')+1);
 
-    if (APP.DEBUG) {
+    if (APP.DEBUG || APP.LOCATION.params.debug) {
         
         APP.VERSION =  -1;
     
     }
 
     // register async listener for cached resources
-    Object.cache.createJSSource(APP.VERSION);   
+    Object.cache.createJSSource(APP.VERSION, 'js/{0}.js?v=');   
    
     // entity type factory
     Object.entity.ENTITY_TYPE_FACTORY_URL = 'js://{0}';
@@ -20,7 +20,7 @@
     Object.entity.create({
         id:'CachedResourceProvider:page', 
         version: APP.VERSION, 
-        urlTemplate:'/page/{0}.html?v='+APP.VERSION,
+        urlTemplate:'page/{0}.html?v='+APP.VERSION,
         cacheDeserializer: Function.NONE
     });
 

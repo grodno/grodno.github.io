@@ -24,9 +24,9 @@
             , t.input);
     }
             
-    var _iterator = (function(d, i){
+    var _op = function(d){
         this.value += _toHtml(d);
-    }).iterator();
+    };
     
     Object.entity.define("lexio/plugin/represent extends lexio/Plugin", {
         
@@ -39,7 +39,7 @@
                     
                     ev.value = '';
                     
-                    _iterator(ev.tokens, ev);
+                    ev.eachToken(_op);
                     
                     console.log('lexio: ', ev);
                 }
