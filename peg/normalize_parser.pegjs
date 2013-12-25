@@ -1,20 +1,24 @@
 /**
- *   
+ *   Text input normalization rules.
  */
-{
- var FN ={}
 
- var ALL = [];
 
- var addCriteria = function(id, body) {
-         ALL[ id ] = ' : function(t) {return this["'+id+'"] = '+body+' ? t : null;}'
+text
+ = t:token rest:(_ token)* _? { return t + (rest? ' '+rest.join('') :'');}
 
-    }
-}
 
-start
-  = additive
+token 
+= number 
+/ r:[a-zA-Z]+ { return r.join('')}
 
+token3
+  = phone
+  / number
+  / string
+
+/**
+ * Samples
+ */
 additive
   = left:multiplicative "|" right:additive { return left + '||' + right; }
   / multiplicative
@@ -40,7 +44,7 @@ grammar
     }
 
 
-token
+token22
   = id:identifier ":(" expr:expr? ")" kind:kind? size:size? {
 
         var body = FN[id]  = '('+[expr||'true', kind , size].join(')&&(')+')'
@@ -72,10 +76,73 @@ size
 
 identifier = f:[a-z] tail:string { return f+tail}
 
-string = s:[a-z0-9$]* { return s.join('')}
+/*
+ * Number.
+ */
 
-digit = [0-9]+
 
+
+number
+  = sign:"-"? n:num_value m:num_measure? { return '{{type:"number", value: '+((sign||"")+n)+', measure:"'+(m||"plain")+'"}}';}
+  
+num_value
+  = n:num frac:([.,]  [0-9]*)? { return n + (frac? '.'+frac[1].join('') :'');} 
+  / num
+  
+num 
+  = n:[0-9]+ rest:([0-9] "" num)?  { return n.join('') + (rest? rest[1] :'');}
+  / r:[0-9]+ { return r.join('')}
+  
+num_measure
+ = ("$" / ("у." _? "е.") / ("дол" "л"? "."? "аров"?))   { return "$" }
+ / ("кг" / "kg")
+
+
+_ = " "+
+
+/*
+ * Phone number.
+ */
+phone
+  = (phone_intro _)? (phone_op _)? n:phone_number  (phone_op _)? { return '{{type:"phone", value:"'+n+'"}}';}
+  
+phone_intro
+  = [тТ] "ел" "."? "ефон"? [:.]?
+  
+phone_op
+  = "(" phone_op ")"
+  / [vV] "el" "."? "com"? "e"?
+  / ("MTS" / "МТС" / "мтс") "."?
+  / [Ll] "ife"
+
+phone_number
+  = "+"? phone_prefix? [ -]? phone_op_code:d2? [ -]? phone_code
+
+phone_prefix
+  = "(" d:phone_prefix ")" { return d; }
+  / d3
+
+phone_code = dnn:d &{ return dnn>9999;}
+
+/*
+ * Primitives.
+ */
+
+d "digit"  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
+
+d2 "digital2"  = digits:([0-9] [0-9]) { return parseInt(digits.join(""), 10); }
+
+d3 "digital3"  = digits:([0-9][0-9][0-9]) { return parseInt(digits.join(""), 10); }
+
+str = s:[\S]* { return s.join('')}
+
+/*
+ * Whitespace.
+ */
+ 
+_ = (whitespace)*
+
+ 
 __ = (whitespace / eol / comment)*
 
 /* Modeled after ECMA-262, 5th ed., 7.4. */
