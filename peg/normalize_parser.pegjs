@@ -2,19 +2,62 @@
  *   Text input normalization rules.
  */
 
-
 text
- = t:token rest:(_ token)* _? { return t + (rest? ' '+rest.join('') :'');}
-
+  = f:token _ r:text { return f + ' ' + r ;}
+  / token
 
 token 
-= number 
-/ r:[a-zA-Z]+ { return r.join('')}
+  = code
+  / amount 
+  / r:[a-zA-Z]+ { return r.join('')}
 
-token3
-  = phone
-  / number
-  / string
+
+amount
+  =  n:number m:(_? measure)? 
+  { return ''
+      +'{{kind:"n"'
+        +', value:'+n
+        +', measure:"'+(m&&m[1]||"x")
+        +'"}}';
+  }
+  
+number
+  = sign:"-"? n:int frac:([.,] [0-9]*)
+    { return (sign||"")+ n 
+        + (frac? '.'+frac[1].join('') :'');
+    } 
+  / sign:"-"? n:int
+    { return (sign||"")+ n} 
+  / int
+  
+code
+  = int3  
+  / (f:d " " r:int3) {return f+r}
+
+
+int3
+  = f:((d d d) / (d d)) " " r:int3 {return f.join('')+r}
+  / r:((d d d) / (d d)) {return r.join('')}
+
+
+int
+  = r:d+ { return r.join('')}
+
+
+d
+  = [0-9]
+
+  
+measure
+  = ("$" / ("у." _? "е.") / ("дол" "л"? "."? "аров"?))   
+    { return "$" }
+  / ("кг" / "kg")
+    { return "kg" }
+  / "%"
+  / ("м" "."? q:" кв."?)   
+    { return "m." +(q?'q.':'') }
+
+_ = " "+
 
 /**
  * Samples

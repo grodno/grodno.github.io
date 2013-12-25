@@ -1,5 +1,7 @@
 (function (global) {
     
+    var APP = global.APP;
+    
     APP.LOCATION = Object.parseUri(''+global.location);
 
     APP.DEBUG = (APP.LOCATION.authority.indexOf('local')+1);
