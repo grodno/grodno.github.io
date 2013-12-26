@@ -10,8 +10,14 @@ Object.entity.define("lexio/Plugin",{
                 
                 _super.init.call(this);
 
-                this.home.setReady(1);
+                this.notifyHomeReady();
 
+            }
+            ,
+            notifyHomeReady : function(){
+                
+                this.home.setReady(1);
+                
             }
             ,            
             // perform on event

@@ -6,7 +6,8 @@
  * Copyright (c) 2010-2012 David Majda
  * Licensend under the MIT license.
  */
-var PEG = (function(undefined) {
+
+(function(global, undefined) {
 
 var PEG = {
   /* PEG.js version (uses semantic versioning). */
@@ -4519,10 +4520,12 @@ PEG.compiler.emitter = function(ast, options) {
   return emit(ast);
 };
 
-return PEG;
+global.PEG = PEG;
 
-})();
-
-if (typeof module !== "undefined") {
-  module.exports = PEG;
+if (typeof global.module !== "undefined") {
+  global.module.exports = PEG;
 }
+
+
+})(this);
+

@@ -32,11 +32,9 @@
         // metadata
         var m = String.CHARS[v] || (String.CHARS[v] = {kind:'x', lat:'', id:v, type:v, origin:v});
 
-        var e = null;
-
-        if (p===0) {
+        if (!ev.lastToken) {
             
-            ev.firstToken = ev.lastToken = e = new Token(v, m, null);
+            this.push(ev.firstToken = ev.lastToken = new Token(v, m, null));
             
         } else {
             
@@ -51,12 +49,11 @@
 
             } else {
                 
-                ev.lastToken = e = new Token(v, m, prev);
+                this.push(ev.lastToken = new Token(v, m, prev));
                 
             }
         }
-        
-        e && this.push(e);
+
         
     }).iterator();   
 

@@ -18,6 +18,10 @@ Object.entity.create({
     }
     ,
     {
+        id:'lexio/plugin/normalize'
+    }
+    ,
+    {
         id:'lexio/plugin/tokenize'
     }
     ,

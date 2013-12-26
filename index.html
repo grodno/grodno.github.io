@@ -7,8 +7,27 @@
 
         <title>Grodno</title>
         <meta name="keywords" content="grodno, гродно">
-        <meta name="description" content="Grodno, Belarus. Гродно.">
+        <meta name="description" content="Grodno, Belarus. Гродно. News, ads etc.">
 
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="http://grodno-co.blogspot.com/feeds/posts/default" />
+
+        <!-- G+ -->
+        <meta itemprop="name" content="Grodno">
+        <meta itemprop="description" content="Grodno, Belarus. Гродно. News, ads etc.">
+        <meta itemprop="image" content="img/logo.png">
+        <!-- OG -->
+        <meta property="og:title" content="Grodno">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://grodno.co">
+        <!--meta property="fb:app_id" content="219232854789016"-->
+        <meta property="og:site_name" content="Grodno">
+        <meta property="og:description" content="Grodno, Belarus. Гродно. News, ads etc.">
+        <meta property="og:image" content="img/logo.png">
+        <!-- GEO LOCATION TAGS-->
+        <meta name="geo.position" content="53.683111,23.823209">
+        <meta name="ICBM" content="53.683111,23.823209">
+        
+        
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
         <link href="app.css" rel="stylesheet">
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
@@ -26,6 +45,8 @@
                 ID : 'grodno.co'
                 ,
                 TITLE : 'Grodno'
+                ,
+                VERSION : '1.4.1'
                 ,
                 COPYRIGHT : '2013 Grodno'
                 ,
@@ -46,17 +67,14 @@
         <script src="app.js"></script>
         <script src="lexio.js"></script>
     </head>
-    
-    
+
+
     <body>
         <div class="navbar navbar-fixed-top">
             <a class="navbar-brand" href="/"><img class="logo" src="/res/logo120.png" height="20px" title="Гродно"/></a>
             <ul class="nav navbar-nav">
-                <li><a href="/">Naviny</a></li>
-                <li><a href="/#~market">Market</a></li>
-                <li><a href="/#~letapis">Letapis</a></li>
-                <li><a href="/#~vyjavy">Vyjavy</a></li>
-                <li><a href="/#~davedka">Davedka</a></li>
+                <li><a href="/">Новости</a></li>
+                <li><a href="/#~market">Маркет</a></li>
             </ul>
         </div>
 
@@ -64,15 +82,9 @@
             <div id="main" class="row panel main">
                 <section id="app" class="col-12 col-lg-9 app" data-widget="ui/Application"></section>
                 <aside class="col-12 col-lg-3">
-                    <div class="panel panel-info">
-                        <h5 class="panel-heading">My</h5>
-                        <div>
-                            <a href="//grodno.co/" target="_blank" title="Our sponsor"><img style="align:center;" src="/res/logo120.png"/></a>
-                        </div>
-                    </div>
 
                     <div class="panel panel-warning">
-                        <h5 class="panel-heading">Spasylki</h5>
+                        <h5 class="panel-heading">Источники</h5>
                         <ul>
                             <li><a target="_blank" href="//forum.grodno.net/">Forum</a></li>
                             <li><a target="_blank" href="//s13.ru">S13</a></li>
@@ -82,6 +94,37 @@
 
                 </aside>
             </div>
+            <div class="row show-grid">
+                <div class="panel  panel-default col-12 ">
+                    <div class="panel-heading">Gardino urbi est.</div>
+                    <div class="panel-body">
+                        <small>
+                            <p>
+                                <strong>Гродно</strong> это больше, чем просто город, место или точка на карте. Больше, чем возможность просто жить, работать, проводить время и хорошо отдыхать.
+                                <strong>Гродно</strong> это уникальная культурная среда, это стиль жизни и круг общения.
+                                Жизнь в городе <strong>Гродно</strong> положительно влияет на все аспекты личности, на развитие умственных способностей, физической формы. 
+                            </p>
+                            <p>
+                                <strong>Гродно</strong> это особое место Силы, которое открывает возможность выхода на новый уровень самосознания.
+                                Здесь, в отличие от большинства других городов, время течёт по другому, иной масштаб событий и случайности закономерны.  
+                                Нужно замечать детали, слушать тишину, чтобы суметь прикоснуться к этой параллельной реальности. 
+                            </p>
+                            <p>
+                                В <strong>Гродно</strong> любят повторять - "Все мы люди" и "Солнце каждому светит".
+                                Это говорит о взаимном уважении людей, о всепобеждающей вере в лучшее будущее, о равном праве на свободу и счастье для всех. 
+                            </p>
+                            <p> 
+                                <strong>Гродно</strong> - прекрасная часть культуры человечества.
+                                Сегодня этот город - один из опорных в делах сохранения мира и улучшения взаимопонимания между народами.
+                            </p>
+                            <p>
+                                Не всем известно, но <i>на небесах только и разговоров что о нашем священном городе <strong>Гродно</strong></i>!
+                            </p>
+                        </small>
+                    </div>
+
+                </div>
+            </div>
             <footer id="footer" class="panel row">
                 <div class="col-12">
                     <small class="pull-right">
@@ -90,7 +133,6 @@
                         |  <a target="_blank" href="//twitter.github.com/bootstrap/">Twitter Bootstrap</a>
                         |  <a target="_blank" href="https://github.com/grodno">GitHub</a>
                         |  <a target="_blank" href="//www.google.com/">Google</a>
-                        |  <a target="_blank" href="//grodno-city.tumblr.com/">Tumblr</a>
                     </small>
                 </div>
             </footer>

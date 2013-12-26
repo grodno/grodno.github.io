@@ -7,9 +7,9 @@ text
   / token
 
 token 
-  = code
-  / amount 
-  / r:[a-zA-Z]+ { return r.join('')}
+  = amount 
+  / time
+  / r:nonwhite+ { return r.join('');}
 
 
 amount
@@ -17,8 +17,8 @@ amount
   { return ''
       +'{{kind:"n"'
         +', value:'+n
-        +', measure:"'+(m&&m[1]||"x")
-        +'"}}';
+        +', measure:"'+(m&&m[1]||"x")+'"'
+        +'}}';
   }
   
 number
@@ -30,22 +30,6 @@ number
     { return (sign||"")+ n} 
   / int
   
-code
-  = int3  
-  / (f:d " " r:int3) {return f+r}
-
-
-int3
-  = f:((d d d) / (d d)) " " r:int3 {return f.join('')+r}
-  / r:((d d d) / (d d)) {return r.join('')}
-
-
-int
-  = r:d+ { return r.join('')}
-
-
-d
-  = [0-9]
 
   
 measure
@@ -56,95 +40,20 @@ measure
   / "%"
   / ("м" "."? q:" кв."?)   
     { return "m." +(q?'q.':'') }
-
-_ = " "+
-
-/**
- * Samples
- */
-additive
-  = left:multiplicative "|" right:additive { return left + '||' + right; }
-  / multiplicative
-
-multiplicative
-  = left:primary "*" right:multiplicative { return left +'&&'+ right; }
-  / primary
-
-primary
-  = integer
-  / "(" additive:additive ")" { return additive; }
-  / "next(" e:additive ")" { return " with (next) {"+e+"}"; }
-  / "numeric(" e:additive ")" { return " with (next) {"+e+"}"; }
-  / ""
-
-integer "integer"
-  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
+  / ("г" "."? "од"? "."? "у"?)   
+    { return "year" }
 
 
-grammar
-  = tokens:token+ {
-      return '{' + 'rules: {' + tokens.join(',')+ '}' + '};';
-    }
-
-
-token22
-  = id:identifier ":(" expr:expr? ")" kind:kind? size:size? {
-
-        var body = FN[id]  = '('+[expr||'true', kind , size].join(')&&(')+')'
-
-        return ''+ id + ' : function(t) {return this["'+id+'"] = '+body+' ? t : null;}'
-
-        }
-
-  / "@" id:identifier {
-            return FN[id];
-        }
-
-expr
-  = "{" body:([^}]*) "}" {
-        return body.join('');
-    }
- 
-
-kind
- = ":" t:([DERXS]) {
-
-        return 't.kind==="'+t.toLowerCase()+'"'
-    }
-
-size
-    = "{" size:digit more:"+"? "}" { 
-            return 't.size'+(more?'>=':'==')+size 
-        }
-
-identifier = f:[a-z] tail:string { return f+tail}
+time
+  =  h:([0-2]? [0-9]) ":" m:([0-5] [-9]) 
+  { return ''
+      +'{{kind:"time"'
+        +', value:"'+(h+":"+m)+'"'
+        +'}}';
+  }
 
 /*
- * Number.
- */
-
-
-
-number
-  = sign:"-"? n:num_value m:num_measure? { return '{{type:"number", value: '+((sign||"")+n)+', measure:"'+(m||"plain")+'"}}';}
-  
-num_value
-  = n:num frac:([.,]  [0-9]*)? { return n + (frac? '.'+frac[1].join('') :'');} 
-  / num
-  
-num 
-  = n:[0-9]+ rest:([0-9] "" num)?  { return n.join('') + (rest? rest[1] :'');}
-  / r:[0-9]+ { return r.join('')}
-  
-num_measure
- = ("$" / ("у." _? "е.") / ("дол" "л"? "."? "аров"?))   { return "$" }
- / ("кг" / "kg")
-
-
-_ = " "+
-
-/*
- * Phone number.
+ * Phone.
  */
 phone
   = (phone_intro _)? (phone_op _)? n:phone_number  (phone_op _)? { return '{{type:"phone", value:"'+n+'"}}';}
@@ -159,25 +68,36 @@ phone_op
   / [Ll] "ife"
 
 phone_number
-  = "+"? phone_prefix? [ -]? phone_op_code:d2? [ -]? phone_code
+  = "+"? phone_prefix? [ -]? phone_op_code:(d d)? [ -]? phone_code
 
 phone_prefix
   = "(" d:phone_prefix ")" { return d; }
-  / d3
+  / (d d d)
 
 phone_code = dnn:d &{ return dnn>9999;}
 
 /*
  * Primitives.
+
+code
+  = int3  
+  / (f:d "-" r:int3) {return f+r}
+
+
+int3
+  = f:((d d d) / (d d)) "-" r:int3 {return f.join('')+r}
+  / r:((d d d) / (d d)) {return r.join('')}
+
+
  */
 
-d "digit"  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
-
-d2 "digital2"  = digits:([0-9] [0-9]) { return parseInt(digits.join(""), 10); }
-
-d3 "digital3"  = digits:([0-9][0-9][0-9]) { return parseInt(digits.join(""), 10); }
-
 str = s:[\S]* { return s.join('')}
+
+int
+  = r:d+ { return r.join('')}
+
+d "digit"
+  = [0-9]
 
 /*
  * Whitespace.
@@ -185,7 +105,7 @@ str = s:[\S]* { return s.join('')}
  
 _ = (whitespace)*
 
- 
+
 __ = (whitespace / eol / comment)*
 
 /* Modeled after ECMA-262, 5th ed., 7.4. */
@@ -213,3 +133,6 @@ eolChar
 /* Modeled after ECMA-262, 5th ed., 7.2. */
 whitespace "whitespace"
   = [ \t\v\f\u00A0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]
+
+nonwhite "non-whitespace"
+  = [^ \t\v\f\u00A0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]
