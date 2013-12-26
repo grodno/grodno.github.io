@@ -80,8 +80,7 @@ li.label.active{
     
 }
 .bad {
-    color: orangered;
-    font-weight: bolder;
+    color:  cadetblue;
 }
 .hardcoded{
     font-size: smaller;
@@ -93,4 +92,12 @@ li.label.active{
 .kind-a{
     color:  fuchsia;
     font-weight: bolder;
+}
+
+.type-amount {
+    background-color: chocolate;
+}
+
+.type-quote {
+    background-color: gainsboro;
 }

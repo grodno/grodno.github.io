@@ -23,7 +23,7 @@
                 performImpl: function(err, ev){
                     
                     if (this.parser) {
-                        ev.input = this.parser.parse(ev.input);
+                        ev.normalizedInput = this.parser.parse(ev.input);
                     }
                     
                 }

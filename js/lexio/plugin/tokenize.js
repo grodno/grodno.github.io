@@ -6,7 +6,6 @@
         this.id = m.origin || v;
         this.input = v;
         
-        this.chars = [m];
         this.size = 1;
         
         this.kind = m.kind;
@@ -15,11 +14,29 @@
         // sequence refs
         if (prev){
             this.prev = prev;
-             prev.next = this;
+            prev.next = this;
         }
     }
     
-    Token.prototype = {
+    var ZToken = function(t, prev) {
+       
+        this.id = t.id;
+        this.input = t.input || + t.id;
+        
+        this.size = t.id.length;
+        
+        this.kind = 'z';
+        this.type = t.type;
+        this.tags = (t.tags || []).concat('type-'+this.type);
+        
+        // sequence refs
+        if (prev){
+            this.prev = prev;
+            prev.next = this;
+        }
+    }
+    
+    Token.prototype = ZToken.prototype = {
         remove : function(){
             this.kind = null;
             this.prev && (this.prev.next = this.next);
@@ -28,40 +45,78 @@
     }
     
     var _tokenize = (function(v, p, ev) {
-
-        // metadata
-        var m = String.CHARS[v] || (String.CHARS[v] = {kind:'x', lat:'', id:v, type:v, origin:v});
-
-        if (!ev.lastToken) {
+        
+        var prev = ev.lastToken;
+        
+        if (v.type) {
             
-            this.push(ev.firstToken = ev.lastToken = new Token(v, m, null));
-            
+             this.push(ev.lastToken = new ZToken(v, prev));
+             
         } else {
             
-            var prev = ev.lastToken;
-           
-            if (prev.kind===m.kind) { // append to previous of same kind
-                
+            // metadata
+            var m = String.CHARS[v] || (String.CHARS[v] = {
+                kind:'x', 
+                lat:'', 
+                id:v, 
+                type:v, 
+                origin:v
+            });
+
+            if (prev && (prev.kind===m.kind)) { // append to previous of same kind
+
                 prev.input += v;
                 prev.id += m.origin || v;
-                prev.chars.push(m);
                 prev.size++;
 
             } else {
-                
+
                 this.push(ev.lastToken = new Token(v, m, prev));
-                
+
             }
+        }
+        
+        if (!prev) {
+
+            ev.firstToken = ev.lastToken;
+
         }
 
         
     }).iterator();   
+    
+    // parses and compile binding from expression
+    var compileTemplate = function(s){
 
+        var  posB, posE = -2,  path, r=[];
+
+            
+        while ( ((posB = s.indexOf('{{')) > -1)&& ((posE = s.indexOf('}}', posB)) > -1) ) {
+                
+            path = s.substring(posB + 1, posE+1);
+                
+            if (path[0]===' '){
+                path = path.substring(1);
+            }
+                
+            r.push.apply(r, s.substring(0, posB).split(''))
+            r.push(Object.parse(path))
+            
+            s = s.substring(posE + 2);
+                
+        }
+        
+        s && r.push.apply(r, s.split(''));
+
+        return r;
+    }
+        
     Object.entity.define("lexio/plugin/tokenize extends lexio/Plugin",{
     
         performImpl:function(err, ev) {
             
-            _tokenize(ev.input.split(''), [], ev);
+            var arr  = ev.normalizedInput ? compileTemplate(ev.normalizedInput) : ev.input.split('');
+            _tokenize(arr, [], ev);
             
         }
    

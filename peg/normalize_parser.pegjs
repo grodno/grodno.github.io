@@ -3,20 +3,29 @@
  */
 
 text
-  = f:token _ r:text { return f + ' ' + r ;}
-  / token
+  = f:token+ { return f.join('') ;}
 
 token 
-  = amount 
-  / time
+  = quotes
+  /  amount 
   / r:nonwhite+ { return r.join('');}
+  / whitespace
 
+quotes
+  =  (['"“] n:[^”'" ]+ ['"”])
+  { return ''
+      +'{{type:"quote"'
+        +', id:"'+n.join('')+'"'
+        +', input:"\\"'+n.join('')+'\\""'
+        +'}}';
+  }
 
 amount
-  =  n:number m:(_? measure)? 
+  =  n:number m:(_? measure & [ .])?
   { return ''
-      +'{{kind:"n"'
-        +', value:'+n
+      +'{{type:"amount"'
+        +', id:'+n
+        +', input:"'+n+(m&&m[1]||"")+'"'
         +', measure:"'+(m&&m[1]||"x")+'"'
         +'}}';
   }
@@ -41,14 +50,14 @@ measure
   / ("м" "."? q:" кв."?)   
     { return "m." +(q?'q.':'') }
   / ("г" "."? "од"? "."? "у"?)   
-    { return "year" }
+    { return "г." }
 
 
 time
   =  h:([0-2]? [0-9]) ":" m:([0-5] [-9]) 
   { return ''
-      +'{{kind:"time"'
-        +', value:"'+(h+":"+m)+'"'
+      +'{{type:"time"'
+        +', id:"'+(h+":"+m)+'"'
         +'}}';
   }
 
@@ -81,11 +90,11 @@ phone_code = dnn:d &{ return dnn>9999;}
 
 code
   = int3  
-  / (f:d "-" r:int3) {return f+r}
+  / (f:d [- ] r:int3) {return f+r}
 
 
 int3
-  = f:((d d d) / (d d)) "-" r:int3 {return f.join('')+r}
+  = f:((d d d) / (d d)) [- ] r:int3 {return f.join('-')+r}
   / r:((d d d) / (d d)) {return r.join('')}
 
 
