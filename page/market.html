@@ -20,7 +20,7 @@
         
         <ul id="posts" 
             data-widget="ui/BloggerList"
-            data-data-url-expression="'blogger://labels=market ,'+((${ market_labels}==='latest')?'':(${ market_labels}||''))+((${ market_kind}==='all')?'':(${ market_kind}||''))"
+            data-data-url-expression="'blogger://labels=market ,'+((${ market_labels}==='latest')?'':(${ market_labels}||''))+((${ market_kind}==='all')?'':((','+${ market_kind})||''))"
             data-skip-first-top="true"
             >Загрузка...</ul>
 

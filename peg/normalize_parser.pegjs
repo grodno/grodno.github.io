@@ -8,31 +8,40 @@ text
 token 
   = quotes 
   / tag
-  / amount 
-  / r:nonwhite+ { return r.join('');}
+  / r:[^'"“«<]+ { return r.join('');}
+  / r:['"“«<]+ { return r.join('');}
   / whitespace
 
 quotes
-  =  (['"“«] n:[^”'"» ]+ " "? n2:[^”'"» ]* ['"”»])
+  =  (['"“«] n:[^”'"» ]+ n2:(_ [^”'"» ]*)? ['"”»])
   { return ''
       +'{{type:"quote"'
-        +', id:"'+n.join('')+(n2.length?(' '+n2.join()):'')'"'
-        +', input:"\\"'+n.join('')+'\\""'
+        +', id:"'+n.join('')+(n2[1].length?(' '+n2[1].join('')):'')+'"'
+        +', input:"\\"'+n.join('')+(n2?(' '+n2[1].join('')):'')+'\\""'
         +'}}';
   }
 
+
 tag
-  =  "<" "/"? t:[a-zA-Z]+ attrs:(_+ [a-zA-Z_] ("=" ['"]? [^'"]* ['"]?))* _? "/"? ">" 
+  =  "<" "/"? t:[a-zA-Z]+ _? attrs:[^>]* ">" 
     { return ''
       +'{{type:"tag"'
-        +', id:"'+t+'"'
+        +', id:"'+t.join('')+'"'
         +', input:" "'
-        +', attrs:'+attrs+''
-        +'}}'+content;
+        +', attrs:"'+attrs.join('')+'"'
+        +'}}';
     }
+
+/**
+"<" "/"? t:[a-zA-Z]+ attrs:(_+ [a-zA-Z_:]+ ("=" ['"]? [^'"]* ['"]?)? )* _? "/"? ">" 
+**/
+tag_attrs 
+  = _+ [a-zA-Z]+ "=" quotes
+  / _+ [a-zA-Z]+ "=" nonwhite 
+  / _+ [a-zA-Z]+
  
 amount
-  =  n:number m:(_? measure & [ .])?
+  =  n:number m:(_? measure)?
   { return ''
       +'{{type:"amount"'
         +', id:'+n
@@ -60,7 +69,7 @@ measure
   / "%"
   / ("м" "."? q:" кв."?)   
     { return "m." +(q?'q.':'') }
-  / ("г" "."? "од"? "."? "у"?)   
+  / ("г" "."? "од"? "."? [а,у]?)   
     { return "г." }
 
 

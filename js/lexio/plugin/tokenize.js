@@ -41,12 +41,29 @@
             this.kind = null;
             this.prev && (this.prev.next = this.next);
             this.next && (this.next.prev = this.prev);
+        },
+        setNext : function(n){
+            this.next= n;
+            if (n){
+                n.prev = this;
+            }
+        }
+        ,
+        setPrev : function(p){
+            this.prev= p;
+            if (p){
+                p.next = this;
+            }
         }
     }
     
     var _tokenize = (function(v, p, ev) {
         
         var prev = ev.lastToken;
+        
+        if (!v) {
+            v= {type:"x", id:"error",input:'[error]' }
+        }
         
         if (v.type) {
             

@@ -42,6 +42,10 @@ Object.entity.create({
     }
     ,
     {
+        id:'lexio/plugin/dates'
+    }
+    ,
+    {
         id:'lexio/plugin/translit'
     }
     ,

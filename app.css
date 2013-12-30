@@ -85,8 +85,12 @@ li.label.active{
 .hardcoded{
     font-size: smaller;
 }
+date{
+    background-color:  darkslateblue;
+}
 .numeric{
-    background-color: bisque;
+    background-color:  cadetblue;
+    white-space: nowrap;
 }
 
 .kind-a{
@@ -99,5 +103,15 @@ li.label.active{
 }
 
 .type-quote {
-    background-color: gainsboro;
+    display: inline;
+    padding: .05em .56em;
+    font-size: 95%;
+    font-weight: 500;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: .25em;
+    background-color: mediumslateblue;
 }

@@ -2,9 +2,9 @@
     
     Object.entity.define('ui/BloggerList extends List', {
         
-        itemTemplate:'<div class="media panel-body"><span class="pull-left"><a href="{url}">'+
-        '<img class="img-rounded media-object" width="64" src="{icon}">{labels}</a></span>'
-        +'<div class="media-body"><h4 class="media-header">{name}</h4><p>{content}</p></div></div>'
+        itemTemplate:'<hr/><div class="media panel-body"><span class="pull-left"><a href="{url}">'+
+        '<img class="img-rounded media-object" width="64" src="{icon}"></a></span>'
+        +'<div class="media-body"><h4 class="media-header">{name}<small>{labels}</small></h4><p>{content}</p></div></div>'
         ,
         itemStyle:'panel panel-default'
         ,
@@ -29,7 +29,7 @@
                     v.content = v.content.substring(0, p) +'<a href="'+v.url+'">Подробнее → </a>';
                 }
                 
-                v.labels = (v.labels && v.labels.length) ?('<br/><span class="label label-info">'+v.labels.join('</span><br/><span class="label label-info">')+'</span>') :'';
+                v.labels = (v.labels && v.labels.length) ?(' <span class="label label-info">'+v.labels.join('</span> <span class="label label-info">')+'</span>') :'';
                 
                 // skip first top item
                 if (T.skipFirstTop && !T.topItem && v.labels && (v.labels.indexOf('top')>-1))   {
