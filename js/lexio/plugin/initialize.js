@@ -90,7 +90,7 @@
                 // perform on event
                 performImpl : function(err, ev) {
                     
-                    ev.input = ev.input.replace(RE_TAG,'')
+                   // ev.input = ev.input.replace(RE_TAG,'')
                         
                 }
                 

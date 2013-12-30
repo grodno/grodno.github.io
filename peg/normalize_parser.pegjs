@@ -6,20 +6,31 @@ text
   = f:token+ { return f.join('') ;}
 
 token 
-  = quotes
-  /  amount 
+  = quotes 
+  / tag
+  / amount 
   / r:nonwhite+ { return r.join('');}
   / whitespace
 
 quotes
-  =  (['"“] n:[^”'" ]+ ['"”])
+  =  (['"“«] n:[^”'"» ]+ " "? n2:[^”'"» ]* ['"”»])
   { return ''
       +'{{type:"quote"'
-        +', id:"'+n.join('')+'"'
+        +', id:"'+n.join('')+(n2.length?(' '+n2.join()):'')'"'
         +', input:"\\"'+n.join('')+'\\""'
         +'}}';
   }
 
+tag
+  =  "<" "/"? t:[a-zA-Z]+ attrs:(_+ [a-zA-Z_] ("=" ['"]? [^'"]* ['"]?))* _? "/"? ">" 
+    { return ''
+      +'{{type:"tag"'
+        +', id:"'+t+'"'
+        +', input:" "'
+        +', attrs:'+attrs+''
+        +'}}'+content;
+    }
+ 
 amount
   =  n:number m:(_? measure & [ .])?
   { return ''
