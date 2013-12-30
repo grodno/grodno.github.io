@@ -46,6 +46,10 @@ Object.entity.create({
     }
     ,
     {
+        id:'lexio/plugin/phones'
+    }
+    ,
+    {
         id:'lexio/plugin/translit'
     }
     ,
