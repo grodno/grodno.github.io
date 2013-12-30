@@ -21,13 +21,12 @@
                 v.name = Object.get(v,'title');
                 v.content = Object.get(v,'content');
                 v.url = Object.get(v,'url');
-                v.icon = Object.get(v,'author.image.url')||'/img/chess-pawn3.png';
+                v.icon = (Object.get(v,'author.image.url')||'').replace('http://img2.blogblog.com/img/b16-rounded.gif','') || 'res/logo120.png';
                 v.author = Object.get(v,'author.displayName');
                     
-                var p = v.content.indexOf('<a name=\'more\'></a>');
-                if (p!=-1){
-                    v.content = v.content.substring(0, p) +'<a href="'+v.url+'">Подробнее → </a>';
-                }
+              //var p = v.content.indexOf('<a name=\'more\'></a>');
+              // v.content = ((p!=-1)?v.content.substring(0, p):v.content) ;
+                
                 
                 v.labels = (v.labels && v.labels.length) ?(' <span class="label label-info">'+v.labels.join('</span> <span class="label label-info">')+'</span>') :'';
                 
@@ -42,7 +41,7 @@
             }).iterator();
             
             var _htmlAsyncAdapter= function(err, ev) {
-                this.datum.content = ev.value;
+                this.datum.content = ev.value +'<a href="'+this.datum.url+'">Подробнее → </a>';
                 return String.formatWithMap(this.itemTemplate, this.datum);
             }
             return { 
