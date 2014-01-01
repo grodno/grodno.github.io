@@ -4,7 +4,7 @@
     
     APP.LOCATION = Object.parseUri(''+global.location);
 
-    APP.DEBUG = (APP.LOCATION.authority.indexOf('local')+1);
+    APP.DEBUG = (APP.LOCATION.authority.indexOf('local')+1) || (APP.LOCATION.authority==='c9.io');
 
     if (APP.DEBUG || APP.LOCATION.params.debug) {
         

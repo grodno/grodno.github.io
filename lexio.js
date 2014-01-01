@@ -26,10 +26,6 @@ Object.entity.create({
     }
     ,
     {
-        id:'lexio/plugin/numbers'
-    }
-    ,
-    {
         id:'lexio/plugin/abbr'
     }
     ,
@@ -39,6 +35,10 @@ Object.entity.create({
     ,
     {
         id:'lexio/plugin/score'
+    }
+    ,
+    {
+        id:'lexio/plugin/numbers'
     }
     ,
     {

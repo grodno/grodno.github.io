@@ -19,20 +19,29 @@
             if (p && p.kind==='s') {
                 p = p.prev;
             }
+            if(!p) return;
         
-            if (p && (p.tags.indexOf('date')+1)) {
+            if ((p.tags.indexOf('date')+1)) {
             
                 p.input += "-"+t.input;
                 p.year = t.id;
                 p.setNext(t.next);
             
             }
+            if ((MONTH_ROOTS.indexOf(Object.get(p,'word.best.root'))+1)) {
+                p.input += "-"+t.input;
+                p.year = t.id;
+                p.setNext(t.next);
+                p.tags.push('label','date','month');
+            }
+        
         }
 
 
 
     }
-      
+    ,
+    MONTH_ROOTS = ['янв','февр','март','апрел','май','июн','июл','август','сентябр','октябр','ноябр','декабр']
     ,
     checkDate  = function(t){
         
@@ -40,7 +49,7 @@
         if (n && n.kind==='s') {
             n = n.next;
         }
-        if (n && n.word && (['янв'].indexOf(n.word.best.root)+1)) {
+        if (n && n.word && (MONTH_ROOTS.indexOf(Object.get(n,'word.best.root'))+1)) {
             
             t.input += "-"+n.input;
             t.setNext(n.next);
