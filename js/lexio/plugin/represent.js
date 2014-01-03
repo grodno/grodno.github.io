@@ -13,9 +13,9 @@
             var c = w.best || w.top;
         
             var sc = c.score;
-            title = (c.root||c.x) +' \n,'+w;
+            title = c.root? (c.root +' \n,'+w) : w.top.x;
             
-            cl.push(c.hardcoded? 'hardcoded' : (sc > 49 ? (sc >99 ? 'good' : 'norm'): (sc>19 ? 'weak' : 'bad')));
+            cl.push(c.hardcoded? 'hardcoded' : (sc > 49 ? (sc >99 ? 'good' : 'norm'): (sc>10 ? 'weak' : 'bad')));
         }
         
         return t.kind==='s'?' ':String.format('<span title="{0}" class="{1}">{2}</span>'

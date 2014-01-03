@@ -1,7 +1,7 @@
 // Lexio plugin
 (function () {
  
-    var _en = function(ww) {
+    var _lat = function(ww) {
         for ( var i = 0, r = "", l = ww.length; i < l; i++) {
             r += String.CHARS[ww[i]].lat;
         }
@@ -9,7 +9,7 @@
     };
     var _translite = function(c) {
         
-        if (c.root && String.ROOTS[_en(c.root)])
+        if (c.root && String.ROOTS[_lat(c.root)])
         {
             c.score+=100;
             c.word.best = c;

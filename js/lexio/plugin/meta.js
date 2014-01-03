@@ -11,7 +11,7 @@
                 
     }).iterator();
     
-     var enums = (function(v){
+    var enums = (function(v){
         var key = v.key.toUpperCase();
         var b = String[key] || (String[key]={});
         b[v.id] = v.value;
@@ -24,10 +24,12 @@
         }).iterator()(this, [])
     };
 
-    Array.prototype.makeMatchingTree = function() {
-        return (function(v){
-            Object.set(this, (v+'_').split('').join('.'),v);
-        }).iterator()(this, {})
+    var treeGenerator = (function(v){
+        Object.set(this, (v+'_').split('').join('.'),v);
+    }).iterator();
+        
+    var addIntoTree = function(key, data) {
+        return treeGenerator(data, String[key] || (String[key] = {}));
     };
     
     var TYPE_U = {
@@ -41,31 +43,22 @@
         return r;
     };
 
+    var applySourceData = function(data) {
+                
+        registry(['chars','roots','complexies','hardcoded','chars','root_masks'], data);
+                
+        enums(data['~']);
+                
+        data.complexies && addIntoTree('COMPLEXIES_TREE', data.complexies.getKeys());
+        data.prefixes && addIntoTree('PREFIXES_TREE', data.prefixes.getKeys());
+        data.suffixes && addIntoTree('SUFFIXES_TREE', data.suffixes.getKeys().mirrorItems());
+        data.flexies && addIntoTree('FLEXIES_TREE', data.flexies.getKeys().mirrorItems());
+    };
     
     Object.entity.define("lexio/plugin/meta extends lexio/Plugin", {
         
         methods: function(_super){
-            
-            var applySourceData = function(data) {
-                
-                registry(['chars','roots','complexies','hardcoded','chars'], data);
-                
-                enums(data['~']);
-                
-                Object.update(String, {
-                    
-                    COMPLEXIES_TREE : data.complexies.getKeys().makeMatchingTree()
-                    ,
-                    PREFIXES_TREE : data.prefixes.getKeys().makeMatchingTree()
-                    ,
-                    SUFFIXES_TREE : data.suffixes.getKeys().mirrorItems().makeMatchingTree()
-                    ,
-                    FLEXIES_TREE : data.flexies.getKeys().mirrorItems().makeMatchingTree()
- 
-                });
-            };
-            
-            
+             
             return {
                 init: function(){
                 

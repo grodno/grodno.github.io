@@ -2,7 +2,7 @@
 (function () {
    
     // normallizzations
-    var NORMALIZERS = [
+    var NORMALIZERS = {r: [
     {
         re:/^(.+)([ие]р)(.*)$/, 
         patches:['р']
@@ -19,7 +19,10 @@
         re:/^(.+)(ере)(.+)$/, 
         patches:['ре']
     }
-    // ,{        re:/^(.+)([цч])$/, patches:['к','т']}
+    ,{
+        re:/^(.+)([цч])$/, 
+        patches:['к','т']
+        }
     ,{
         re:/^(.+)(ец|ч)$/, 
         patches:['ц']
@@ -33,7 +36,10 @@
         re:/^(.+)(ш)$/, 
         patches:['х','с']
     }
-    // ,{        re:/^(.+)(ж)$/, patches:['д', 'з', 'г']}
+    ,{
+        re:/^(.+)(ж)$/, 
+        patches:['д', 'з', 'г']
+        }
     ,{
         re:/^(.+)(з)$/, 
         patches:['г']
@@ -46,16 +52,22 @@
         re:/^(.+)(жд)$/, 
         patches:['д', 'ж']
     }
-    ]   ;
+    ],
+    e:[
+      {
+        re:/^(.+)(ou|oo)(.+)$/, 
+        patches:['u']
+        }  
+    ]};
 
-    function tryNormalize(n) {
+    var tryNormalize = function (n) {
         
         if (this.root) return;
         
-        var m = n.re.match(this.x);
+        var m = this.x.match(n.re);
         if (m) {
             for (var i = 0; i < n.patches.length; i++) {
-                var r  = String.ROOTS[m[0]+n.patches[i]+m[2]];
+                var r  = String.ROOTS[m[1]+n.patches[i]+(m[3]||'')];
                 if (r) {
                     
                     this.root = this.x;
@@ -70,7 +82,12 @@
     
     var _score = function(c) {
         
-        var x = c.x, c, z;
+        if(c.hardcoded){
+            return;
+        }
+        
+
+        var x = c.x, sf;
         
         var len = x.length;
         
@@ -83,15 +100,15 @@
             
             c.root = x;
             
-            c.score += len+(r.score||100);
+            c.score += len+r.score;
             
             return;
         }
 
-        if ((c = (this.suffix || this.flexie)) && ('аеяюий'.indexOf(c[0])>-1) && (r = String.ROOTS[x +'й'])){
+        if ((sf = (c.suffix || c.flexie)) && ('аеяюий'.indexOf(sf[0])>-1) && (r = String.ROOTS[x +'й'])){
                 
             c.root = x+'й';
-            c.score += len+(r.score||100);
+            c.score += len+r.score;
             return;        
         }
 
@@ -99,69 +116,39 @@
             return;
         }
         
-        Function.iterate(tryNormalize,NORMALIZERS,c);
+        Function.iterate(tryNormalize,NORMALIZERS[c.word.lang],c);
         
         if(c.root){
             return;
         }
         
+        var mask;   
+        if (len>2 && (mask=String.ROOT_MASKS[String.signature(x)])) {
             
-        if (len>2 && String.ROOT_MASKS[String.signature(x)]) {
-                
-                c.score += this.token.size - len + 50;
-                
-            // } else  {
-                
-            
-            // z = x.substr(-1);
-            
-            // if (z==='ж'){
-                
-            //     c = x.substring(0,len-1);
-            //     W.morphem(this,'root',c+'д');
-            //     W.morphem(this,'root',c+'з');
-            //     W.morphem(this,'root',c+'г');
-                
-            // }
-            
-            // if ((z==='ч') || (z==='ц')){
-                
-            //     c = x.substring(0,len-1);
-            //     W.morphem(this,'root',c+'к');
-            //     W.morphem(this,'root',c+'т');
-                
-            // }
-                
-                
-            //     sc /= 2;
-                //this.success( x, (this.top.src.length - len)-50);
-                //this.complexify(x);
-            
+            c.root = x;
+            c.score += this.token.size - len + mask.score;
         }
- 
-        if (this.best.score < c.score){
-            this.best = c;
-        }
-        
     }
             
     var _tres = (function(w, i, tres) {
-        if (w.score>tres){
+        if (w.root && w.score>=tres ){//
             this.push(w);
         }
     }).iterator();     
            
     var _iterator = (function(w, i) {
         
-            if (w.best) return;
+        if (w.best) return;
         
-            w.best = w.top;
+        w.eachCase(_score);
             
-            w.eachCase(_score);
+        Array.sortBy(w.cases, 'score', -1);        
             
-            w.cases = _tres(w.cases,[], w.best.score*0.2);
+        w.best = w.cases[0];
             
-            Array.sortBy(w.cases, 'score', -1);        
+        w.cases = _tres(w.cases,[], w.best.score*0.2);
+            
+            
             
     }).iterator();     
          

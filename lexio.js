@@ -11,7 +11,8 @@ Object.entity.create({
         id:'lexio/plugin/meta'
         ,
         sources:[
-        'lexio_meta://0AqQx4KOOt8TGdExjQ2ZJM0Q5MFBQSVRhYUw1ZHJMSFE'
+         'lexio_meta://0AqQx4KOOt8TGdExjQ2ZJM0Q5MFBQSVRhYUw1ZHJMSFE'
+        ,'lexio_meta://0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2c'
         ]
     //var EN = GSheets.getSpreadsheetData('0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2');
   

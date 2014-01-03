@@ -58,11 +58,6 @@
     var op_morphology = function(c){
         c.morphology();
     };
-
-    var register= function(C,key,x) {
-        var reg = this.registry[key] || (this.registry[key] = {});
-        (reg[x] || (reg[x] =[])).push(C);
-    }
     
     //## [word] facility:
     String.getWord = (function($R) {
@@ -95,7 +90,11 @@
                     
                     b.update({
                         score:1, 
-                        x : this.x
+                        x : this.x,
+                        suffix : null,
+                        prefix : null,
+                        flexie : null,
+                        complexie : null 
                     });
                     
                     if (String.HARDCODED[this.x]) {
@@ -144,7 +143,7 @@
         this.word = word;
         this.level = (parent && parent.level||0) + 1;// branch depth level
         this.word.cases.push(this);
-        
+             
         this.update(params);
     }
 
@@ -187,17 +186,17 @@
         toString : function() {
             
             return (this.negation||'')
-            + (this.prependix ? this.prependix+'-' : '') 
-            + this.getForm()
-            + (this.flexie ? ':'+this.flexie : '') 
-            + (this.appendix ? ':'+this.appendix : '') ;
+                + (this.prependix ? this.prependix+'-' : '') 
+                + this.getForm()
+                + (this.flexie ? ':'+this.flexie : '') 
+                + (this.appendix ? ':'+this.appendix : '') ;
         }
         ,
         getForm : function() {
             
             return (this.prefix||'') +(this.complexie ? '{' + this.complexie + '}' : '')
-            + '['+ (this.x||'-')+ (!this.root || (this.root === this.x) ? '': ('=' + this.root)) + ']'
-            + (this.suffix ||'');
+                + '['+ (this.x||'-')+ (!this.root || (this.root === this.x) ? '': ('=' + this.root)) + ']'
+                + (this.suffix ||'');
         }
         ,
         morphology : function() {
@@ -264,7 +263,7 @@
 
     var _op = function(d){
         
-        if (d.kind==='r') {
+        if (d.kind==='r' || d.kind==='e') {
             
             var w = d.word = String.getWord(d);
             

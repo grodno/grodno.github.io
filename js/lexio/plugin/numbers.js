@@ -72,6 +72,7 @@
         }
         
         if (!n) return;
+        
         var k = Object.get(n.word,'best.root') || n.id;
         if (MEASURES[k]) {
             

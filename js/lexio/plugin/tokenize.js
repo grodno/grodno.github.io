@@ -82,9 +82,13 @@
 
             if (prev && (prev.kind===m.kind)) { // append to previous of same kind
 
+                var id = m.origin || v;
                 prev.input += v;
-                prev.id += m.origin || v;
-                prev.size++;
+                
+                if (prev.lastAppended !== id) {
+                    prev.id += (prev.lastAppended = id);
+                    prev.size++;
+                }
 
             } else {
 
