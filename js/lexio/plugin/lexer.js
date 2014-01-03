@@ -55,58 +55,10 @@
         }))
     }; 
     
-
     var op_morphology = function(c){
         c.morphology();
     };
-    
-    // normallizzations
-    var NORMALIZERS = [
-    {
-        re:/^(.+)([ие]р)(.*)$/, 
-        patches:['р']
-    }
-    ,{
-        re:/^(.+)(оро)(.+)$/, 
-        patches:['ра']
-    }
-    ,{
-        re:/^(.+)(оло)(.+)$/, 
-        patches:['ла']
-    }
-    ,{
-        re:/^(.+)(ере)(.+)$/, 
-        patches:['ре']
-    }
-    // ,{        re:/^(.+)([цч])$/, patches:['к','т']}
-    ,{
-        re:/^(.+)(ец|ч)$/, 
-        patches:['ц']
-    }
-    
-    ,{
-        re:/^(.+)(е)г$/, 
-        patches:['']
-    }
-    ,{
-        re:/^(.+)(ш)$/, 
-        patches:['х','с']
-    }
-    // ,{        re:/^(.+)(ж)$/, patches:['д', 'з', 'г']}
-    ,{
-        re:/^(.+)(з)$/, 
-        patches:['г']
-    }
-    ,{
-        re:/^(.+)(щ)$/, 
-        patches:['ст','т']
-    }
-    ,{
-        re:/^(.+)(жд)$/, 
-        patches:['д', 'ж']
-    }
-    ]   ;
-    
+
     var register= function(C,key,x) {
         var reg = this.registry[key] || (this.registry[key] = {});
         (reg[x] || (reg[x] =[])).push(C);
@@ -134,21 +86,11 @@
                 
             }
             ,
-            morphem: function(C,key, x) {
-                
-                if (this.info[key+x]) return;
-        
-                this.info[key+x] = C;
-        
-            //this.text.register(C,key,x);
-       
-            }
- 
-
-            ,
             morphology : function(b) {
                 
                 if (!b) {
+                    
+                    // initial for word
                     b = this.top = new Case(this);
                     
                     b.update({
@@ -171,7 +113,9 @@
                     this.eachCase(op_morphology);
                 } else {
                     
+                    //with branch
                     b.morphology();
+                    
                 }
                 
                 
@@ -257,71 +201,33 @@
         }
         ,
         morphology : function() {
-            
-            this.rootify();
 
-            if (this.flexie==null) {
+            if (this.flexie===null) {
                 this.flexie='';
                 _reverseMatchesInTree(String.FLEXIES_TREE, op_flexify, this);
             } 
                 
-            if (this.prefix==null) {
+            if (this.prefix===null) {
                 this.prefix='';
                 _matchesInTree(String.PREFIXES_TREE, op_prefixize, this);
             }
                 
-            if (this.suffix==null) {
+            if (this.suffix===null) {
                 this.suffix='';
                 _reverseMatchesInTree(String.SUFFIXES_TREE, op_suffixize, this);
             }
                 
-            if (this.complexie==null) {
+            if (this.complexie===null) {
                 this.complexie='';
                 _matchesInTree(String.COMPLEXIES_TREE, op_complexify, this);
-            }
-                
-        }
-        ,
-        rootify:function(){
+            }                
 
-            var c,z,x = this.x, len = x.length, W=this.word;
-
-            W.morphem(this,'root',x);
-                
-            W.morphem(this,'root',x.replace('ь',''));
-
-            if ((c = (this.suffix || this.flexie)) && ('аеяюий'.indexOf(c[0])>-1)){
-                
-                W.morphem(this,'root',x+'й');
-                
-            }
-            
-            z = x.substr(-1);
-            
-            if (z==='ж'){
-                
-                c = x.substring(0,len-1);
-                W.morphem(this,'root',c+'д');
-                W.morphem(this,'root',c+'з');
-                W.morphem(this,'root',c+'г');
-                
-            }
-            
-            if ((z==='ч') || (z==='ц')){
-                
-                c = x.substring(0,len-1);
-                W.morphem(this,'root',c+'к');
-                W.morphem(this,'root',c+'т');
-                
-            }
-
-            this.root = x;
         }
         ,
         cuttify:(function(ev){
-            APP1=["ся","сь","те"],
-            NEG=["не","ни"],
-            ETE = ["eте"];
+            var APP1=["ся","сь","те"];
+            var NEG=["не","ни"];
+            var ETE = ["eте"];
 
             return function() {
                 

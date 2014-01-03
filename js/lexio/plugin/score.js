@@ -1,19 +1,76 @@
 // Lexio plugin
 (function () {
    
-    var TYPE_U = {
-        type:'x'
+    // normallizzations
+    var NORMALIZERS = [
+    {
+        re:/^(.+)([ие]р)(.*)$/, 
+        patches:['р']
     }
-    var _signature = function(ww) {
-        for ( var i = 0, r = "", l = ww.length; i < l; i++) {
-            r += (String.CHARS[ww[i]] || TYPE_U).type;
-        }
-        return r;
-    };
+    ,{
+        re:/^(.+)(оро)(.+)$/, 
+        patches:['ра']
+    }
+    ,{
+        re:/^(.+)(оло)(.+)$/, 
+        patches:['ла']
+    }
+    ,{
+        re:/^(.+)(ере)(.+)$/, 
+        patches:['ре']
+    }
+    // ,{        re:/^(.+)([цч])$/, patches:['к','т']}
+    ,{
+        re:/^(.+)(ец|ч)$/, 
+        patches:['ц']
+    }
+    
+    ,{
+        re:/^(.+)(е)г$/, 
+        patches:['']
+    }
+    ,{
+        re:/^(.+)(ш)$/, 
+        patches:['х','с']
+    }
+    // ,{        re:/^(.+)(ж)$/, patches:['д', 'з', 'г']}
+    ,{
+        re:/^(.+)(з)$/, 
+        patches:['г']
+    }
+    ,{
+        re:/^(.+)(щ)$/, 
+        patches:['ст','т']
+    }
+    ,{
+        re:/^(.+)(жд)$/, 
+        patches:['д', 'ж']
+    }
+    ]   ;
 
+    function tryNormalize(n) {
+        
+        if (this.root) return;
+        
+        var m = n.re.match(this.x);
+        if (m) {
+            for (var i = 0; i < n.patches.length; i++) {
+                var r  = String.ROOTS[m[0]+n.patches[i]+m[2]];
+                if (r) {
+                    
+                    this.root = this.x;
+                    this.score += this.x.length + (r.score||90);
+                    return;
+                    
+                }
+            }
+        }
+        
+    }
     
     var _score = function(c) {
-        var sc = c.score, x = c.x;
+        
+        var x = c.x, c, z;
         
         var len = x.length;
         
@@ -21,26 +78,68 @@
             return;
         }
         
-        if (String.ROOTS[x]) {
+        var r  = String.ROOTS[x];
+        if (r) {
             
-            sc += len+100;
+            c.root = x;
             
-        } else {
+            c.score += len+(r.score||100);
             
-            if (len>2 && String.ROOT_MASKS[_signature(x)]) {
+            return;
+        }
+
+        if ((c = (this.suffix || this.flexie)) && ('аеяюий'.indexOf(c[0])>-1) && (r = String.ROOTS[x +'й'])){
                 
-                sc += this.token.size - len + 50;
+            c.root = x+'й';
+            c.score += len+(r.score||100);
+            return;        
+        }
+
+        if(len<3){
+            return;
+        }
+        
+        Function.iterate(tryNormalize,NORMALIZERS,c);
+        
+        if(c.root){
+            return;
+        }
+        
+            
+        if (len>2 && String.ROOT_MASKS[String.signature(x)]) {
                 
-            } else  {
-                sc /= 2;
+                c.score += this.token.size - len + 50;
+                
+            // } else  {
+                
+            
+            // z = x.substr(-1);
+            
+            // if (z==='ж'){
+                
+            //     c = x.substring(0,len-1);
+            //     W.morphem(this,'root',c+'д');
+            //     W.morphem(this,'root',c+'з');
+            //     W.morphem(this,'root',c+'г');
+                
+            // }
+            
+            // if ((z==='ч') || (z==='ц')){
+                
+            //     c = x.substring(0,len-1);
+            //     W.morphem(this,'root',c+'к');
+            //     W.morphem(this,'root',c+'т');
+                
+            // }
+                
+                
+            //     sc /= 2;
                 //this.success( x, (this.top.src.length - len)-50);
                 //this.complexify(x);
-            } 
+            
         }
  
-        c.score = sc;      
-        
-        if (this.best.score < sc){
+        if (this.best.score < c.score){
             this.best = c;
         }
         

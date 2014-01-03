@@ -30,6 +30,18 @@
         }).iterator()(this, {})
     };
     
+    var TYPE_U = {
+        type:'x'
+    }
+
+    String.signature = function(x) {
+        for ( var i = 0, r = "", l = x.length; i < l; i++) {
+            r += (String.CHARS[x[i]] || TYPE_U).type;
+        }
+        return r;
+    };
+
+    
     Object.entity.define("lexio/plugin/meta extends lexio/Plugin", {
         
         methods: function(_super){
