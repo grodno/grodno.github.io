@@ -5,7 +5,7 @@
         if (t.kind==='d'){
             
             var next2 = Object.get(t.next,'next');
-            while (next2 && ('- ()'.indexOf(t.next.id)+1) && (next2.kind==='d')) {
+            while (0 && next2 && ('- ()'.indexOf(t.next.id)+1) && (next2.kind==='d')) {
                 
                 t.input  = t.id  = (t.id += ''+next2.id);
                 
@@ -34,7 +34,6 @@
         }
         
     };
-    var CURR = new Date();
     
     Object.entity.define("lexio/plugin/phones extends lexio/Plugin", {
         

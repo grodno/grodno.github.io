@@ -82,14 +82,7 @@
     
     var _score = function(c) {
         
-        if(c.hardcoded){
-            return;
-        }
-        
-
-        var x = c.x, sf;
-        
-        var len = x.length;
+        var x = c.x, len = x.length, lang=c.word.lang;
         
         if(len<2){
             return;
@@ -104,8 +97,9 @@
             
             return;
         }
-
-        if ((sf = (c.suffix || c.flexie)) && ('аеяюий'.indexOf(sf[0])>-1) && (r = String.ROOTS[x +'й'])){
+        
+        var sf =  (c.suffix || c.flexie);
+        if (sf && lang==='r' && ('аеяюий'.indexOf(sf[0])>-1) && (r = String.ROOTS[x +'й'])){
                 
             c.root = x+'й';
             c.score += len+r.score;
@@ -116,14 +110,14 @@
             return;
         }
         
-        Function.iterate(tryNormalize,NORMALIZERS[c.word.lang],c);
+        Function.iterate(tryNormalize,NORMALIZERS[lang],c);
         
         if(c.root){
             return;
         }
         
         var mask;   
-        if (len>2 && (mask=String.ROOT_MASKS[String.signature(x)])) {
+        if (len>2 && (mask=String.ROOT_MASKS[lang+String.signature(x)])) {
             
             c.root = x;
             c.score += this.token.size - len + mask.score;
@@ -140,6 +134,11 @@
         
         if (w.best) return;
         
+        if (w.top.hardcoded) {
+            w.best = w.top;
+            return;
+        }
+        
         w.eachCase(_score);
             
         Array.sortBy(w.cases, 'score', -1);        
@@ -147,9 +146,7 @@
         w.best = w.cases[0];
             
         w.cases = _tres(w.cases,[], w.best.score*0.2);
-            
-            
-            
+
     }).iterator();     
          
     

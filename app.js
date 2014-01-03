@@ -40,7 +40,7 @@
     // register async source for lexio processing
     Object.entity.create({
         id:'CachedResourceProvider:lexio_meta', 
-        version: '1',//''+Math.round((new Date()).valueOf() / 86400000),
+        version: ('v'+APP.VERSION),//''+Math.round((new Date()).valueOf() / 86400000),
         scope1 : 'session', 
         urlTemplate:'[jsonp]'+APP.GOOGLE_SHEETS_URI+'{0}'
     });    

@@ -24,12 +24,12 @@ quotes
 
 tag
   =  "<" "/"? t:[a-zA-Z]+ _? attrs:[^>]* ">" 
-    { return ''
-      +'{{type:"tag"'
-        +', id:"'+t.join('')+'"'
-        +', input:" "'
-        +', attrs:"'+attrs.join('')+'"'
-        +'}}';
+    { return '{'
+      +JSON.stringify({type: "tag"
+        , id: t.join('')
+        , input: " "
+        , attrs: attrs.join('')
+        })+'}';
     }
 
 /**

@@ -85,7 +85,7 @@
                 var id = m.origin || v;
                 prev.input += v;
                 
-                if (prev.lastAppended !== id) {
+                if (prev.lastAppended !== id) { // prevent duplications
                     prev.id += (prev.lastAppended = id);
                     prev.size++;
                 }
