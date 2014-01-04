@@ -71,25 +71,25 @@
              
         } else {
             
-            // metadata
-            var m = String.CHARS[v] || (String.CHARS[v] = {
+            // metadata String.CHARS2[ev.lastChar+v] ||
+            var m =  String.CHARS[v] || (String.CHARS[v] = {
                 kind:'x', 
                 lat:'', 
                 id:v, 
                 type:v, 
                 origin:v
             });
-
+            
+            //ev.lastChar = v;
+            
             if (prev && (prev.kind===m.kind)) { // append to previous of same kind
 
                 var id = m.origin || v;
                 prev.input += v;
                 
-                if (prev.lastAppended !== id) { // prevent duplications
-                    prev.id += (prev.lastAppended = id);
-                    prev.size++;
-                }
-
+                prev.id += id;
+                prev.size++; 
+                        
             } else {
 
                 this.push(ev.lastToken = new Token(v, m, prev));
@@ -111,15 +111,10 @@
 
         var  posB, posE = -2,  path, r=[];
 
-            
         while ( ((posB = s.indexOf('{{')) > -1)&& ((posE = s.indexOf('}}', posB)) > -1) ) {
                 
             path = s.substring(posB + 1, posE+1);
-                
-            if (path[0]===' '){
-                path = path.substring(1);
-            }
-                
+
             r.push.apply(r, s.substring(0, posB).split(''))
             r.push(Object.parse(path))
             

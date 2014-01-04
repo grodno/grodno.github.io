@@ -117,10 +117,11 @@
         }
         
         var mask;   
-        if (len>2 && (mask=String.ROOT_MASKS[lang+String.signature(x)])) {
+        if ((mask=String.ROOT_MASKS[lang+String.signature(x)])) {
             
             c.root = x;
             c.score += this.token.size - len + mask.score;
+            return;
         }
     }
             

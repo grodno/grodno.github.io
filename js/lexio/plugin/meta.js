@@ -37,8 +37,13 @@
     }
 
     String.signature = function(x) {
-        for ( var i = 0, r = "", l = x.length; i < l; i++) {
-            r += (String.CHARS[x[i]] || TYPE_U).type;
+        for ( var i = 0, r = "", l = x.length, p, c; i < l; i++) {
+            c = x[i];
+            if (c!==p) {
+                r += (String.CHARS[c] || TYPE_U).type;
+                p = c;                
+            }
+
         }
         return r;
     };
