@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+        <title>Import</title>
+       <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+        <link href="app.css" rel="stylesheet">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <script src="libs/axio.js"></script>
+
+        <script>
+            
+            var APP = {
+                ID : 'grodno.co'
+                ,
+                TITLE : 'Grodno'
+                ,
+                VERSION : '1.4.5'
+                ,
+                COPYRIGHT : '2013 Grodno'
+                ,
+                GOOGLE_SHEETS_URI:'https://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc='
+                ,
+                GOOGLE_API_KEY:'AIzaSyAGenobWLKI-F6MWzrHIXmviwJww43n2EM'//'AIzaSyA--IJRFbmFubpjcz5Yherycv6Vy48qBY0'
+            };
+        </script>
+        <script src="app.js"></script>
+        <script >
+            // Lexio plugin
+(function () {
+    
+    var Token = function(v, m, prev) {
+       
+        this.id = v;
+        this.input = v;
+        
+        this.size = v.length;
+        this.weight = m.weight;
+        this.kind = 'e';
+        this.tags = [];
+        
+        // sequence refs
+        if (prev){
+            this.prev = prev;
+            prev.next = this;
+        }
+    }
+
+    
+    Token.prototype = {
+        remove : function(){
+            this.kind = null;
+            this.prev && (this.prev.next = this.next);
+            this.next && (this.next.prev = this.prev);
+        },
+        setNext : function(n){
+            this.next= n;
+            if (n){
+                n.prev = this;
+            }
+        }
+        ,
+        setPrev : function(p){
+            this.prev= p;
+            if (p){
+                p.next = this;
+            }
+        }
+    }
+    
+    var _tokenize = (function(v, p, ev) {
+        
+        var prev = ev.lastToken;
+        
+        this.push(ev.lastToken = new Token(v.id, v, prev));
+
+        if (!prev) {
+
+            ev.firstToken = ev.lastToken;
+
+        }
+
+        
+    }).iterator();   
+    
+    Object.entity.define("importTokenize extends lexio/Plugin",{
+        requires:['lib://en_all']
+        ,
+        performImpl:function(err, ev) {
+            
+            _tokenize(window.EN_ALL.all, [], ev);
+            
+        }
+   
+    });
+
+})();
+// Lexio plugin
+// show as HTML
+(function () {
+    
+    var _op = function(t){
+       if (!t.word.best) return;
+        
+        var r = t.word.best.root;
+        var d = this.roots[r] || (this.roots[r] = {id:r, weight:0, score:t.word.best.score});
+        
+        d.weight+=t.weight;
+        
+    };
+    var _html = function(t){
+
+         this.value += String.formatWithMap("\\n {id} \t {weight} \t {score}", t);
+    };
+    
+    Object.entity.define("importRepresent extends lexio/Plugin", {
+        
+        methods: function(_super){
+            
+            return {
+                
+                // implementation of perform on event
+                performImpl: function(err, ev){
+                    
+                    ev.value = '';
+                    
+                    ev.roots = {};
+                    
+                    ev.eachToken(_op);
+                    
+                    Function.iterate(_html, ev.roots,ev);
+                    
+                    window.container.innerHTML = ev.value;
+                }
+            };
+        }
+    });
+    
+})();
+// Lexio handler instance
+Object.entity.create({
+    id:"lexio/Processor:lexio"
+    ,
+    plugins:[
+    {
+        id:'lexio/plugin/initialize'
+    }
+    ,{
+        id:'lexio/plugin/meta'
+        ,
+        sources:[
+         'lexio_meta://0AqQx4KOOt8TGdExjQ2ZJM0Q5MFBQSVRhYUw1ZHJMSFE'
+        ,'lexio_meta://0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2c'
+        ]
+    //var EN = GSheets.getSpreadsheetData('0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2');
+  
+    }
+    ,
+    {
+        id:'importTokenize'
+    }
+    ,
+    {
+        id:'lexio/plugin/lexer'
+    }
+    ,
+    {
+        id:'lexio/plugin/score'
+    }
+    ,
+    {
+        id:'importRepresent'
+    }
+    ]
+});
+            
+
+            
+        </script>
+    </head>
+
+
+    <body>
+    <button onclick="Object.notify('lexio://#');">Do it</button>
+<pre id="container">
+    
+</pre>
+    </body>
+</html>
