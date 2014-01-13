@@ -57,7 +57,10 @@
       {
         re:/^(.+)(ou|oo)(.+)$/, 
         patches:['u']
-        }  
+        } ,{
+        re:/^(.+)(v)$/, 
+        patches:['f']
+    } 
     ]};
 
     var tryNormalize = function (n) {
@@ -105,7 +108,12 @@
             c.score += len+r.score;
             return;        
         }
-
+        if (lang==='e' && (x[len-1]===x[len-2]) && (r = String.ROOTS[x.substring(0, len-1)])){
+                
+            c.root = r.id;
+            c.score += len+r.score;
+            return;        
+        }
         if(len<3){
             return;
         }
