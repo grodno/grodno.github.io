@@ -57,9 +57,17 @@
       {
         re:/^(.+)(ou|oo)(.+)$/, 
         patches:['u']
-        } ,{
+        } 
+        ,{
+        re:/^(.+)(ee)(.){1,2}$/, 
+        patches:['e']
+        } 
+        ,{
         re:/^(.+)(v)$/, 
         patches:['f']
+    } ,{
+        re:/^(.+)(s)$/, 
+        patches:['z']
     } 
     ]};
 
@@ -104,16 +112,27 @@
         var sf =  (c.suffix || c.flexie);
         if (sf && lang==='r' && ('аеяюий'.indexOf(sf[0])>-1) && (r = String.ROOTS[x +'й'])){
                 
-            c.root = x+'й';
-            c.score += len+r.score;
-            return;        
-        }
-        if (lang==='e' && (x[len-1]===x[len-2]) && (r = String.ROOTS[x.substring(0, len-1)])){
-                
             c.root = r.id;
             c.score += len+r.score;
             return;        
         }
+        if (lang==='e') {
+            
+            if (sf && (r = String.ROOTS[x +'e'])){
+                    
+                c.root = r.id;
+                c.score += len+r.score;
+                return;        
+            }
+            
+            if ( (x[len-1]===x[len-2]) && (r = String.ROOTS[x.substring(0, len-1)])){
+                    
+                c.root = r.id;
+                c.score += len+r.score;
+                return;        
+            }            
+        }
+
         if(len<3){
             return;
         }

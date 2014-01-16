@@ -6,8 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 
         <title>Import</title>
-       <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
-        <link href="app.css" rel="stylesheet">
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
         <script src="libs/axio.js"></script>
 
@@ -106,14 +104,23 @@
        if (!t.word.best) return;
         
         var r = t.word.best.root;
-        var d = this.roots[r] || (this.roots[r] = {id:r, weight:0, score:t.word.best.score});
+        var d = this.roots[r] || (this.roots[r] = {id:r, weight:0, src:[], score:t.word.best.score});
         
         d.weight+=t.weight;
+        d.src.push(t.id)
         
     };
     var _html = function(t){
-
-         this.value += String.formatWithMap("\\n {id} \t {weight} \t {score}", t);
+        if (String.ROOTS[t.id]){
+            t.src= t.src.join(',');
+            this.value += String.formatWithMap("\\n{id}\t{weight}\t{src}", t);
+        }
+    }; 
+    var _html_rest = function(t){
+        if (!this.roots[t.id]){
+            
+            this.value += String.formatWithMap("\\n{id}\t{weight}\t-", t);
+        }
     };
     
     Object.entity.define("importRepresent extends lexio/Plugin", {
@@ -130,8 +137,12 @@
                     ev.roots = {};
                     
                     ev.eachToken(_op);
+                    Function.iterate(_html_rest, String.ROOTS,ev);
                     
+                    ev.roots = Function.iterate(function(d){this.push(d)}, ev.roots,[])
+                    Array.sortBy(ev.roots,'id')
                     Function.iterate(_html, ev.roots,ev);
+                    
                     
                     window.container.innerHTML = ev.value;
                 }
@@ -152,8 +163,7 @@ Object.entity.create({
         id:'lexio/plugin/meta'
         ,
         sources:[
-         'lexio_meta://0AqQx4KOOt8TGdExjQ2ZJM0Q5MFBQSVRhYUw1ZHJMSFE'
-        ,'lexio_meta://0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2c'
+         'lexio_meta://0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2c'
         ]
     //var EN = GSheets.getSpreadsheetData('0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2');
   
@@ -184,7 +194,7 @@ Object.entity.create({
 
 
     <body>
-    <button onclick="Object.notify('lexio://#');">Do it</button>
+    <button onclick="Object.notify('lexio://#');this.style.display='none';">Do it</button>
 <pre id="container">
     
 </pre>

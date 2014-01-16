@@ -225,7 +225,7 @@
         ,
         cuttify:(function(ev){
             var APP1=["ся","сь","те"];
-            var NEG=["не","ни","un"];
+            var NEG=["не","ни","un","dis","de"];
             var ETE = ["eте"];
 
             return function() {
