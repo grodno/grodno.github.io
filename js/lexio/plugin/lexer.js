@@ -31,7 +31,7 @@
         if (rest.length>1) {
             this.word.morphology( this.branch({
                 flexie:key, 
-                score:3*key.length, 
+                score:key.length, 
                 x:rest
             } ))
         }
@@ -42,7 +42,18 @@
             this.word.morphology( this.branch({
                 suffix:key, 
                 x:rest, 
-                score:2*key.length
+                score:key.length
+            }))
+        }
+    }
+    ,
+    op_suffixize2 =function(key, rest){
+        if (rest.length>2) {
+            this.word.morphology( this.branch({
+                suffix:key+this.suffix, 
+                suffix2:key,
+                x:rest, 
+                score:key.length
             }))
         }
     }
@@ -92,6 +103,7 @@
                         score:1, 
                         x : this.x,
                         suffix : null,
+                        suffix2 : null,
                         prefix : null,
                         flexie : null,
                         complexie : null 
@@ -160,6 +172,7 @@
             
             this.score = x.score;
             this.suffix = x.suffix;
+            this.suffix2 = x.suffix2;
             this.prefix = x.prefix;
             this.negation = x.negation;
             this.appendix = x.appendix;
@@ -200,32 +213,61 @@
         }
         ,
         morphology : function() {
-
+            var completed = true;
             if (this.flexie===null) {
                 this.flexie='';
+                completed = 0;
                 _reverseMatchesInTree(String.FLEXIES_TREE, op_flexify, this);
             } 
                 
             if (this.prefix===null) {
                 this.prefix='';
+                completed = 0;
                 _matchesInTree(String.PREFIXES_TREE, op_prefixize, this);
             }
                 
             if (this.suffix===null) {
                 this.suffix='';
+                completed = 0;
                 _reverseMatchesInTree(String.SUFFIXES_TREE, op_suffixize, this);
+            } else {
+                if (this.suffix && (this.suffix2===null) ){
+                this.suffix2='';
+                completed = 0;
+                _reverseMatchesInTree(String.SUFFIXES_TREE, op_suffixize2, this);
+               }
             }
                 
             if (this.complexie===null) {
                 this.complexie='';
+                completed = 0;
                 _matchesInTree(String.COMPLEXIES_TREE, op_complexify, this);
-            }                
-
+            }    
+            
+            this.tuneRoot(); 
+            
         }
+        ,
+        tuneRoot:(function(ev){
+         var VOWEL_PREP = "aeoi";
+
+            return function() {
+                
+                var x= this.x;
+                if ((x.length>4) && (this.word.lang==='e') &&  (VOWEL_PREP.indexOf(x[0])>-1) && (x[1]===x[2])) {
+                    this.branch({
+                        prependix:x.substr(0,2), 
+                        score:3, 
+                        x: x.substr(2)
+                    });
+                }   
+            }
+       })()
         ,
         cuttify:(function(ev){
             var APP1=["ся","сь","те"];
-            var NEG=["не","ни","un","dis","de"];
+            var NEG=["не","ни","un","de","in"];
+            var NEG3=["dis"];
             var ETE = ["eте"];
 
             return function() {
@@ -248,6 +290,14 @@
                         x: x.substr(2)
                     });
                 }
+                var ch3 = x.substr(0,3);
+                if (NEG3.indexOf(ch3)>-1) {
+                    this.branch({
+                        negation:ch3, 
+                        score:4, 
+                        x: x.substr(3)
+                    });
+                }
                 ch2 = x.substr(-3);
                 if (ETE.indexOf(ch2)>-1) {
                     this.branch({
@@ -256,6 +306,7 @@
                         x: x.substr(0,x.length-1)
                     });
                 }
+
             };
 
         })()

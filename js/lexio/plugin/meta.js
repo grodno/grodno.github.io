@@ -3,6 +3,12 @@
 
     var _reg = (function(v, p){
         this[v.id] = v;
+        if (v.ids){
+            v.ids = v.ids.split(',');
+            for (var i = 0; i < v.ids.length; i++) {
+               this[v.ids[i]] = v; 
+            }
+        }
     }).iterator();
             
     var registry = (function(v){
@@ -35,11 +41,11 @@
     var TYPE_U = {
         type:'x'
     }
-
+    var DIFTONGS=['oo','ea','ei','th','gh','ou','sh','ch'];
     String.signature = function(x) {
         for ( var i = 0, r = "", l = x.length, p, c; i < l; i++) {
             c = x[i];
-            if (c!==p) {
+            if (c!==p && DIFTONGS.indexOf(p+c)===-1) {
                 r += (String.CHARS[c] || TYPE_U).type;
                 p = c;                
             }

@@ -55,18 +55,13 @@
     ],
     e:[
       {
-        re:/^(.+)(ou|oo)(.+)$/, 
-        patches:['u']
-        } 
-        ,{
-        re:/^(.+)(ee)(.){1,2}$/, 
-        patches:['e']
-        } 
-        ,{
         re:/^(.+)(v)$/, 
         patches:['f']
     } ,{
-        re:/^(.+)(s)$/, 
+        re:/^(.+)(er|or|ar)$/, 
+        patches:['r']
+    } ,{
+        re:/^(.+)([sc])$/, 
         patches:['z']
     } 
     ]};
@@ -153,7 +148,7 @@
     }
             
     var _tres = (function(w, i, tres) {
-        if (w.root && w.score>=tres ){//
+        if (w.x && w.score>=tres ){//
             this.push(w);
         }
     }).iterator();     

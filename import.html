@@ -101,19 +101,45 @@
 (function () {
     
     var _op = function(t){
-       if (!t.word.best) return;
-        
-        var r = t.word.best.root;
-        var d = this.roots[r] || (this.roots[r] = {id:r, weight:0, src:[], score:t.word.best.score});
-        
-        d.weight+=t.weight;
-        d.src.push(t.id)
+        var best = t.word.best;
+        if(t.word.best.hardcoded)  return; 
+
+        var d;
+        if (0) {//!t.word.best.root
+           this.unrecognized.push(t.id+'\t'+t.word);
+           //return;
+            for (var i = 0; i < t.word.cases.length; i++) {
+                var c = t.word.cases[i];
+                var r = c.root || c.x;
+                d = this.roots[r] || (this.roots[r] = {id:r, weight:0, src:[], score:c.score});
+                d.weight+=t.weight;
+                d.src.push(t.id);
+            }
+        }else{
+            var r = best.root||best.x;
+            d = this.roots[r] || (this.roots[r] = {id:r, weight:0, src:[], score:t.word.best.score});
+            d.weight+=t.weight;
+            d.src.push(t.id);
+        }
         
     };
     var _html = function(t){
         if (String.ROOTS[t.id]){
             t.src= t.src.join(',');
+        
             this.value += String.formatWithMap("\\n{id}\t{weight}\t{src}", t);
+        }
+    };
+    var _html2 = function(t){
+        var srcL = t.src.length;
+            
+        if (t.id.length>2 && !String.ROOTS[t.id]){
+            if (srcL>2) {
+                t.src= t.src.join(',');
+        
+                this.value += String.formatWithMap("\\n{id}_\t{weight}\t{src}", t);
+            }
+            
         }
     }; 
     var _html_rest = function(t){
@@ -133,8 +159,9 @@
                 performImpl: function(err, ev){
                     
                     ev.value = '';
-                    
+                    ev.weight=0;
                     ev.roots = {};
+                    ev.unrecognized=['']
                     
                     ev.eachToken(_op);
                     Function.iterate(_html_rest, String.ROOTS,ev);
@@ -142,15 +169,21 @@
                     ev.roots = Function.iterate(function(d){this.push(d)}, ev.roots,[])
                     Array.sortBy(ev.roots,'id')
                     Function.iterate(_html, ev.roots,ev);
+                    Function.iterate(_html2, ev.roots,ev);
                     
                     
-                    window.container.innerHTML = ev.value;
+                    window.container.innerHTML = ev.value+ev.unrecognized.join('\n*');//
                 }
             };
         }
     });
     
 })();
+
+// reset meta-en
+window.localStorage['lexio_meta:0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2c']=null;
+
+
 // Lexio handler instance
 Object.entity.create({
     id:"lexio/Processor:lexio"
