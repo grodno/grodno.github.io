@@ -266,8 +266,8 @@
         ,
         cuttify:(function(ev){
             var APP1=["ся","сь","те"];
-            var NEG=["не","ни","un","de","in"];
-            var NEG3=["dis"];
+            var NEG=["не","ни","un","de","in","re"];
+            var NEG3=["dis","non",'mis'];
             var ETE = ["eте"];
 
             return function() {
