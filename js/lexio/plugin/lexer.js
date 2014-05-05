@@ -2,7 +2,7 @@
 (function() {
     
     var _matchesInTree = function(sub,op, ctx) {
-        for (var r,x=ctx.x, p=0, c; (c = x[p]) && sub && (sub = sub[c]);p++){
+        for (var r,x=ctx.x,l=x.length-2, p=0, c; p<l && (c = x[p]) && sub && (sub = sub[c]);p++){
             if ((r=sub['_'])) {
                 op.call(ctx, r, x.substring(p+1));
             }
@@ -10,7 +10,7 @@
     }
     ,
     _reverseMatchesInTree = function(sub,op, ctx) {
-        for (var x=ctx.x, p=x.length-1, c; (c = x[p]) && sub && (sub = sub[c]) ;p--){
+        for (var x=ctx.x, p=x.length-1, c;p>1 && (c = x[p]) && sub && (sub = sub[c]) ;p--){
             if ((sub['_'])) {
                 op.call(ctx, x.substring(p), x.substr(0,p));
             }
@@ -231,11 +231,11 @@
                 completed = 0;
                 _reverseMatchesInTree(String.SUFFIXES_TREE, op_suffixize, this);
             } else {
-                if (this.suffix && (this.suffix2===null) ){
-                this.suffix2='';
-                completed = 0;
-                _reverseMatchesInTree(String.SUFFIXES_TREE, op_suffixize2, this);
-               }
+            //    if (this.suffix && (this.suffix2===null) ){
+            //    this.suffix2='';
+            //    completed = 0;
+            //    _reverseMatchesInTree(String.SUFFIXES_TREE, op_suffixize2, this);
+            //   }
             }
                 
             if (this.complexie===null) {

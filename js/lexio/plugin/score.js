@@ -53,18 +53,7 @@
         patches:['д', 'ж']
     }
     ],
-    e:[
-      {
-        re:/^(.+)(v)$/, 
-        patches:['f']
-    } ,{
-        re:/^(.+)(er|or|ar)$/, 
-        patches:['r']
-    } ,{
-        re:/^(.+)([sc])$/, 
-        patches:['z']
-    } 
-    ]};
+    e:[]};
 
     var tryNormalize = function (n) {
         
@@ -99,7 +88,7 @@
             
             c.root = x;
             
-            c.score += len+r.score;
+            c.score += len*8+r.score;
             
             return;
         }
@@ -116,14 +105,14 @@
             if (sf && (r = String.ROOTS[x +'e'])){
                     
                 c.root = r.id;
-                c.score += len+r.score;
+                c.score += len*8+r.score;
                 return;        
             }
             
             if ( (x[len-1]===x[len-2]) && (r = String.ROOTS[x.substring(0, len-1)])){
                     
                 c.root = r.id;
-                c.score += len+r.score;
+                c.score += len*8+r.score;
                 return;        
             }            
         }

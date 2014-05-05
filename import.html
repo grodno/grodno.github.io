@@ -106,19 +106,30 @@
         if(best.hardcoded)  return; 
 
         var r = best.root||best.x;
+        if(!r)  return; 
+        
         if (String.ROOTS[r]){
             r = String.ROOTS[r].id;
         }
         
-        var d = this.roots[r] || (this.roots[r] = {id:r, weight:0, src:[], score:t.word.best.score});
+        var d = this.roots[r] || (this.roots[r] = {id:r, weight:0, src:[]});
         d.weight+=t.weight;
-        d.src.push(t.id+':'+t.weight);
+        d.src.push({id:t.id, weight:t.weight});
+
+        var sx = (best.flexie||'') ;
+        if(!String.ROOTS[r] || !sx)  return; 
+        
+        var s = this.suffixes[sx] || (this.suffixes[sx] = {id:sx, weight:0, src:[]});
+        s.weight+=1;
+        if (s.weight<10){
+            s.src.push({id:t.id, weight:t.weight});
+        }
 
     };
     
     var _html = function(t){
         if (String.ROOTS[t.id]){
-            t.src= t.src.join(',');
+            t.src= (function(e){this.push(e.id+':'+e.weight)}).iterator()(Array.sortBy(t.src,'weight',-1),[]).join(',');
         
             this.value += String.formatWithMap("\\n{weight}\t{id}\t{src}", t);
         }
@@ -129,13 +140,22 @@
             
         if (t.id.length>2 && !String.ROOTS[t.id]){
             if (srcL>2) {
-                t.src= t.src.join(',');
+                t.src= (function(e){this.push(e.id+':'+e.weight)}).iterator()(Array.sortBy(t.src,'weight',-1),[]).join(',');
+        
         
                 this.value += String.formatWithMap("\\n{weight}\t{id}\t{src}", t);
             }
             
         }
     }; 
+    var _htmlSx= function(t){
+        //if (String.ROOTS[t.id]){
+            t.src= (function(e){this.push(e.id+':'+e.weight)}).iterator()(Array.sortBy(t.src,'weight',-1),[]).join(',');
+        
+            this.value += String.formatWithMap("\\n{weight}\t{id}\t{src}", t);
+        //}
+    };
+
 
     Object.entity.define("importRepresent extends lexio/Plugin", {
         
@@ -148,6 +168,7 @@
                     
                     ev.value = '';
                     ev.roots = {};
+                    ev.suffixes = {};
 
                     ev.eachToken(_op);
                     
@@ -160,10 +181,13 @@
                     
                     // make array and sort
                     ev.roots = Function.iterate(function(d){this.push(d)}, ev.roots,[]);
-                    Array.sortBy(ev.roots,'weight')
+                    Array.sortBy(ev.roots,'weight',-1);
                     
                     Function.iterate(_html, ev.roots,ev);
                     Function.iterate(_html2, ev.roots,ev);
+                    
+                    
+                    //Function.iterate(_htmlSx, Array.sortBy(Function.iterate(function(d){this.push(d)}, ev.suffixes,[]),'weight',-1),ev);
                     
                     
                     window.container.innerHTML = ev.value;//
@@ -175,7 +199,7 @@
 })();
 
 // reset meta-en
-window.localStorage['lexio_meta:0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2c']=null;
+window.localStorage['lexio_meta:1JBxZVPj4pbHVlywPd9YzXyAVUrliAnOfFQ5zW57zoBA']=null;
 
 
 // Lexio handler instance
@@ -190,7 +214,7 @@ Object.entity.create({
         id:'lexio/plugin/meta'
         ,
         sources:[
-         'lexio_meta://0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2c'
+         'lexio_meta://1JBxZVPj4pbHVlywPd9YzXyAVUrliAnOfFQ5zW57zoBA'
         ]
     //var EN = GSheets.getSpreadsheetData('0AqQx4KOOt8TGdEFhUExMU3ZsaVl3RDBiWXhtcWVDZ2');
   

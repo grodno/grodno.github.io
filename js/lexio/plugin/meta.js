@@ -3,10 +3,11 @@
 
     var _reg = (function(v, p){
         this[v.id] = v;
-        if (v.ids){
-            v.ids = v.ids.split(',');
-            for (var i = 0; i < v.ids.length; i++) {
-               this[v.ids[i]] = v; 
+        var ids = v.ids;
+        if (ids){
+            ids = ids.split(',');
+            for (var i = 0; i < ids.length; i++) {
+               this[ids[i]] = v; 
             }
         }
     }).iterator();
