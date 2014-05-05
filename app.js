@@ -31,6 +31,14 @@
 
     // register data provider for Blogger posts
     Object.entity.create({
+        id:'CachedResourceProvider:gsheet' , 
+        version: ''+Math.round((new Date()).valueOf() / 86400000),
+        scope : 'session', 
+        urlTemplate:'[jsonp]https://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?id={0}&doc=0AsS3yCcHWEuCdHNUamh2OWVvQWh0a3lTdnM5WW5ZM2c'
+    });
+
+    // register data provider for Blogger posts
+    Object.entity.create({
         id:'CachedResourceProvider:blogger' , 
         version: ''+Math.round((new Date()).valueOf() / 86400000),
         scope : 'session', 
