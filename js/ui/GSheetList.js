@@ -4,7 +4,8 @@
         Object.entity.define('ui/GSheetList extends List', {
             
         
-        itemTemplate:'<div class="media">'+
+        itemTemplate:'<div class="panel-heading">'+
+        '<div class="media">'+
         '<a class="pull-left" href="{url}"><img class="img-rounded media-object" width="64" src="{icon}"></a>'+
         '<div class="media-body">'+
         '<h4 class="media-header">'+
@@ -12,10 +13,11 @@
         '</h4>'+
         ' </div>'+
         '</div>'+
+        '</div>'+
         '<div class="panel-body">{body}</div>'+
         '<div class="panel-footer"><a href="{url}" target="_blank">{urlName}</a> {category}</div>'
         ,
-        itemStyle:'panel panel-default'
+        itemStyle:'panel  panel-info'
         ,
         domNodeType:'ul'
         ,
@@ -34,7 +36,7 @@
                 ,
                 normalizeDataIterator: (function(v, i){
                     v.icon = v.icon || '/res/logo120.png';
-                    //v.body = v.body.split('<!--more-->')[0];
+                    v.body = v.body.split('</p>')[0]+"</p>";
                     v.url = 'http://s13.ru/archives/'+v.id
                     v.urlName = 'S13'
                     this.push(v);
