@@ -4,10 +4,16 @@
         Object.entity.define('ui/GSheetList extends List', {
             
         
-        itemTemplate:'<div class="media panel-body"><span class="pull-left"><a href="//s13.ru/archives/{id}">'+
-        '<img class="img-rounded media-object" width="64" src="{icon}"></a></span>'
-        +'<div class="media-body"><h4 class="media-header">{name}<br/><small><a href="//s13.ru/archives/{id}" target="_blank">S13.RU</a> {category}</small></h4><p>{body}</p>'
-        +' </div></div>'
+        itemTemplate:'<div class="media">'+
+        '<a class="pull-left" href="{url}"><img class="img-rounded media-object" width="64" src="{icon}"></a>'+
+        '<div class="media-body">'+
+        '<h4 class="media-header">'+
+        '<div>{name_be}<br/><small>{name_en}</small></div>'+
+        '</h4>'+
+        ' </div>'+
+        '</div>'+
+        '<div class="panel-body">{body}</div>'+
+        '<div class="panel-footer"><a href="{url}" target="_blank">{urlName}</a> {category}</div>'
         ,
         itemStyle:'panel panel-default'
         ,
@@ -23,22 +29,15 @@
                 
                 dataAsyncAdapter : function(err, data) {
                     this.domNode.innerHTML='';
-                    //this.normalizeItemDataIterator(this.normalizeCellsIterator(,[]),[])
-                    return Object.get(data,'input');
+                    return this.normalizeDataIterator(Object.get(data,'input'),[]);
                 }
                 ,
-                normalizeItemDataIterator: (function(v, i){
-                    if (i<2) return;
+                normalizeDataIterator: (function(v, i){
+                    v.icon = v.icon || '/res/logo120.png';
+                    //v.body = v.body.split('<!--more-->')[0];
+                    v.url = 'http://s13.ru/archives/'+v.id
+                    v.urlName = 'S13'
                     this.push(v);
-                }).iterator()  
-                ,
-                normalizeCellsIterator: (function(v){
-                    var key = Object.get(v,'title.$t'), col= key[0], row=Number(key.substring(1));
-                    ;
-                    if (!this[row]){
-                        this[row] = {};
-                    }
-                    this[row][col] = Object.get(v,'content.$t');
                 }).iterator()  
             }
 
