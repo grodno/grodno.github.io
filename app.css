@@ -5,39 +5,17 @@
     Description: Purpose of the stylesheet follows.
 */
 body {
-    padding-top: 0px;
+    padding-top: 75px;
     padding-bottom: 40px;
     overflow-y:scroll;
-    font-family: 'Ubuntu', sans-serif;
-    background-image1: url(/res/bg1.png)
 }
 ul{
     padding-left: 1em;
 }
 
-
-.navbar-fixed-top {
-    top: 0;
-    position: inherit;
-}
-
-@media screen and (min-width: 768px) {
-    body {
-        padding-top: 70px;
-
-    }
-    .navbar-fixed-top {
-        top: 0;
-        position: fixed;
-    }
-}
-
 a:hover {
     text-shadow: 1px 1px 1px rgba(67, 81, 188, 0.4);
     text-decoration: none;
-}
-.navbar{
-    background: #fbfbfb;
 }
 
 .brand, h2{
@@ -54,60 +32,32 @@ h4{
 }
 
 .app{
-    background: #FAFAFA;padding: 10px 10px 10px 10px;margin-left: 0px;min-height: 100%;
+    background: #FAFAFA;padding: 10px 10px 10px 10px;
+    min-height: 100%;
 }
 
+.navbar{
+    background-image: url(/res/bg1.png);
+}
 
+.navbar-brand, .navbar-nav, .navbar-nav>li {
+    float: left;
+}
+
+.navbar-nav>li>a {
+    font-size: large;
+    color1: midnightblue;
+}
 .margin-left {
     margin-left: 1em;
 }
-li.label{
+
+.breadcrumb li{
     cursor: pointer;
 }
-li.label.active{
-    background-color: orangered;
-}
 
-.good{
-    color:blue;
-    font-size: smaller;
-}
-.norm{
-    color: royalblue;
-}
-.weak {
-    color: green;
-    
-}
-.bad {
-    color:  lightsalmon;
-}
-.hardcoded{
-    font-size: smaller;
-}
-date{
-    background-color:  darkslateblue;
-}
-.numeric{
-    background-color:  cadetblue;
-    white-space: nowrap;
+.breadcrumb li.active{
+    color: orangered;
 }
 
 
-.type-amount {
-    background-color: chocolate;
-}
-
-.type-quote,  .kind-a{
-    display: inline;
-    padding: .05em .56em;
-    font-size: 95%;
-    font-weight: 500;
-    line-height: 1;
-    color: #fff;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    border-radius: .25em;
-    background-color: mediumslateblue;
-}
