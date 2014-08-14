@@ -28,7 +28,7 @@
                 p.setNext(t.next);
             
             }
-            if ((MONTH_ROOTS.indexOf(Object.get(p,'word.best.root'))+1)) {
+            if ((MONTH_ROOTS.indexOf(Object.get(p,'word.best.root')))) {
                 p.input += "-"+t.input;
                 p.year = t.id;
                 p.setNext(t.next);
@@ -65,7 +65,8 @@
             
             
             if (checkYear(t)) {
-                
+		// 123
+		w=2                
             }
             
             checkDate(t);
