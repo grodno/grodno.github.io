@@ -10,11 +10,18 @@ body {
     overflow-y:scroll;
     font-family: 'Abel', sans-serif;
 }
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+    font-family: 'Abel', sans-serif;
+    
+}
 ul{
     padding-left: 1em;
     list-style: none;
 }
-
+hr {
+ margin-top: 5px; 
+ margin-bottom: 5px; 
+}
 a:hover {
     text-shadow: 1px 1px 1px rgba(67, 81, 188, 0.4);
     text-decoration: none;
