@@ -2,9 +2,9 @@
     
     Object.entity.define('ui/BloggerList extends List', {
         
-        itemTemplate:'<hr/><div class="media panel-body"><span class="pull-left"><a href="{url}">'+
-        '<img class="img-rounded media-object" width="64" src="{icon}"></a></span>'
-        +'<div class="media-body"><h4 class="media-header">{name}<small>{labels}</small></h4><p>{content}</p></div></div>'
+        itemTemplate:'<div class="media panel-body"><span class="pull-left"><a href="{url}">'+
+        '<img class="img-rounded media-object" width="32" src="{icon}"></a></span>'
+        +'<div class="media-body"><h5 class="media-header">{name} <a href="{url}">Подробнее&nbsp;→</a></h5></div></div>'//<p>{content}</p>
         ,
         itemStyle:'panel panel-default'
         ,
@@ -41,17 +41,11 @@
             }).iterator();
             
             var _htmlAsyncAdapter= function(err, ev) {
-                this.datum.content = ev.value +'<a href="'+this.datum.url+'">Подробнее → </a>';
+                this.datum.content = ev.value ;
                 return String.formatWithMap(this.itemTemplate, this.datum);
             }
             return { 
-                
-                init : function() {
-                    
-                    _super.init.apply(this, arguments);
-                    
-                }
-                ,
+
                 dataAsyncAdapter : function(err, data) {
                     
                     this.domNode.innerHTML='';
@@ -63,10 +57,7 @@
                 childrenItemAdapter :function(datum, i) {
                     return {
                         id:'html',
-                        htmlUrl:'lexio://#'+datum.content,
-                        htmlAsyncAdapter: _htmlAsyncAdapter,
-                        itemTemplate: this.itemTemplate,
-                        datum : datum
+                        html:String.formatWithMap(this.itemTemplate, datum)+'',
                     }
                 }
                 

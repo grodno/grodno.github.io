@@ -8,9 +8,11 @@ body {
     padding-top: 75px;
     padding-bottom: 40px;
     overflow-y:scroll;
+    font-family: 'Abel', sans-serif;
 }
 ul{
     padding-left: 1em;
+    list-style: none;
 }
 
 a:hover {
@@ -37,7 +39,7 @@ h4{
 }
 
 .navbar{
-    background-image: url(/res/bg1.png);
+    /*background-image: url(/res/bg1.png);*/
 }
 
 .navbar-brand, .navbar-nav, .navbar-nav>li {

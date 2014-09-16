@@ -42,7 +42,7 @@
         id:'CachedResourceProvider:blogger' , 
         version: ''+Math.round((new Date()).valueOf() / 86400000),
         scope : 'session', 
-        urlTemplate:'[jsonp]https://www.googleapis.com/blogger/v3/blogs/1638693468845489013/posts?{0}&key='+APP.GOOGLE_API_KEY
+        urlTemplate:'[jsonp]https://www.googleapis.com/blogger/v3/blogs/1139621239033216002/posts?{0}&key='+APP.GOOGLE_API_KEY
     });
     
     // register async source for lexio processing
