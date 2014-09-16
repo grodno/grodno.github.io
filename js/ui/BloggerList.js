@@ -2,9 +2,9 @@
     
     Object.entity.define('ui/BloggerList extends List', {
         
-        itemTemplate:'<div class="media panel-body"><span class="pull-left"><a href="{url}">'+
+        itemTemplate:'<div class="media panel-body"><span class="pull-left"><a target="_blank" href="{url}">'+
         '<img class="img-rounded media-object" width="32" src="{icon}"></a></span>'
-        +'<div class="media-body"><h5 class="media-header">{name} <a href="{url}">далее&nbsp;→</a></h5></div></div>'//<p>{content}</p>
+        +'<div class="media-body"><h5 class="media-header">{name} <a target="_blank" href="{url}">далее&nbsp;→</a></h5></div></div>'//<p>{content}</p>
         ,
         itemStyle:'panel panel-default'
         ,
