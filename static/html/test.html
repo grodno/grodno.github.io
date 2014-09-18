@@ -1,0 +1,8 @@
+<p>Test 222</p>
+<div id="list" x-widget="List" x-data-uri-expression="'db://query/links#'+${?db.touch}" x-item-template-uri="html://item"></div>
+
+
+<fieldset x-widget="Fieldset" x-caption="form">
+
+    <div x-widget="Textarea" x-caption="Current" x-value-uri-expression="'db://field/links/?field=description&amp;id='+${+list.value}"></div>
+</fieldset>
