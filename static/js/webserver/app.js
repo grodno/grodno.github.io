@@ -7,6 +7,8 @@
 (function() {
   var SampleApp, express, fs;
 
+  require('coffee-script/register');
+
   express = require("express");
 
   fs = require("fs");
@@ -36,7 +38,7 @@
           "index.html": ""
         };
       }
-      self.zcache["index.html"] = fs.readFileSync("./index.html");
+      self.zcache["index.html"] = fs.readFileSync("./static/index.html");
     };
 
     /*
@@ -79,14 +81,9 @@
      */
     self.createRoutes = function() {
       self.routes = {};
-      self.routes["/asciimo"] = function(req, res) {
-        var link;
-        link = "http://i.imgur.com/kmbjB.png";
-        res.send("<html><body><img src='" + link + "'></body></html>");
-      };
       self.routes["/"] = function(req, res) {
         res.setHeader("Content-Type", "text/html");
-        res.send(self.cache_get("index.html"));
+        res.send(fs.readFileSync("./static/index.html"));
       };
     };
 
@@ -98,6 +95,7 @@
       var r;
       self.createRoutes();
       self.app = express();
+      self.app.use(express["static"]('./static'));
       for (r in self.routes) {
         self.app.get(r, self.routes[r]);
       }

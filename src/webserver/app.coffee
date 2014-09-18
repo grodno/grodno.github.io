@@ -1,6 +1,9 @@
 ###
  Define the sample application.
 ###
+require('coffee-script/register');
+
+
 express = require("express")
 fs = require("fs")
 
@@ -33,7 +36,7 @@ SampleApp = ->
         self.zcache = "index.html": ""    if typeof self.zcache is "undefined"
         
         #  Local cache for static content.
-        self.zcache["index.html"] = fs.readFileSync("./index.html")
+        self.zcache["index.html"] = fs.readFileSync("./static/index.html")
         return
 
     
@@ -98,14 +101,10 @@ SampleApp = ->
     ###
     self.createRoutes = ->
         self.routes = {}
-        self.routes["/asciimo"] = (req, res) ->
-            link = "http://i.imgur.com/kmbjB.png"
-            res.send "<html><body><img src='" + link + "'></body></html>"
-            return
 
         self.routes["/"] = (req, res) ->
             res.setHeader "Content-Type", "text/html"
-            res.send self.cache_get("index.html")
+            res.send fs.readFileSync("./static/index.html")#self.cache_get("index.html")
             return
 
         return
@@ -117,6 +116,8 @@ SampleApp = ->
     self.initializeServer = ->
         self.createRoutes()
         self.app = express()
+        
+        self.app.use(express.static('./static'))
         
         #  Add handlers for the app (from the routes).
         self.app.get r, self.routes[r] for r of self.routes
