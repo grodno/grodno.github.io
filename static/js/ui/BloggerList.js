@@ -21,7 +21,7 @@
                 v.name = Object.get(v,'title');
                 v.content = Object.get(v,'content');
                 v.url = Object.get(v,'url');
-                v.icon = (Object.get(v,'author.image.url')||'').replace('http://img2.blogblog.com/img/b16-rounded.gif','') || 'res/logo120.png';
+                v.icon = (Object.get(v,'author.image.url')||'').replace('http://img2.blogblog.com/img/b16-rounded.gif','') || 'static/res/logo120.png';
                 v.author = Object.get(v,'author.displayName');
                     
               //var p = v.content.indexOf('<a name=\'more\'></a>');

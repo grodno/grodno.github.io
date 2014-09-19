@@ -1,281 +1,37 @@
 <!doctype html>
-<html lang="ru">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-
-        <title>Grodno</title>
-        <meta name="keywords" content="grodno, гродно">
-        <meta name="description" content="Grodno, Belarus. Гродно. News, ads etc.">
-
-        <link rel="alternate" type="application/rss+xml" title="RSS" href="http://grodno-co.blogspot.com/feeds/posts/default" />
-
-        <!-- G+ -->
-        <meta itemprop="name" content="Grodno">
-        <meta itemprop="description" content="Grodno, Belarus. Гродно. News, ads etc.">
-        <meta itemprop="image" content="img/logo.png">
-        <!-- OG -->
-        <meta property="og:title" content="Grodno">
-        <meta property="og:type" content="website">
-        <meta property="og:url" content="http://grodno.co">
-        <!--meta property="fb:app_id" content="219232854789016"-->
-        <meta property="og:site_name" content="Grodno">
-        <meta property="og:description" content="Grodno, Belarus. Гродно. News, ads etc.">
-        <meta property="og:image" content="img/logo.png">
-        <!-- GEO LOCATION TAGS-->
-        <meta name="geo.position" content="53.683111,23.823209">
-        <meta name="ICBM" content="53.683111,23.823209">
-        
-        
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
-        <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
-        <link href="css/app.css" rel="stylesheet">
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-
-        <script src="libs/modernizr-2.6.1.min.js"></script>
-        <!--[if lt IE 9]>
-        <script src="libs/es5-shim.min.js"></script>
-        <script src="libs/respond.min.js"></script>
-        <![endif]-->
-        <script src="libs/axio.js"></script>
-
-        <script>
-            
-            var APP = {
-                ID : 'grodno.co'
-                ,
-                TITLE : 'Grodno'
-                ,
-                VERSION : '1.5.2'
-                ,
-                COPYRIGHT : '2013 Grodno'
-                ,
-                SOURCES:{
-                    SITE:'0AqQx4KOOt8TGdEZWZHpBdXAtNlVSMUFMOXppQ3ZuMkE'
-                }
-                ,
-                GAT :{
-                    account: 'UA-37246628-1'
-                }
-                ,
-                GOOGLE_SHEETS_URI:'https://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc='
-                ,
-                GOOGLE_API_KEY:'AIzaSyAGenobWLKI-F6MWzrHIXmviwJww43n2EM'//'AIzaSyA--IJRFbmFubpjcz5Yherycv6Vy48qBY0'
-            };
-            
-        </script>
-        <script src="client_app.js"></script>
-    </head>
-
-
-    <body>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form action="" method="POST" target="result">
+      <input id="m" name="value" value="Test Value" autocomplete="off" />
+      <button>Send</button>
+    </form>
+    <iframe name="result" src="about:blank" frameborder="no" style="display:none;"></iframe>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
     
-        <div class="navbar navbar-fixed-top" >
-        <div class="container">
-            <div id="main" class="row">
-            <a class="navbar-brand" href="/"><img class="logo" src="/res/herb.jpg" height="40px" title="Гродно"/></a>
-            <ul class="nav navbar-nav ">
-                <li><h2 class="r"><a href="/">GRODNO.CO</a></h2>
-                    
-                </li>
-            </ul>
-        </div>
-        </div>
-        </div>
-
-        <div class="container">
-            <div id="main" class="row panel main">
-
-                <article  class="col-12 col-lg-4">
-                    <a class="twitter-timeline" 
-                    href="https://twitter.com/search?q=grodno+OR+%23%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE"
-                    data-widget-id="292285277165207552">Tweets about Гродно</a>
-                    <script>
-                    !function(d,s,id){
-                    var js,fjs=d.getElementsByTagName(s)[0],
-                    p=/^http:/.test(d.location)?'http':'https';
-                    if(!d.getElementById(id)){
-                    js=d.createElement(s);js.id=id;
-                    js.src=p+"://platform.twitter.com/widgets.js";
-                    fjs.parentNode.insertBefore(js,fjs);}}
-                    (document,"script","twitter-wjs");
-                    </script>
-                </article>
-                <article  class="col-12 col-lg-6">
-                    <div class="panel panel-info">
-                        <h5 class="panel-heading">Новости и объявления</h5>
-                        
-                        <a target="_blank" href="http://news.grodno.co/">Новости</a> 
-                        ( <a target="_blank" href="http://naviny.grodno.co/">Naviny</a> 
-                         - 
-                        <a target="_blank" href="http://daily.grodno.co/">News</a> )
-                        &nbsp;|&nbsp;<a target="_blank" href="http://realty.grodno.co/">Жильё</a>
-                        &nbsp;|&nbsp;<a target="_blank" href="http://cars.grodno.co/">Авто</a>
-                        &nbsp;|&nbsp;<a target="_blank" href="http://job.grodno.co/">Работа</a>
-                        &nbsp;|&nbsp;<a target="_blank" href="http://service.grodno.co/">Услуги</a>
-                        &nbsp;|&nbsp;<a target="_blank" href="http://grodno-ad.blogspot.com/">Гаджеты</a>
-                        
-                        <hr/>
-                        <div id="news" data-widget="ui/BloggerList" data-data-url="blogger://askdjkdjd"></div>
-                    </div>
-                </article>
-                <aside class="col-12 col-lg-2">
-                
-                    <div class="panel panel-info">
-                        <h5 class="panel-heading">Информация</h5>
-                        <a href="http://forexbrest.info/kursy-valut/grodno/"><img src="http://forexbrest.info/i/kursy-valut-grodno-lite.gif" alt="Курсы валют в Гродно сегодня" border="0" /></a>
-                        <br/><br/>
-                        <a target="_BLANK" href="http://www.blr.cc/benzin/"><img src="http://www.blr.cc/img/benzin_belarus.gif" width="98" height="100" border="0" alt="Цена бензина в Беларуси" /></a>
-                        <br/><br/>
-                        <a target="_blank" href="http://pogoda.blr.cc/belarus/grodno/"><img src="http://pogoda.blr.cc/img/2-grodno.gif" alt="Погода в Гродно на неделю" title="Погода в Гродно на неделю" border="0" /></a>
-                    </div>
-                    
-
-
-                </aside>
-
-            </div>
-
-            <div class="row panel panel-default">
-                    <h5 class="panel-heading">Гродно в Сети</h5>
-                    <div class="col-12 col-lg-3">
-                        <h6>Медиа</h6>
-                        <hr/>
-                        <ul>
-                            <li><a target="_blank" href="//forum.grodno.net/">Форум</a></li>
-                            <li><a target="_blank" href="//s13.ru">s13.ru</a></li>
-                            <li><a target="_blank" href="http://grodno.in/">grodno.in</a></li>
-                            <li><a target="_blank" href="http://gip.by/">gip.by</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-12 col-lg-3">
-                        <h6>Сообщества</h6>
-                        <hr/>
-                        <ul>
-                            <li><a target="_blank" href="https://plus.google.com/100705443782796510440/posts">Grodno Live24</a></li>
-                            <li><a target="_blank" href="https://plus.google.com/107891930911298943270/posts">Гродновости</a></li>
-                         </ul>
-                    </div>
-                    <div class="col-12 col-lg-3">
-                        <h6>Интересы</h6>
-                        <hr/>
-                        <ul>
-                            <li><a target="_blank" href="http://auto-grodno.by/">Автомобили</a></li>
-                            <li><a target="_blank" href="http://chess.grodno.co/">Шахматы</a></li>
-                            <li><a target="_blank" href="http://english.grodno.co/">English</a></li>
-                        </ul>
-                        <br/>  
-                        
-                    </div>
-                    <div class="col-12 col-lg-3">
-                        <h6>Партнёры</h6>
-                        <hr/>
-                        <ul>
-                            <li><a target="_blank" href="http://nordkamin.by/">НОРДКАМИН</a></li>
-                            <li><a target="_blank" href="http://www.astrela.by/">Астрэла</a></li>
-                            <li><a target="_blank" href="http://elektromontaz.by/">Elektromontaz</a></li>
-                        </ul>
-                        <br/>  
-                        
-                    </div>
-            </div>
-
-            <div class="row panel panel-info">
-                    <h5 class="panel-heading">VERA DESIGNATIO URBIS IN LITTAVIA GRODNA</h5>
-                    <div class="panel-body">
-                        <div class="col-12 col-lg-3">
-                        <small>
-                            <p>
-                                <strong>Город Гродно</strong> - это особое Место Силы, где открывается выход на новый уровень восприятия мира.
-                                Здесь время течёт по-своему, другой масштаб событий, случайности закономерны и всё вокруг проникнуто особым смыслом.
-                                Надо только научится замечать детали, слушать тишину, чтобы суметь прикоснуться к этой иной реальности. 
-                            </p>
-                            <p> 
-                                <strong><a class="fl" href="http://ru.wikipedia.org/wiki/%D0%98%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F_%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE" target="_blank">История Гродно</a> </strong> - важная часть общемировой истории человечества. 
-                                Здесь тесно переплелись в единый узор судьбы и языки, обычаи и культуры.
-                                Седня наш город является примером вековых традиций дружбы и взаимопонимания между народами.
-                            </p>
-                            
-                        </small>     
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <a target="video" href="//www.youtube.com/embed/5NkGFURgisI">2013</a>
-                            - <a target="video" href="//www.youtube.com/embed/j4oJoRAb_Ag">2012</a>
-                            - <a target="video" href="//www.youtube.com/embed/U0G5dBA854g">2011</a>
-                            - <a target="video" href="//www.youtube.com/embed/o6aPka3Ew1g/">Belarus</a>
-                            <iframe name="video"width="560" height="315" src="//www.youtube.com/embed/j4oJoRAb_Ag" frameborder="0" allowfullscreen></iframe>
-                        </div>
-                        <div class="col-12 col-lg-3">
-                        <small>
-
-                            
-                            <p>
-                                Люди в <strong>Гродно</strong> всё больше душевные, можно сказать, деликатные, внимательные и отзывчивые. 
-                                Отношения между горожанами основаны на взаимном уважении, на признании права каждого человека на Свободу и Счастье.
-                                Поэтому повседневная дислокация в городе протекает гладко, в обстановке братской общности и согласия.
-                            </p>
-                            <p>
-                                Нас объединяет вера в лучшее будущее, которое мы вместе строим каждый день изо всех своих сил.
-                                Здесь любят <a href="http://fucking-great-advice.ru/advice/94/" target="_blank">повторять</a> "Все мы люди", "Солнце каждому светит", "Закрой рот, бери и делай". Аминь.
-                            </p>
-                            </small>
-                        </div>
-                    </div>
-                    <br/>
-                    <div class="panel-body">
-                        <div class="col-12 col-lg-4">
-                            <small>
-                                Научно доказано, что пятнадцать минут проведённые на месте <a class="fl" href="http://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D1%80%D1%8B%D0%B9_%D0%B7%D0%B0%D0%BC%D0%BE%D0%BA_(%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE)" target="_blank">Старого замка</a>
-                                способны поднять карму на двадцать процентов и прочисить чакры на неделю вперёд.
-                                В крайне запущенных случаях, показаны целебные шопинги в Белосток или туры выходного дня в аквапарк в Друскеники.
-                            </small>
-                        </div>
-                        <div class="col-12 col-lg-4">
-                            <small>
-                                <strong><a href="http://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE" target="_blank">Гродно</a></strong> это не просто место, где возможно много работать и хорошо отдыхать. 
-                                Это уникальная культурная среда и многочисленные <a class="fl" href="http://ru.wikipedia.org/wiki/%D0%94%D0%BE%D1%81%D1%82%D0%BE%D0%BF%D1%80%D0%B8%D0%BC%D0%B5%D1%87%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8_%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE"
-                                 target="_blank">достопримечательности</a>, это неповторимый стиль общения, особая душевная атмосфера.
-                                Жизнь в Гродно положительно влияет на здоровье, придаёт бодрости духа, располагает к развитию личности и росту самосознания человека.
-                            </small>
-                        </div>
-                        <div class="col-12 col-lg-4">
-                               <small>
-                                На <a href="http://ru.wikipedia.org/wiki/%D0%93%D0%B5%D1%80%D0%B1_%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE" target="_blank">Гербе Гродно</a> стремительным домкратом прыгает через ограду Святой Олень Гумбa,
-                                как символ целеустремлённости и преодления всевозможных преград. Он как бы косит глазом в нашу сторону и мог бы что-то важное сказать, но некогда...
-                            </small>
-                        </div>
-                    </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-12 col-lg-12">
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                    <!-- grodno-co_footer-3_AdSense1_728x90_as -->
-                    <ins class="adsbygoogle"
-                         style="display:inline-block;width:728px;height:90px"
-                         data-ad-client="ca-pub-5504904202317007"
-                         data-ad-slot="5868595079"></ins>
-                    <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-                </div>
-            </div>         
-            
-        </div>  
-        
-    
-        <footer id="footer" class="panel row">
-                <div class="col-12">
-                    <small class="pull-right">
-                        Powered by: 
-                        <a target="_blank" href="//github.com/alitskevich/AxioJS">AxioJS</a> 
-                        |  <a target="_blank" href="//twitter.github.com/bootstrap/">Twitter Bootstrap</a>
-                        |  <a target="_blank" href="https://github.com/grodno">GitHub</a>
-                        |  <a target="_blank" href="//www.google.com/">Google</a>
-                    </small>
-                </div>
-            </footer>
-        <script>Object.dom.init();</script>
-    </body>
+      var socket = io();
+      var COUNT  = 0; 
+      
+      socket.on('message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+        $('#m').val(COUNT++)
+      });
+      
+    </script>
+  </body>
 </html>

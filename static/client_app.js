@@ -13,7 +13,7 @@
     }
 
     // register async source for cached resources
-    Object.cache.createJSSource(APP.VERSION, 'js/{0}.js?v=');   
+    Object.cache.createJSSource(APP.VERSION, 'static/js/{0}.js?v=');   
    
     // entity type factory
     Object.entity.ENTITY_TYPE_FACTORY_URL = 'js://{0}';
