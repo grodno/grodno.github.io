@@ -7,8 +7,6 @@
 (function() {
   var SampleApp, express, fs;
 
-  require('coffee-script/register');
-
   express = require("express");
 
   fs = require("fs");

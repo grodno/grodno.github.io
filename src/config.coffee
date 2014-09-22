@@ -1,60 +1,16 @@
-DEBUG = not ('local' in window.location.hostname)
+((C) ->
 
-APP = 
-    id : 'app:ClientApplication' 
-    title : "Langvar.JS"
-    plugins: [
-            
-            "remote:HttpService"
-            
-            "script:ScriptService"
+    C.CONFIG =
+    
+        ID: "grodno.co"
+        TITLE: "Grodno"
+        VERSION: "1.5.2"
+        COPYRIGHT: "2013 Grodno"
+        SOURCES: "0AqQx4KOOt8TGdEZWZHpBdXAtNlVSMUFMOXppQ3ZuMkE"
+    
+        GAT: "UA-37246628-1"
+    
+        GOOGLE_SHEETS_URI: "https://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc="
+        GOOGLE_API_KEY: "AIzaSyAGenobWLKI-F6MWzrHIXmviwJww43n2EM" #'AIzaSyA--IJRFbmFubpjcz5Yherycv6Vy48qBY0'
 
-            {
-                id: "entity:ScriptService"
-                methods : (_super) ->
-                    resolveUri: (uri) ->
-                        uri.path = ('js/'+uri.domain.replace(/\./g,'/')+'.js').split('/')
-                        uri.domain = "*"
-                        _super.resolveUri.call @, uri
-            }
-            
-            "settings:Settings"
-            {
-                
-                id:"html:HtmlLoader"
-                storage: if DEBUG then null else window.localStorage
-            }
-            {            
-                id:"db:IndexedDatabase"
-
-                #syncPeriod: 1 * 6 *1000
-                syncUriExpression: "'script://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc=0AqQx4KOOt8TGdEZWZHpBdXAtNlVSMUFMOXppQ3ZuMkE&jsonp=callback&ts='+${?.lastSynchedTimestampOnce}"#ByPeriod
-                #socketChannel:'grodno.heroku.com'
-                version: 5
-                scheme: ['meta','links','enums','error']
-            }
-            {
-                id:"gsheet:Cache"
-                storage: window.localStorage
-                uriPattern:'script://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc={{domain}}&sheet={{path}}&jsonp=callback&version={{version}}'
-            }
-            {
-               
-                id:'lexio:lexio.TextFactory'
-                plugins: [
-                        'lexio.plugin.ParseHtml'
-                        'lexio.plugin.SplitText'
-                        'lexio.plugin.Numerics'
-                        'lexio.plugin.Hardcoded'
-                        'lexio.plugin.Morpheus'
-                        'lexio.plugin.WordScore'
-                        'lexio.plugin.Sentences'
-                ]
-            }
-    ]
-
-doReload = ->
-        ls = window.localStorage
-        ls.removeItem(ls.key(i)) for o, i in ls
-        ls
-
+)(if @module then @module.exports else @)

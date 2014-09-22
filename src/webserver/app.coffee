@@ -1,7 +1,6 @@
 ###
  Define the sample application.
 ###
-require('coffee-script/register');
 
 
 express = require("express")
