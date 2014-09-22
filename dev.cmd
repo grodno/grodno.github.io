@@ -1,2 +1,2 @@
-start coffee -o static\js -cw src
+start coffee -o static\js -cw .
 start supervisor index.js
