@@ -1,6 +1,0 @@
-[submodule "axoid"]
-	path = axoid
-	url = https://github.com/alitskevich/axoid.git
-[submodule "lexoid"]
-	path = lexoid
-	url = https://github.com/alitskevich/lexoid.git
