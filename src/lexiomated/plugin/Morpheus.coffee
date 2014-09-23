@@ -1,0 +1,18 @@
+# Morphological analysis.
+Object.entity.define 
+    id : "lexiomated.plugin.Morpheus extends lexiomated.Plugin"
+    requires: [
+        'gsheet://1FNyFDeXG68gTfCbWr1gno3KykcUGvH_SXOqrjl1wZhQ/chars'#chars
+        'gsheet://1JBxZVPj4pbHVlywPd9YzXyAVUrliAnOfFQ5zW57zoBA'#en
+        'gsheet://0AqQx4KOOt8TGdExjQ2ZJM0Q5MFBQSVRhYUw1ZHJMSFE'#ru
+    ]
+    methods: (_super) ->
+
+        onRequiredLoaded: (chars) ->
+            Word.registry 'CHARS', chars
+            Word.applyDictionaries e for e, i in arguments when i>0 
+
+        # handles text event passed 
+        handleEvent: (event) ->
+            event.each 'word', (e)->
+                e.word = Word.get(e.text).analyze()

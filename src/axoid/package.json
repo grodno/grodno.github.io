@@ -1,0 +1,7 @@
+{
+  "name": "axoid",
+  "version": "4.0.1",
+  "description": "Axoid CoffeeScript container. Everything is Entities with Events between.",
+  "devDependencies": {
+  }
+}
