@@ -5,11 +5,8 @@ Object.entity.define
     domNodeType: "ul"
     style: "media-list"
     css: "list-style: none;"
+    
     methods: (_super) ->
-        
-        _htmlAsyncAdapter = (err, ev) ->
-            @datum.content = ev.value
-            String.formatWithMap @itemTemplate, @datum
 
         dataAsyncAdapter: (err, data) ->
             @domNode.innerHTML = ""

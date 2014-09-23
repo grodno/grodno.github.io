@@ -8,11 +8,6 @@
     style: "media-list",
     css: "list-style: none;",
     methods: function(_super) {
-      var _htmlAsyncAdapter;
-      _htmlAsyncAdapter = function(err, ev) {
-        this.datum.content = ev.value;
-        return String.formatWithMap(this.itemTemplate, this.datum);
-      };
       return {
         dataAsyncAdapter: function(err, data) {
           var v, _i, _len, _ref, _results;
