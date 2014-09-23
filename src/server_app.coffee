@@ -1,4 +1,13 @@
+require './axoid/axiod.coffee'
+require './webserver/server.coffee'
 
 
-require('./webserver/app.coffee')().initialize().start()
+Object.entity.create 
+    id : 'app:webserver.Application' 
+    config : CONFIG
+    plugins: [
+            
+        ]
 
+    onPluginsInitialized: ->
+                true

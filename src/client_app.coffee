@@ -1,8 +1,8 @@
 DEBUG = not ('local' in window.location.hostname)
 
 Object.entity.create 
-    id : 'app:ClientApplication' 
-    title : "Langvar.JS"
+    id : 'app:webclient.Application' 
+    title : APP.TITLE
     plugins: [
             
             "remote:HttpService"

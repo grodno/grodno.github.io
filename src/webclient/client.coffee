@@ -238,7 +238,7 @@ Object.entity.define
     storage: window.localStorage
     
 Object.entity.define
-    id : 'ClientApplication' 
+    id : 'webclient.Application' 
     properties : ['title', 'page', 'index', "plugins:Plugins"]
     methods : (_super) ->
 
@@ -255,11 +255,7 @@ Object.entity.define
 
         titleChanged: (ev, v)->
             window.document.title = v
-        
-        dataChanged: (ev, data)->
-            _super.dataChanged.call @, ev, data
-            @prop 'title', (ENV.TITLE or '-')
-            
+
         navigate: (h)->
             return unless h
             hashes = h.split '-'
@@ -267,34 +263,8 @@ Object.entity.define
             @prop 'index', (hashes[1] or "")
 
         onPluginsInitialized: ->
-                @initWidget node for node in @domNode.querySelectorAll "[data-widget]"
+                (Object.dom.initWidget domNode : node, parentEntity : @) for node in @domNode.querySelectorAll "[data-widget]"
                 true
                 
-        initWidget : (->
-            
-    
-            handleError = (err, meta) ->
-                Object.error(err "wrong_widget", meta).log()
-                            
-                node = Object.dom.createElement()
-                meta.domNode.appendChild node
-                Object.entity.create
-                    typeId: "Html"
-                    parentEntity: meta.parentEntity
-                    style: "alert-error"
-                    html: "Error: " + (err.message or ("can't create UI view: " + meta.id))
 
-            (v) ->
-                meta = 
-                    domNode : v
-                    parentEntity : @                    
-
-                for n,z of v.dataset 
-                    meta[n] = if z[0] is '@' then Object.parse(z[1..]) else z
-                id = v.getAttribute("id")
-                meta.id = ((if id then (id+":") else "")) + meta["widget"]
-    
-                Object.entity.create meta, (err) -> handleError err, meta if err
-                
-        )()
 

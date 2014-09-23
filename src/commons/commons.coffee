@@ -154,9 +154,11 @@ Object.entity.defineProperty
                             
                         flow.next()
                     
-                    (err)-> 
+                    (err)->    
                         Object.error(err,"#{@}.onPluginsInitializing").log() if err
-                        @onPluginsInitialized?(err, @plugins = (e for e, i in arguments when i>1))          
+                        @onPluginsInitialized?(err, @plugins = (e for e, i in arguments when i>1))  
+                        @addFinalizer =>
+                            p.done() for p in @plugins
                 ]  
                 
 # EventHandler With Plugins

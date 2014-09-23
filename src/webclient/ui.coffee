@@ -160,7 +160,32 @@ Object.dom = ((_win) ->
                     clss.push cl unless cl in clss
         elt.className = (cl for cl in clss when cl).join(' ')
         elt
+        
+    initWidget : (->
+        
 
+        handleError = (err, meta) ->
+            Object.error(err "wrong_widget", meta).log()
+                        
+            node = Object.dom.createElement()
+            meta.domNode.appendChild node
+            Object.entity.create
+                typeId: "Html"
+                parentEntity: meta.parentEntity
+                style: "alert-error"
+                html: "Error: " + (err.message or ("can't create UI view: " + meta.id))
+
+        (meta) ->
+            elt = meta.domNode    
+            
+            (meta[n] = if z[0] is '@' then Object.parse(z[1..]) else z) for n,z of elt.dataset
+            
+            id = elt.getAttribute("id")
+            meta.id = ((if id then (id+":") else "")) + meta["widget"]
+
+            Object.entity.create meta, (err) -> handleError err, meta if err
+            
+    )()
 ) @
 
 
@@ -191,10 +216,7 @@ Object.entity.defineProperty
             
             # back reference
             node.entity = T
-            
-            # make alive if needed
-            Object.dom.alive T if T.alive
-            
+
             unless node.parentNode?.parentNode
                 if T.nextNode
                     T.nextNode.insertBefore(node)
@@ -337,6 +359,13 @@ Object.entity.defineProperty
     # patches entity type attached to
     mixin:(_super) ->
         
+        init: ->
+            _super.init.call @
+            
+             # make alive 
+            Object.dom.alive @
+              
+            
         disabledChanged: (ev, v) ->
             @domNode.disabled = (if v then "disabled" else "")
             @toggleDomNodeClass "disabled", v
@@ -371,7 +400,8 @@ Object.entity.define
             @prop 'html', String.template(tmpl, ctx)
 
         htmlChanged: ->
-            Object.dom.init @
+            (Object.dom.initWidget domNode : node, parentEntity : @)  for node in @domNode.querySelectorAll "[data-widget]"
+
 
 # @define UI label view.
 Object.entity.define  
