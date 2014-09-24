@@ -144,7 +144,7 @@ h4{
     padding: 0px;
     height1:480px;
     background-color:#022c55;
-        background-image: url(/img/bg_hero.jpg);
+        background-image: url(/res/bg_hero.jpg);
 
     transition: height 0.5s, opacity 0.5s;
     -moz-transition: height 0.5s, opacity 0.5s; /* Firefox 4 */
@@ -157,7 +157,7 @@ h4{
     color:white;
     height:109px;
     background-color: #5555f5;
-    background-image: url(/img/top-bg.jpg);
+    background-image: url(/res/top-bg.jpg);
     background-position: 0% 0%;background-repeat: repeat-x;
 }
 
@@ -268,7 +268,7 @@ white-space: normal;
   right: 0;
   bottom: 0;
   left: 0;
-  background: url(../img/bs-docs-masthead-pattern.png) repeat center center;
+  background: url(../res/bs-docs-masthead-pattern.png) repeat center center;
   opacity: .4;
 }
 /* Responsive

@@ -2,6 +2,21 @@
 HttpService.
 ###
 
+# Default logging.
+Object.log = ((c) ->
+    
+    (x) ->
+        args = (e for e in arguments)
+        if c?.log
+            if c.log.apply
+                c.log args...
+            else
+                c.log args.join(", ")# IE8
+        x  
+        
+)(@console)
+
+
 Object.entity.define  
 
     id: "HttpService extends EventHandler"

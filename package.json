@@ -31,7 +31,9 @@
   "dependencies": {
     "body-parser": "^1.8.2",
     "coffee-script": "^1.8.0",
+    "dustjs-linkedin": "^2.4.2",
     "express": "4.x",
+    "request": "^2.44.0",
     "socket.io": "^1.1.0"
   },
   "devDependencies": {

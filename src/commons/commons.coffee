@@ -1,6 +1,6 @@
 
 ### 
- Very common stuff used with AXOIDs.
+ Very common stuff used w/AXOIDs. 
 ### 
 
 # property [liquid].
@@ -150,15 +150,23 @@ Object.entity.defineProperty
                 (flow) -> [
                     ->
                         for m in meta
+                            m.parentEntity = @
                             Object.entity.create m, flow.wait()
                             
                         flow.next()
                     
                     (err)->    
                         Object.error(err,"#{@}.onPluginsInitializing").log() if err
-                        @onPluginsInitialized?(err, @plugins = (e for e, i in arguments when i>1))  
+                        @plugins = (e for e, i in arguments when i>1)
+                        
+                        @[id] = p for p in @plugins when id=p.id
+ 
+                        @onPluginsInitialized?(err, @plugins)  
                         @addFinalizer =>
-                            p.done() for p in @plugins
+                            for p in @plugins
+                                p.done()
+                                p.parentEntity = null
+                                @[p.id]= null if p.id
                 ]  
                 
 # EventHandler With Plugins

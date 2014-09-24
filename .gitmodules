@@ -1,3 +1,6 @@
 [submodule "src/axoid"]
 	path = src/axoid
 	url = git@github.com:alitskevich/axoid.git
+[submodule "src/lexiomated"]
+	path = src/lexiomated
+	url = git@github.com:alitskevich/lexiomated.git
