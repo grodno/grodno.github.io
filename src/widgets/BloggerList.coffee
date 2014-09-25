@@ -1,5 +1,5 @@
 Object.entity.define 
-    id:"ui.BloggerList extends List"
+    id:"widgets.BloggerList extends List"
     itemTemplate: """
     <div class="media panel-body">
         <span class="pull-left"><a target="_blank" href="{{url}}"><img class="img-rounded media-object" width="32" src="{{icon}}"></a></span>
