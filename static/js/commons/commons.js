@@ -162,11 +162,11 @@
           throw new Error("No id for " + this);
         }
         this.log("listen for events");
-        return Object.entity.listen(this.id, this.onEvent, this);
+        return Object.event.listen(this.id, this.onEvent, this);
       };
       return {
         done: function() {
-          Object.entity.unlisten(this.id);
+          Object.event.unlisten(this.id);
           return _super.done.call(this);
         },
         onEvent: function(ev) {
@@ -204,7 +204,7 @@
               }, function(err) {
                 var e, i, id, p, _i, _len, _ref;
                 if (err) {
-                  Object.error(err, "" + this + ".onPluginsInitializing").log();
+                  this.error(err, "" + this + ".onPluginsInitializing");
                 }
                 this.plugins = (function() {
                   var _i, _len, _results;
@@ -344,7 +344,7 @@
           return '' + (this.version || 1);
         },
         fetch: function(uri, cb) {
-          return Object.fire({
+          return Object.event.fire({
             uri: this.resolveUri(uri),
             callback: cb,
             unmarshaller: this.fetchUnmarshaller
@@ -379,7 +379,7 @@
             return function(err, data) {
               var s;
               if ((err = (typeof s !== "undefined" && s !== null ? s.error : void 0) || err)) {
-                err = Object.error(err, "fetch data for versioned cache").log();
+                err = _this.error(err, "fetch data for versioned cache");
               }
               if (!err && (s = _this.cacheSerializer(data))) {
                 CACHE[key] = data;

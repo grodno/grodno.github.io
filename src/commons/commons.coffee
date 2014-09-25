@@ -119,11 +119,11 @@ Object.entity.define
         _listenEvents = ->
             throw new Error("No id for #{@}") if not @id
             @log "listen for events"
-            Object.entity.listen @id, @onEvent, @
+            Object.event.listen @id, @onEvent, @
             
         # done entity
         done: ->
-           Object.entity.unlisten @id 
+           Object.event.unlisten @id 
            _super.done.call @
            
         # listen for Events
@@ -156,7 +156,8 @@ Object.entity.defineProperty
                         flow.next()
                     
                     (err)->    
-                        Object.error(err,"#{@}.onPluginsInitializing").log() if err
+                        @error(err, "#{@}.onPluginsInitializing") if err
+                        
                         @plugins = (e for e, i in arguments when i>1)
                         
                         @[id] = p for p in @plugins when id=p.id
@@ -233,7 +234,7 @@ Object.entity.define
         
         fetch: (uri, cb) ->
             
-            Object.fire
+            Object.event.fire
                 uri: @resolveUri uri
                 callback: cb
                 unmarshaller: @fetchUnmarshaller
@@ -259,7 +260,7 @@ Object.entity.define
                 #fetch otherwise    
                 @fetch u, (err, data) =>
                     
-                    err = Object.error(err, "fetch data for versioned cache").log() if (err = s?.error or err)
+                    err = @error(err, "fetch data for versioned cache") if (err = s?.error or err)
                     
                     if not err and (s = @cacheSerializer(data))
                         CACHE[key] = data

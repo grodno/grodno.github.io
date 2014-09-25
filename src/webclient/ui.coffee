@@ -312,7 +312,7 @@ Object.entity.defineProperty
                 try
                     e.domNode.innerHTML = (if (hidden or not v) then "" else v)
                 catch 
-                    Object.error(_error, "Caption").log()
+                    T.error(_error, "Caption")
 
         # value comparator
         comparator: Function.FALSE
@@ -433,7 +433,7 @@ Object.entity.define
                         @prop "caption", @busyCaption
 
                     cb = ev.callback
-                    Object.fire ev, (ev) =>
+                    Object.event.fire ev, (ev) =>
                         cb?.apply(@, arguments)
                         @updateDomNodeClass "!ui-busy"
                         @prop "disabled", false

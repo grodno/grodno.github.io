@@ -82,8 +82,8 @@ String.localize = ((_cache, fn) ->
                     try
                         String.localize.addBundle (Function.call(Function, str))()
                         return true
-                    catch e
-                        Object.error.log "Object.parse", str, e
+                    catch 
+                        @error _error, ("Object.parse:" + str)
                     null
             )
         return

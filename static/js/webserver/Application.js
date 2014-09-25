@@ -7,6 +7,7 @@
       return {
         init: function() {
           this.log("Application init");
+          this.setupTerminationHandlers();
           this.express = require("express")();
           this.http = require("http").createServer(this.express);
           return _super.init.call(this);
@@ -21,15 +22,15 @@
               p.config(this);
             }
           }
-          this.http.listen(this.port, this.ipaddress, (function(_this) {
+          return this.http.listen(this.port, this.ipaddress, (function(_this) {
             return function() {
               return _this.log("%s: Node server started on %s:%d ...", Date(Date.now()), _this.ipaddress, _this.port);
             };
           })(this));
-          return true;
         },
         use: function(x) {
-          return this.express.use(x);
+          this.express.use(x);
+          return this;
         },
         config: function(key, def) {
           return Object.get(this.config, key) || def || null;
@@ -46,23 +47,25 @@
         Setup termination handlers (for exit and a list of signals).
          */
         setupTerminationHandlers: function() {
-          var sig, terminator, _i, _len, _ref, _results;
-          process.on("exit", function() {
-            return console.log("" + (Date(Date.now())) + ": Node server stopped.", Date(Date.now()));
-          });
+          var sig, terminator, _i, _len, _ref;
+          process.on("exit", (function(_this) {
+            return function() {
+              _this.done();
+              return _this.error("" + (Date(Date.now())) + ": Node server stopped.");
+            };
+          })(this));
           terminator = function(sig) {
-            console.log("" + (Date(Date.now())) + ": Received " + sig + " - terminating ...");
+            Object.error(": Received " + sig + " - terminating ...").log();
             return process.exit(1);
           };
           _ref = ["SIGHUP", "SIGINT", "SIGQUIT", "SIGILL", "SIGTRAP", "SIGABRT", "SIGBUS", "SIGFPE", "SIGUSR1", "SIGSEGV", "SIGUSR2", "SIGTERM"];
-          _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             sig = _ref[_i];
-            _results.push(process.on(function() {
-              return self.terminator(sig);
+            process.on(sig, (function() {
+              return terminator(sig);
             }));
           }
-          return _results;
+          return this;
         }
       };
     }

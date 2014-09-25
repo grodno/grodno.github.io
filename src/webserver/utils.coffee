@@ -1,4 +1,15 @@
-         
+
+Object.log = (x) ->
+        c = global.console
+        
+        if x?.isError
+            stack = (new Error).stack.split('\n')[3..-3].join('\n\t\t\t')
+            args = ["#{Date(Date.now())} : "+x, '\n\t Details:', x.details,'\n\t Stacktrace:\n\t\t\t', stack]
+            c.error args...
+        else
+            args = (e for e in arguments)
+            c.log args...
+        x         
 
 Object.entity.create
     id: "request:EventHandler"
@@ -57,7 +68,9 @@ Object.http = (->
     _mime = (req) ->
         (req.headers["content-type"] or "").split(";")[0]
 
-
+    _statusCode = (reason) ->
+        (if reason then (REASON_CODES[reason] or 500) else 200)
+        
     http.fetchPayload = (ev, req, next) ->
         if [
             "get"
@@ -84,31 +97,18 @@ Object.http = (->
         ext = url.substring(p + 1).toUpperCase()
         MIME[ext] or MIME.HTML
 
-    http.send = (res, result, mime, reason) ->
-        code = (if reason then (REASON_CODES[reason] or 500) else 200)
-        res.writeHead code, http.STATUS_CODES[code],
-            "Content-Type": mime or MIME.HTML
+    http.send = (res, result, reason) ->
+        res.status(_statusCode reason).send(result)
 
-        res.end result
-        return
-
-    
     # send error as JSON
     http.sendJson = (res, obj, reason) ->
-        @send res, JSON.stringify(obj), MIME.JSON, reason
-        return
+        res.status(_statusCode reason).json(obj)
 
-    
     # send error as JSON
-    http.sendError = (res, err, message) ->
-        err = http.narrowError(err, message)
-        http.sendJson res, err, err.reason
-        err
-
-    http.narrowError = (err, message) ->
-        err = Object.error(err or {}, message)
-        err.reason = "internal-server-error"    if not err.reason or not REASON_CODES[err.reason]
-        err.message = http.STATUS_CODES[REASON_CODES[err.reason]]    unless err.message
+    http.sendError = (res, message) ->
+        err = Object.error(message).log()
+        err.message = http.STATUS_CODES[REASON_CODES[err.reason]] + err.message
+        res.status(_statusCode err.reason).json(err)
         err
 
     http

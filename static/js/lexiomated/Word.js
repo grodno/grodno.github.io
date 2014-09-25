@@ -238,11 +238,16 @@
     Word.ALL = {};
 
     Word.applyDictionaries = function(data) {
-      var k, _ref, _ref1, _ref2;
+      var k, r, _ref, _ref1, _ref2;
       if (!data) {
         return null;
       }
-      this.registry('ROOTS', data.roots);
+      for (k in data) {
+        r = data[k];
+        if (k.slice(0, 6) === 'roots') {
+          this.registry('ROOTS', r);
+        }
+      }
       this.registry('COMPLEXIES', data.complexies);
       this.registry('FLEXIES', data.flexies);
       this.registry('ROOTS_MASKS', data.root_masks);

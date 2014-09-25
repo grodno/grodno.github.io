@@ -2,11 +2,18 @@
 (function() {
   Object.entity.define({
     id: 'webserver.HomePlugin',
-    baseDir: './static',
     methods: function(_super) {
       return {
         getDefault: function(opts, cb) {
           opts.viewId = 'index';
+          return cb();
+        },
+        getAppCache: function(opts, cb) {
+          opts.viewId = 'appcache';
+          return cb();
+        },
+        getOffline: function(opts, cb) {
+          opts.viewId = 'offline';
           return cb();
         }
       };

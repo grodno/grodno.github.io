@@ -13,7 +13,7 @@
           };
           dust.onLoad = (function(_this) {
             return function(view, callback) {
-              return Object.fire(String.format(_this.templatePattern, view), callback);
+              return Object.event.fire(String.format(_this.templatePattern, view), callback);
             };
           })(this);
           return app.use(function(req, res, next) {

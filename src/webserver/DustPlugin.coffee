@@ -12,7 +12,7 @@ Object.entity.define
             dust.optimizers.format = (context, node) -> node
             
             dust.onLoad = (view, callback) =>
-              Object.fire String.format(@templatePattern, view), callback
+              Object.event.fire String.format(@templatePattern, view), callback
             
             app.use (req, res, next) ->
                 return next() unless viewId = req.options.viewId

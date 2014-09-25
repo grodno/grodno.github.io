@@ -16,7 +16,7 @@ Object.entity.defineProperty
             valid = true
             if @fields
                 for f in @fields
-                    ev0 = Object.entity(f).checkIfValid()
+                    ev0 = Object.entity.get(f).checkIfValid()
                     ev.stack.push.apply ev.stack, ev0.stack    if ev0.stack.length
                     
                 unless valid = not (ev.stack.length)
@@ -26,13 +26,13 @@ Object.entity.defineProperty
     
         fieldsValues: ->
             r = {}
-            Object.prop r, key.replace(RE_TILDA, "."), Object.entity(key).getValue() for key in @fields if @fields
+            Object.prop r, key.replace(RE_TILDA, "."), Object.entity.get(key).getValue() for key in @fields if @fields
             Object.prop r, key.replace(RE_TILDA, "."), window.document.getElementById(key).value for key in @inputs if @inputs
             r
     
         getFields: ->
             r = {}
-            r[key] = Object.entity(key) for key in @fields if @fields
+            r[key] = Object.entity.get(key) for key in @fields if @fields
             r
 
         # creates onload handler for hidden iframe

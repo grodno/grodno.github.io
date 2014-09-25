@@ -1,33 +1,32 @@
-DEBUG = not ('local' in window.location.hostname)
+Object.DEBUG = not ('local' in window.location.hostname)
 
 Object.entity.create 
     id : 'app:webclient.Application' 
-    title : APP.TITLE
+    title : CONFIG.TITLE
     plugins: [
             
             "remote:HttpService"
             
             "script:ScriptService"
 
+            "settings:Settings"
+
             {
                 id: "entity:ScriptService"
                 scriptTypeC:"text/coffeescript"
                 methods : (_super) ->
                     resolveUri: (uri) ->
-                        uri.path = ('static/js/'+uri.domain.replace(/\./g,'/')+'.js').split('/')
+                        uri.path = ('/js/'+uri.domain.replace(/\./g,'/')+'.js').split('/')
                         uri.domain = "*"
                         _super.resolveUri.call @, uri
             }
-            
-            "settings:Settings"
             {
                 
                 id:"html:HtmlLoader"
-                storage: if DEBUG then null else window.localStorage
+                storage: if Object.DEBUG then null else window.localStorage
             }
             {            
                 id:"db:IndexedDatabase"
-
                 #syncPeriod: 1 * 6 *1000
                 syncUriExpression: "'script://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc=0AqQx4KOOt8TGdEZWZHpBdXAtNlVSMUFMOXppQ3ZuMkE&jsonp=callback&ts='+${?.lastSynchedTimestampOnce}"#ByPeriod
                 #socketChannel:'grodno.heroku.com'
@@ -38,6 +37,11 @@ Object.entity.create
                 id:"gsheet:Cache"
                 storage: window.localStorage
                 uriPattern:'script://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc={{domain}}&sheet={{path}}&jsonp=callback&version={{version}}'
+            }
+            {
+                id:"blogger:Cache"
+                storage: window.sessionStorage
+                uriPattern:"script://www.googleapis.com/blogger/v3/blogs/1638693468845489013/posts?{0}&key=#{CONFIG.GOOGLE_API_KEY}&jsonp=callback&ssl=true&version={{version}}"
             }
             {
                
@@ -52,7 +56,7 @@ Object.entity.create
                         'lexiomated.plugin.Sentences'
                 ]
             }
-    ]
+        ]
 
 doReload = ->
         ls = window.localStorage

@@ -96,13 +96,11 @@ Axio: Localization resources.
             version: version,
             urlTemplate: "[remote]" + (urlTemplate || ("/l10n/l10n-{0}.js?v=" + version)),
             cacheDeserializer: function(str) {
-              var e;
               try {
                 String.localize.addBundle((Function.call(Function, str))());
                 return true;
               } catch (_error) {
-                e = _error;
-                Object.error.log("Object.parse", str, e);
+                this.error(_error, "Object.parse:" + str);
               }
               return null;
             }

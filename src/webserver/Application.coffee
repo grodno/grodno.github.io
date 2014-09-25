@@ -7,7 +7,7 @@ Object.entity.define
         init: ->
             @log "Application init"
             
-            #@setupTerminationHandlers()
+            @setupTerminationHandlers()
             
             @express = require("express")()
             @http = require("http").createServer(@express)            
@@ -23,11 +23,11 @@ Object.entity.define
             @http.listen @port, @ipaddress, =>
                 @log "%s: Node server started on %s:%d ...", Date(Date.now()), @ipaddress, @port
 
-            true
 
-        # gets config param
+        # adds express handler to use
         use: (x) ->
            @express.use(x)
+           @
 
         # gets config param
         config: (key, def) ->
@@ -43,19 +43,20 @@ Object.entity.define
             @http.close 
             @
 
-
         ###
         Setup termination handlers (for exit and a list of signals).
         ###
         setupTerminationHandlers: ->
             
             #  Process on exit and signals.
-            process.on "exit", ->
-                console.log "#{Date(Date.now())}: Node server stopped.", Date(Date.now())
+            process.on "exit", =>
+                @done()
+                @error("#{Date(Date.now())}: Node server stopped.")
     
             terminator = (sig) ->
-                console.log "#{Date(Date.now())}: Received #{sig} - terminating ..."
+                Object.error(": Received #{sig} - terminating ...").log()
                 process.exit 1
 
             # Removed 'SIGPIPE' from the list - bugz 852598.
-            (process.on -> self.terminator sig) for sig in ["SIGHUP","SIGINT","SIGQUIT","SIGILL","SIGTRAP","SIGABRT","SIGBUS","SIGFPE","SIGUSR1","SIGSEGV","SIGUSR2","SIGTERM"]
+            (process.on sig, (-> terminator sig)) for sig in ["SIGHUP","SIGINT","SIGQUIT","SIGILL","SIGTRAP","SIGABRT","SIGBUS","SIGFPE","SIGUSR1","SIGSEGV","SIGUSR2","SIGTERM"]
+            @

@@ -3,12 +3,7 @@ require './commons/commons.coffee'
 require './webserver/utils.coffee'
 
 Object.DEBUG = true
-
-Object.log = (x) ->
-        c = global.console
-        args = (e for e in arguments)
-        c.log args...
-        x 
+ 
         
 Object.entity.create
     id: 'entity:EventHandler' 

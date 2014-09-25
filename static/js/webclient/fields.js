@@ -16,7 +16,7 @@
             _ref = this.fields;
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               f = _ref[_i];
-              ev0 = Object.entity(f).checkIfValid();
+              ev0 = Object.entity.get(f).checkIfValid();
               if (ev0.stack.length) {
                 ev.stack.push.apply(ev.stack, ev0.stack);
               }
@@ -37,7 +37,7 @@
             _ref = this.fields;
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               key = _ref[_i];
-              Object.prop(r, key.replace(RE_TILDA, "."), Object.entity(key).getValue());
+              Object.prop(r, key.replace(RE_TILDA, "."), Object.entity.get(key).getValue());
             }
           }
           if (this.inputs) {
@@ -56,7 +56,7 @@
             _ref = this.fields;
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               key = _ref[_i];
-              r[key] = Object.entity(key);
+              r[key] = Object.entity.get(key);
             }
           }
           return r;

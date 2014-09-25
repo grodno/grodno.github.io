@@ -2,9 +2,17 @@
 # Based on Express.
 Object.entity.define
     id: 'webserver.HomePlugin' 
-    baseDir: './static'
     methods: (_super) ->
         
         getDefault: (opts, cb) ->
             opts.viewId='index'
+            cb()
+            
+                    
+        getAppCache: (opts, cb) ->
+            opts.viewId='appcache'
+            cb()
+            
+        getOffline: (opts, cb) ->
+            opts.viewId='offline'
             cb()

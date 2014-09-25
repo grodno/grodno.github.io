@@ -8,15 +8,27 @@ HttpService.
   Object.log = (function(c) {
     return function(x) {
       var args, e;
-      args = (function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = arguments.length; _i < _len; _i++) {
-          e = arguments[_i];
-          _results.push(e);
+      if (x != null ? x.isError : void 0) {
+        if (!x.stack) {
+          x.stack = (new Error).stack;
         }
-        return _results;
-      }).apply(this, arguments);
+        if (c != null ? c.error : void 0) {
+          c.error(x.reason, x.message, x.details, x.stack);
+          return;
+        } else {
+          args = ["ERROR:", x.reason, x.message, x.details, x.stack];
+        }
+      } else {
+        args = (function() {
+          var _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = arguments.length; _i < _len; _i++) {
+            e = arguments[_i];
+            _results.push(e);
+          }
+          return _results;
+        }).apply(this, arguments);
+      }
       if (c != null ? c.log : void 0) {
         if (c.log.apply) {
           c.log.apply(c, args);
@@ -121,7 +133,7 @@ HttpService.
             }
           } catch (_error) {
             running = false;
-            ev.callback(Object.error(_error, "remote_error:" + ev.uri).log());
+            ev.callback(this.error(_error, "remote_error:" + ev.uri));
           }
         }
       };
@@ -249,7 +261,7 @@ HttpService.
           onMessage: function(ev) {
             this.log("onMessage", ev);
             if (ev.uri) {
-              return Object.fire(ev);
+              return Object.event.fire(ev);
             }
           }
         };
@@ -312,7 +324,7 @@ HttpService.
           try {
             (Function.call(Function, s))();
           } catch (_error) {
-            Object.error(_error, "JS syntax:" + _error.message).log();
+            this.error(_error, "JS syntax:" + _error.message).log();
           }
           return s;
         }

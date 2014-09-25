@@ -2,7 +2,7 @@
 (function() {
   Object.entity.define({
     id: "ui.BloggerList extends List",
-    itemTemplate: "<div class=\"media panel-body\"><span class=\"pull-left\"><a target=\"_blank\" href=\"{url}\">" + "<img class=\"img-rounded media-object\" width=\"32\" src=\"{icon}\"></a></span>" + "<div class=\"media-body\"><h5 class=\"media-header\">{name} <a target=\"_blank\" href=\"{url}\">далее&nbsp;→</a></h5></div></div>",
+    itemTemplate: "<div class=\"media panel-body\">\n    <span class=\"pull-left\"><a target=\"_blank\" href=\"{{url}}\"><img class=\"img-rounded media-object\" width=\"32\" src=\"{{icon}}\"></a></span>\n    <div class=\"media-body\">\n        <h5 class=\"media-header\">{{name}} <a target=\"_blank\" href=\"{{url}}\">далее&nbsp;→</a></h5>\n    </div>\n</div>",
     itemStyle: "panel panel-default",
     domNodeType: "ul",
     style: "media-list",
@@ -10,25 +10,22 @@
     methods: function(_super) {
       return {
         dataAsyncAdapter: function(err, data) {
-          var v, _i, _len, _ref, _results;
+          var items, v, _i, _len;
           this.domNode.innerHTML = "";
-          _ref = Object.get(data, "items") || [];
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            v = _ref[_i];
-            v.name = Object.get(v, "title");
-            v.content = Object.get(v, "content");
-            v.url = Object.get(v, "url");
-            v.icon = (Object.get(v, "author.image.url") || "").replace("http://img2.blogblog.com/img/b16-rounded.gif", "") || "static/res/logo120.png";
-            v.author = Object.get(v, "author.displayName");
-            _results.push(v.labels = (v.labels && v.labels.length ? " <span class=\"label label-info\">" + v.labels.join("</span> <span class=\"label label-info\">") + "</span>" : ""));
+          items = Object.prop(data, "items") || [];
+          for (_i = 0, _len = items.length; _i < _len; _i++) {
+            v = items[_i];
+            v.name = Object.prop(v, "title");
+            v.icon = (Object.prop(v, "author.image.url") || "").replace("http://img2.blogblog.com/img/b16-rounded.gif", "") || "/res/logo120.png";
+            v.author = Object.prop(v, "author.displayName");
+            v.labels = (v.labels && v.labels.length ? ' <span class="label label-info">' + v.labels.join('</span> <span class="label label-info">') + "</span>" : "");
           }
-          return _results;
+          return items;
         },
         childrenItemAdapter: function(datum, i) {
           return {
-            id: "html",
-            html: String.formatWithMap(this.itemTemplate, datum) + ""
+            id: "Html",
+            html: String.template(this.itemTemplate, datum)
           };
         }
       };

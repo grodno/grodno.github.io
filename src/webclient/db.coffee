@@ -228,7 +228,7 @@
                     [
                         ->
                             for storeId, docs of delta when (storeId = storeId.split('_')[0])
-                                Object.fire
+                                Object.event.fire
                                     uri:"db://upsert/#{storeId}"
                                     docs: docs
                                     callback: flow.wait()

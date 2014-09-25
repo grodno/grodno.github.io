@@ -16,35 +16,61 @@ AXOID.JS
       return x;
     };
     O.log = F0;
-    O.error = function(err, message, details) {
-      if (!err) {
-        err = {
-          message: "unknown"
-        };
-      }
-      if (typeof err === "string") {
-        err = {
-          reason: err
-        };
-      }
-      err.reason = err.reason || "unknown";
-      err.message = [message || '', err.message || ('' + err)].join(' ');
-      err.details = details || err.details || '';
-      err.log = function() {
-        var c;
-        c = global.console;
-        if (!this.stack) {
-          this.stack = (new Error).stack;
+    O.error = (function() {
+      var Err;
+      Err = (function() {
+        function Err(e) {
+          this.details = [];
+          if (typeof e === 'string') {
+            if (e) {
+              this.reason = e.split(':')[0];
+            }
+            if (e) {
+              this.message = e;
+            }
+          } else {
+            if (e.reason) {
+              this.reason = e.reason;
+            }
+            if (e.message) {
+              this.message = e.message;
+            }
+          }
         }
-        if (c != null ? c.error : void 0) {
-          c.error(this.reason, this.message, this.details, this.stack);
-        } else {
-          O.log.apply(O, ["ERROR:", this]);
-        }
-        return this;
+
+        Err.prototype.reason = 'unknown';
+
+        Err.prototype.message = '';
+
+        Err.prototype.isError = true;
+
+        Err.prototype.addDetails = function() {
+          var det, _i, _len;
+          for (_i = 0, _len = arguments.length; _i < _len; _i++) {
+            det = arguments[_i];
+            if (det) {
+              this.details.unshift(det);
+            }
+          }
+          return this;
+        };
+
+        Err.prototype.log = function() {
+          O.log(this);
+          return this;
+        };
+
+        Err.prototype.toString = function() {
+          return "[error] " + this.message;
+        };
+
+        return Err;
+
+      })();
+      return function(err, details) {
+        return ((err != null ? err.isError : void 0) ? err : new Err(err)).addDetails(details);
       };
-      return err;
-    };
+    })();
     O.Uri = (function() {
       function Uri() {
         this.isUri = true;
@@ -292,15 +318,12 @@ AXOID.JS
           _args = [].concat(results);
           results = [null, void 0];
           try {
-            if (!global.DEBUG) {
+            if (!Object.DEBUG) {
               _sError = new Error;
             }
             return op.apply(flow.context, _args);
           } catch (_error) {
-            return O.error(_error, 'flow-op:', {
-              op: ('' + op).slice(0, 151).replace(/\s+/g, ''),
-              args: _args
-            }).log();
+            return O.error(_error, ('perform: ' + op).slice(0, 151).replace(/\s+/g, '')).log();
           }
         }
       };
@@ -331,7 +354,7 @@ AXOID.JS
       return tick();
     };
     O.require = (function() {
-      var createCb, _cache;
+      var createCb, performRequire, _cache;
       _cache = {};
       createCb = function(ctx) {
         return function(err, r) {
@@ -348,7 +371,7 @@ AXOID.JS
           return 1;
         };
       };
-      return function(list, cb) {
+      return performRequire = function(list, cb) {
         if (!(list != null ? list.length : void 0)) {
           return cb(null, 0);
         }
@@ -364,7 +387,7 @@ AXOID.JS
                 })) && !ctx.isDone) {
                   ctx.q.push(flow.wait());
                   if (ctx.q.length === 1) {
-                    O.fire(x, createCb(ctx));
+                    O.event.fire(x, createCb(ctx));
                   }
                 }
               }
@@ -647,7 +670,7 @@ AXOID.JS
             _ref1 = handler.sources;
             for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
               p = _ref1[_i];
-              if (!(w = O.entity(p.entityId))) {
+              if (!(w = O.entity.get(p.entityId))) {
                 handler.values = null;
                 return T.log("Expression have no source yet: " + p.id + " -> " + propName);
               }
@@ -675,7 +698,7 @@ AXOID.JS
         _ref1 = path.split('.'), sId = _ref1[0], sProp = _ref1[1];
         _bind = function(ev) {
           var S, val;
-          if (!(S = O.entity(sId))) {
+          if (!(S = O.entity.sId)) {
             return;
           }
           val = S.prop(sProp);
@@ -731,30 +754,20 @@ AXOID.JS
 
       EntityProperty.prototype.extractDefaults = function(T, defaults) {
         var n;
-        n = this.id;
-        if (T[n]) {
-          defaults[n] = T[n];
+        if (T[n = this.id] && (defaults[n] = T[n])) {
           T[n] = void 0;
         }
-        n = this.id + 'Expression';
-        if (T[n]) {
-          defaults[n] = T[n];
+        if (T[n = this.id + 'Expression'] && (defaults[n] = T[n])) {
           T[n] = void 0;
         }
-        n = this.id + 'Binding';
-        if (T[n]) {
-          defaults[n] = T[n];
+        if (T[n = this.id + 'Binding'] && (defaults[n] = T[n])) {
           T[n] = void 0;
         }
         if (!this.asyncTarget) {
-          n = this.id + 'Uri';
-          if (T[n]) {
-            defaults[n] = T[n];
+          if (T[n = this.id + 'Uri'] && (defaults[n] = T[n])) {
             T[n] = void 0;
           }
-          n = this.id + 'UriExpression';
-          if (T[n]) {
-            defaults[n] = T[n];
+          if (T[n = this.id + 'UriExpression'] && (defaults[n] = T[n])) {
             return T[n] = void 0;
           }
         }
@@ -805,7 +818,7 @@ AXOID.JS
       };
 
       EntityProperty.prototype.setValueForUri = function(T, uri) {
-        return O.fire(uri, (function(_this) {
+        return O.event.fire(uri, (function(_this) {
           return function(err, value) {
             if (!T.isDone) {
               return T.prop(_this.id, (T["" + _this.id + "AsyncAdapter"] || _this.asyncAdapter).call(T, err, value));
@@ -1083,8 +1096,8 @@ AXOID.JS
         }
         return Event.notifyPropertyChanged(this.id, propId, ev);
       },
-      error: function(err, message, info) {
-        return Object.error(err, message, info || this).log();
+      error: function(e, details) {
+        return Object.error(e, details).log();
       },
       log: function(x) {
         var args, e;
@@ -1104,36 +1117,31 @@ AXOID.JS
         return "[" + this.constructor.type.id + ":" + (this.id || this._id) + "]";
       }
     };
-
-    /*
-    API
-     */
-    O.entity = function(id) {
-      return ENTITY.get(id);
+    O.event = {
+      fire: function(event, callback) {
+        return (event.isEvent ? event : new Event(event)).fire(callback);
+      },
+      listen: function(type, handlet, target) {
+        return Event.listen(type, handlet, target);
+      },
+      unlisten: function(type) {
+        return Event.unlisten(type);
+      }
     };
-    O.entity.listen = function(id, fn, target) {
-      return Event.listen(id, fn, target);
+    return O.entity = {
+      get: function(id) {
+        return ENTITY.get(id);
+      },
+      define: function(meta) {
+        return ENTITY.defineType(meta);
+      },
+      defineProperty: function(meta) {
+        return PROP.TYPES[meta.id] = meta;
+      },
+      create: function(meta, callback) {
+        return ENTITY.create(meta, callback);
+      }
     };
-    O.entity.unlisten = function(id) {
-      return Event.unlisten(id);
-    };
-    O.fire = function(ev, cb) {
-      return (ev.isEvent ? ev : new Event(ev)).fire(cb);
-    };
-    O.entity.define = function(meta) {
-      return ENTITY.defineType(meta);
-    };
-    O.entity.defineProperty = function(meta) {
-      return PROP.TYPES[meta.id] = meta;
-    };
-    O.entity.create = function(meta, cb) {
-      return ENTITY.create(meta, cb);
-    };
-    O.entity.prop = function(id, key, value) {
-      var _ref1;
-      return (_ref1 = ENTITY.get(id)) != null ? _ref1.prop(key, value) : void 0;
-    };
-    return O.entity;
   })(this);
 
 }).call(this);

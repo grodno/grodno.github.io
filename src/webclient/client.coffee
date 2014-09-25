@@ -6,7 +6,16 @@ HttpService.
 Object.log = ((c) ->
     
     (x) ->
-        args = (e for e in arguments)
+        if x?.isError
+            x.stack = (new Error).stack unless x.stack
+            if c?.error 
+                c.error x.reason, x.message, x.details, x.stack 
+                return
+            else
+                args = ["ERROR:", x.reason, x.message, x.details, x.stack]
+        else
+            args = (e for e in arguments)
+            
         if c?.log
             if c.log.apply
                 c.log args...
@@ -99,7 +108,7 @@ Object.entity.define
                         rq.send null
                 catch 
                     running=false
-                    ev.callback Object.error(_error, "remote_error:" + ev.uri).log()
+                    ev.callback @error(_error, "remote_error:" + ev.uri)
                 return
         
 Object.entity.define  
@@ -199,7 +208,7 @@ Object.entity.define
 
             onMessage: (ev) ->
                 @log "onMessage", ev
-                Object.fire ev if ev.uri
+                Object.event.fire ev if ev.uri
 
 ) @
 
@@ -237,7 +246,7 @@ Object.entity.define
             try
                 (Function.call(Function, s))()
             catch 
-                Object.error(_error, "JS syntax:" + _error.message).log()
+                @error(_error, "JS syntax:" + _error.message).log()
             s
 
 Object.entity.define

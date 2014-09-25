@@ -399,7 +399,7 @@ Axio: Web DOM API.
             try {
               return e.domNode.innerHTML = (hidden || !v ? "" : v);
             } catch (_error) {
-              return Object.error(_error, "Caption").log();
+              return T.error(_error, "Caption");
             }
           }
         },
@@ -550,7 +550,7 @@ Axio: Web DOM API.
               this.prop("caption", this.busyCaption);
             }
             cb = ev.callback;
-            return Object.fire(ev, (function(_this) {
+            return Object.event.fire(ev, (function(_this) {
               return function(ev) {
                 if (cb != null) {
                   cb.apply(_this, arguments);
