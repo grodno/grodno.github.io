@@ -12,6 +12,10 @@
           opts.viewId = 'appcache';
           return cb();
         },
+        getLogin: function(opts, cb) {
+          opts.viewId = 'login';
+          return cb();
+        },
         getOffline: function(opts, cb) {
           opts.viewId = 'offline';
           return cb();

@@ -563,42 +563,92 @@ AXOID.JS
       };
     })();
     String.template = (function() {
-      var FN2, RE, RE2;
-      RE = /\{\{(\w+?)\}\}/gm;
-      RE2 = /\{\{#(\w+?)\}\}([\s\S]+?)\{\{\/(\w+?)\}\}/gm;
-      FN2 = function(s, k, c) {
-        var ctx, e;
-        return k + c;
-        if (!(ctx = this[k])) {
-          return '';
+      var fn, parse;
+      parse = function(s, x) {
+        var RE, e, lastIndex, r, r0, stack, tag, text;
+        r = {
+          tag: 'top',
+          children: []
+        };
+        stack = [];
+        lastIndex = 0;
+        RE = /{{([?\/:]?)([a-zA-Z\.]+)((\|[a-z]+)*)}}/g;
+        while (e = RE.exec(s)) {
+          if (e.index && (text = s.slice(lastIndex, +(e.index - 1) + 1 || 9e9))) {
+            r.children.push({
+              tag: '_',
+              value: text
+            });
+          }
+          tag = e[2];
+          if (e[1] === '?') {
+            stack.unshift(r);
+            r.children.push(r0 = {
+              tag: tag,
+              children: []
+            });
+            r = r0;
+          } else if (e[1] === '/') {
+            r = stack.shift();
+          } else if (e[1] === ':') {
+            r = r['_' + tag] = {
+              children: []
+            };
+          } else {
+            r.children.push({
+              tag: tag
+            });
+          }
+          lastIndex = RE.lastIndex;
         }
-        if (ctx.length) {
-          return ((function() {
-            var _i, _len, _results;
-            _results = [];
-            for (_i = 0, _len = ctx.length; _i < _len; _i++) {
-              e = ctx[_i];
-              _results.push(String.template(c, e));
-            }
-            return _results;
-          })()).join('');
-        } else {
-          return String.template(c, ctx);
-        }
-      };
-      return function(s, map) {
-        if (!s) {
-          return '';
-        } else {
-          return s.replace(RE, function(s, k) {
-            return O.prop(map, k) || '';
+        if (lastIndex && (s = s.slice(lastIndex))) {
+          r.children.push({
+            tag: '_',
+            value: s
           });
         }
+        return r;
+      };
+      fn = function(node, obj) {
+        var e, n, r, tag, v, _i, _j, _len, _len1, _ref1;
+        r = [];
+        if (node.children) {
+          _ref1 = node.children;
+          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+            n = _ref1[_i];
+            if ((tag = n.tag) === '_') {
+              r.push(n.value);
+            } else {
+              if ((v = tag === '.' ? obj : O.prop(obj, tag))) {
+                if (Array.isArray(v)) {
+                  for (_j = 0, _len1 = v.length; _j < _len1; _j++) {
+                    e = v[_j];
+                    if (e) {
+                      r.push(fn(n, e));
+                    }
+                  }
+                } else {
+                  r.push(fn(n, v));
+                }
+              } else {
+                if (n._else) {
+                  r.push(fn(n._else, v));
+                }
+              }
+            }
+          }
+        } else {
+          r.push(obj);
+        }
+        return r.join('');
+      };
+      return function(s, obj) {
+        return fn(parse(s), obj);
       };
     })();
 
     /*
-    properties
+    Property implementation
      */
     PROP = {
       TYPES: {},
@@ -858,7 +908,7 @@ AXOID.JS
     })();
 
     /*
-    Entity
+    Entity implementation
      */
     ENTITY = {
       ALL: {},

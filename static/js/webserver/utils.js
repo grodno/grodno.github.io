@@ -117,10 +117,8 @@
     http.sendJson = function(res, obj, reason) {
       return res.status(_statusCode(reason)).json(obj);
     };
-    http.sendError = function(res, message) {
-      var err;
-      err = Object.error(message).log();
-      err.message = http.STATUS_CODES[REASON_CODES[err.reason]] + err.message;
+    http.sendError = function(res, err) {
+      err = Object.error(err).log();
       res.status(_statusCode(err.reason)).json(err);
       return err;
     };

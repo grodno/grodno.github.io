@@ -21,9 +21,10 @@
             if (!(viewId = req.options.viewId)) {
               return next();
             }
-            context = Object.clone(req.result || {});
-            context.app = app.config;
-            context.viewId = viewId;
+            context = Object.clone(req.result || {}, {
+              app: app.config,
+              viewId: viewId
+            });
             return dust.render(viewId, context, function(err, result) {
               req.error = err;
               req.result = result;

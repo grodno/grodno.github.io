@@ -7,49 +7,58 @@
     config: function(app) {
       var HTTP_METHODS;
       HTTP_METHODS = ["get", "post", "put", "delete", "options"];
-      return app.use(function(req, res, next) {
-        var method, n, op, opId, opName, opts, plugin, uri, v, _ref;
-        method = req.method = req.method.toLowerCase();
-        if (__indexOf.call(HTTP_METHODS, method) < 0) {
-          return next();
-        }
-        opts = req.options = {};
-        _ref = req.headers;
-        for (n in _ref) {
-          v = _ref[n];
-          req.options[n.toLowerCase()] = v;
-        }
-        opts.host = opts["x-forwarded-host"] || opts.host || "*";
-        opts.access_token = opts["x-authorization"] || opts["authorization"] || null;
-        uri = req.uri = Object.Uri.parse("//*" + (req.url === '/' ? '/home' : req.url));
-        Object.update(opts, uri.params);
-        opts.language = opts.language || opts.lang || String.LANGUAGE;
-        if (!(plugin = app[uri.path[0]])) {
-          return next();
-        }
-        opId = String.capitalize(uri.path[1] || 'default');
-        op = Object.prop(plugin, method + opId);
-        opName = [plugin.id, ".", method, opId].join('');
-        Object.log("Dispatch " + uri + " into " + opName);
-        if (op) {
-          try {
-            return op.call(plugin, opts, function(err, result) {
-              req.error = err;
-              req.result = result;
-              return next();
-            });
-          } catch (_error) {
-            req.error = Object.error(0, "Error in " + opName + " ", _error).log();
+      return app.use((function(_this) {
+        return function(req, res, next) {
+          var method, n, op, opId, opName, opts, plugin, uri, v, _ref, _ref1;
+          opts = req.options = {};
+          method = req.method = req.method.toLowerCase();
+          if (__indexOf.call(HTTP_METHODS, method) < 0) {
+            return next();
           }
-        } else {
-          if ((method === "options") && plugin["post" + opId]) {
-            req.result = "OK";
+          uri = req.uri = Object.Uri.parse("//*" + (req.url === '/' ? '/home' : req.url));
+          if (!(plugin = app[uri.path[0]])) {
+            return next();
+          }
+          _ref = req.headers;
+          for (n in _ref) {
+            v = _ref[n];
+            opts[n.toLowerCase()] = v;
+          }
+          _ref1 = uri.params;
+          for (n in _ref1) {
+            v = _ref1[n];
+            opts[n.toLowerCase()] = v;
+          }
+          if (!opts.access_token) {
+            opts.access_token = opts["x-authorization"] || opts["authorization"];
+          }
+          if (!opts.language) {
+            opts.language = opts.lang || String.LANGUAGE;
+          }
+          opId = String.capitalize(uri.path[1] || 'default');
+          op = Object.prop(plugin, method + opId);
+          opName = [plugin.id, ".", method, opId].join('');
+          Object.log("Dispatch " + uri + " into " + opName);
+          if (op) {
+            try {
+              return op.call(plugin, opts, function(err, result) {
+                req.error = err;
+                req.result = result;
+                return next();
+              });
+            } catch (_error) {
+              req.error = _this.error(_error, "Error in " + opName + " ");
+            }
           } else {
-            req.error = Object.error("no-op", "Operation not found:  " + opName).log();
+            if ((method === "options") && plugin["post" + opId]) {
+              req.result = "OK";
+            } else {
+              req.error = Object.error("not-found: Operation not found: " + opName).log();
+            }
           }
-        }
-        return next();
-      });
+          return next();
+        };
+      })(this));
     }
   });
 
