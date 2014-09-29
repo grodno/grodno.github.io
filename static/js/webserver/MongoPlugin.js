@@ -4,8 +4,11 @@
     id: 'webserver.MongoPlugin extends EventHandler',
     options: {},
     methods: function(_super) {
-      var OPERATIONS, db, mongo, _close, _collection, _count, _cursor, _findOne, _first, _insert, _last, _obj, _objectID, _optionsKeys, _query, _queryOptionsFilter, _remove, _retPayload, _update, _upsert;
+      var OPERATIONS, db, mongo, _close, _collection, _count, _cursor, _findOne, _first, _insert, _last, _mongo, _obj, _objectID, _optionsKeys, _query, _queryOptionsFilter, _remove, _retPayload, _update, _upsert;
       mongo = void 0;
+      _mongo = function() {
+        return mongo || (mongo = require("mongodb"));
+      };
       db = void 0;
       _close = function() {
         if (db != null) {
@@ -47,12 +50,7 @@
       };
       _first = function(collectionId, flow) {
         return function() {
-          this.next = function(err, r) {
-            if (err) {
-              home.error(err);
-            }
-            return flow.next(err, r);
-          };
+          this.next = flow.next;
           this.collectionId = collectionId;
           if (!this.query) {
             this.query = Object.parse(this.query) || _objectID(this.docId || this.hash);
@@ -63,7 +61,7 @@
           if (db) {
             return this.next(null, db);
           } else {
-            return (mongo || (mongo = require("mongodb"))).connect(this.home.uri, this.home.options, this.next);
+            return _mongo().connect(this.home.uri, this.home.options, this.next);
           }
         };
       };
@@ -77,7 +75,7 @@
         if (err) {
           return this.next(err);
         }
-        return collection.find(this.query, _queryOptionsFilter(this.options), this.next);
+        return collection.find(this.query, _queryOptionsFilter(this), this.next);
       };
       _count = function(err, cursor) {
         if (err) {
@@ -131,6 +129,7 @@
       };
       _last = function(err, result) {
         if (err) {
+          this.home.error(err);
           _close();
         }
         return this.next(err, result);
@@ -165,7 +164,7 @@
         },
         done: function() {
           _close();
-          return _super.done.call(this, this);
+          return _super.done.call(this);
         }
       };
     }

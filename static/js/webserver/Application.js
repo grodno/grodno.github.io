@@ -35,8 +35,8 @@
         config: function(key, def) {
           return Object.get(this.config, key) || def || null;
         },
-        done: function(T) {
-          _super.done.call(this, T);
+        done: function() {
+          _super.done.call(this);
           this.http.removeAllListeners("connection");
           this.http.removeAllListeners("request");
           this.http.close;

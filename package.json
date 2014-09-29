@@ -34,6 +34,7 @@
     "dustjs-linkedin": "^2.4.2",
     "express": "4.x",
     "mongodb": "^1.4.17",
+    "nano": "^5.11.2",
     "request": "^2.44.0",
     "socket.io": "^1.1.0"
   },
