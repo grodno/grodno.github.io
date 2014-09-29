@@ -563,7 +563,7 @@ AXOID.JS
       };
     })();
     String.template = (function() {
-      var fn, parse;
+      var RE_SPEC, encoder, fn, parse;
       parse = function(s, x) {
         var RE, e, lastIndex, r, r0, stack, tag, text;
         r = {
@@ -609,6 +609,10 @@ AXOID.JS
         }
         return r;
       };
+      encoder = function(i) {
+        return '&#' + i.charCodeAt(0) + ';';
+      };
+      RE_SPEC = /[\u00A0-\u9999<>\&]/g;
       fn = function(node, obj) {
         var e, n, r, tag, v, _i, _j, _len, _len1, _ref1;
         r = [];
@@ -638,7 +642,7 @@ AXOID.JS
             }
           }
         } else {
-          r.push(obj);
+          r.push(('' + obj).replace(RE_SPEC, encoder));
         }
         return r.join('');
       };

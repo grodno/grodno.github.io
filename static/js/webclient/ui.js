@@ -729,11 +729,14 @@ Axio: Web DOM API.
   Object.entity.define({
     id: "List extends View",
     properties: ["children:Children", 'itemTemplate', "data", "selection", "value:Value"],
+    style: 'media-list',
     domNodeType: 'ul',
     itemType: 'Widget',
+    itemStyle: 'media-item',
     itemTemplate: '<a href="#" onclick="return false;">{{name}}</a>',
     dataIdKey: 'id',
     itemDomNodeType: 'li',
+    asyncDataPropertyName: 'items',
     alive: true,
     methods: function(_super) {
       var _reg;
@@ -753,8 +756,37 @@ Axio: Web DOM API.
         return r;
       };
       return {
+        dataAsyncAdapter: function(err, data) {
+          return (err ? this.errorAsyncData() : Object.prop(data, this.asyncDataPropertyName)) || [];
+        },
+        errorAsyncData: function() {
+          return [
+            {
+              id: 'Html',
+              html: 'Remote data error'
+            }
+          ];
+        },
+        emptyData: function() {
+          return [
+            {
+              id: 'Html',
+              html: 'No items'
+            }
+          ];
+        },
         valueChanged: function(ev) {
           return this.syncSelection();
+        },
+        itemTemplateChanged: function(ev, template) {
+          var ch, key, _ref, _results;
+          _ref = this.childrenRegistry;
+          _results = [];
+          for (key in _ref) {
+            ch = _ref[key];
+            _results.push(ch.prop('template', template));
+          }
+          return _results;
         },
         childrenChanged: function(ev) {
           this.childrenRegistry = _reg(this.getChildren(), 'value');
@@ -782,7 +814,7 @@ Axio: Web DOM API.
           ev.noReset = true;
           r = [];
           if (!data) {
-            return r;
+            return [];
           }
           ch = this._children;
           this._children = [];
@@ -812,11 +844,14 @@ Axio: Web DOM API.
           return r;
         },
         updateChild: function(e, d) {
-          return e.prop('data', d);
+          return e.prop('data', {
+            value: d,
+            force: true
+          });
         },
         childrenItemAdapter: function(d, i, nextNode) {
           return {
-            id: this.itemType,
+            id: this.id + '_' + d[this.dataIdKey] + ":" + this.itemType,
             domNodeType: this.itemDomNodeType,
             nextNode: nextNode,
             style: this.itemStyle,

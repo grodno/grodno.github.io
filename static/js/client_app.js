@@ -36,7 +36,7 @@
       }, {
         id: "blogger:Cache",
         storage: window.sessionStorage,
-        uriPattern: "script://www.googleapis.com/blogger/v3/blogs/1638693468845489013/posts?{0}&key=" + CONFIG.GOOGLE_API_KEY + "&jsonp=callback&ssl=true&version={{version}}"
+        uriPattern: "script://www.googleapis.com/blogger/v3/blogs/{{domain}}/posts?key=" + CONFIG.GOOGLE_API_KEY + "&jsonp=callback&ssl=true&version={{version}}"
       }, {
         id: 'lexio:lexiomated.TextFactory',
         plugins: ['lexiomated.plugin.ParseHtml', 'lexiomated.plugin.SplitText', 'lexiomated.plugin.Numerics', 'lexiomated.plugin.Hardcoded', 'lexiomated.plugin.Morpheus', 'lexiomated.plugin.WordScore', 'lexiomated.plugin.Sentences']

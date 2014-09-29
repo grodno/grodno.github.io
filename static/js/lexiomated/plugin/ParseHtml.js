@@ -30,7 +30,7 @@
           isContainer: false
         }
       };
-      reAttrs = /(\s+[a-z][a-z0-9\-]+)(?:=(\w+|"?[^>"]*"?))?/gi;
+      reAttrs = /(\s+[a-z][a-z0-9\-]+)(?:=(\w+|['"]?[^>"]*['"]?))?/gi;
       parseAttrs = function(s) {
         var e, r, v;
         r = {};

@@ -1,0 +1,45 @@
+{
+  "name": "grodno-co",
+  "version": "2.0.1",
+  "description": "Grodno.Co Site",
+  "keywords": [
+    "Node.js",
+    "application",
+    "CoffeeScript"
+  ],
+  "author": {
+    "name": "Aliaksandr Litskevich",
+    "email": "alitskevich@gmail.com",
+    "url": "http://google.com/+Alex.Litskevich"
+  },
+  "private": true,
+  "license": {
+    "type": "APACHE20",
+    "url": "https://github.com/grodno/grodno.co/blob/master/LICENSE"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grodno/grodno.co"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": ">= 1.0.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.8.2",
+    "coffee-script": "^1.8.0",
+    "dustjs-linkedin": "^2.4.2",
+    "express": "4.x",
+    "mongodb": "^1.4.17",
+    "request": "^2.44.0",
+    "socket.io": "^1.1.0"
+  },
+  "devDependencies": {
+    "should": "*",
+    "mocha": "*"
+  },
+  "main": "./index.js"
+}

@@ -1,0 +1,8 @@
+<div class="media panel-body">
+    <span class="pull-left"><a target="_blank" href="{{url}}"><img class="img-rounded media-object" width="32" src="{{?author.image.url}}{{.}}{{:else}}/res/logo120.png{{/author.image.url}}"></a></span>
+    <div class="media-body">
+        <h5 class="media-header">{{title}} ({{author.displayName}}) <a target="_blank" href="{{url}}">далее&nbsp;→</a></h5>
+        <div data-widget="lexiomated.Widget" data-data="{{content}}"></div>
+        {{?labels}}<span class="label label-info">{{.}}</span>{{/labels}}
+    </div>
+</div>

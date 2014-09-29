@@ -9,7 +9,7 @@
       HTTP_METHODS = ["get", "post", "put", "delete", "options"];
       return app.use((function(_this) {
         return function(req, res, next) {
-          var method, n, op, opId, opName, opts, plugin, uri, v, _ref, _ref1;
+          var i, method, n, op, opId, opName, opts, plugin, uri, v, _i, _len, _ref, _ref1, _ref2;
           opts = req.options = {};
           method = req.method = req.method.toLowerCase();
           if (__indexOf.call(HTTP_METHODS, method) < 0) {
@@ -29,6 +29,15 @@
             v = _ref1[n];
             opts[n.toLowerCase()] = v;
           }
+          _ref2 = uri.path;
+          for (i = _i = 0, _len = _ref2.length; _i < _len; i = ++_i) {
+            v = _ref2[i];
+            opts['path' + i] = v;
+          }
+          if (uri.hash) {
+            opts.hash = uri.hash;
+          }
+          opts.uri = uri;
           if (!opts.access_token) {
             opts.access_token = opts["x-authorization"] || opts["authorization"];
           }

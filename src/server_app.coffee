@@ -4,7 +4,8 @@ require './webserver/utils.coffee'
 
 Object.DEBUG = true
  
-        
+config = require './config.coffee'
+
 Object.entity.create
     id: 'entity:EventHandler' 
     handleEvent: (ev) ->
@@ -14,7 +15,7 @@ Object.entity.create
         
 Object.entity.create 
     id : 'app:webserver.Application' 
-    config : require './config.coffee'
+    config : config
     
     #  Set the environment variables we need.
     ipaddress : process.env.OPENSHIFT_NODEJS_IP or process.env.IP or "127.0.0.1"
@@ -26,6 +27,9 @@ Object.entity.create
         'home:webserver.HomePlugin'
         'webserver.DustPlugin'
         'webserver.ResponsePlugin'
-        
+        {
+            id:'db:webserver.MongoPlugin'
+            uri:'mongodb://grodno:ozheshko22@ds055397.mongolab.com:55397/grodno'
+        }
         ]
 

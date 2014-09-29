@@ -30,11 +30,15 @@
       };
       return {
         dataChanged: function(ev) {
-          return this.prop('textUri', 'lexio://#' + ev.value);
+          return this.prop('textUri', 'lexio://#' + ev.value.replace(/&#(\d+);/g, function(s, d) {
+            return String.fromCharCode(d);
+          }));
         },
-        textChanged: function(ev) {
-          var r, text;
-          text = ev.value;
+        textChanged: function(ev, text) {
+          var r;
+          if (text == null) {
+            text = ev.value;
+          }
           r = (text != null ? text.rootElt.toHtml() : void 0) || '-';
           return this.prop('html', '' + r);
         }

@@ -20,6 +20,22 @@ id: 'app:webserver.Application',
 config: require('./static/js/config.js'),
 ipaddress: process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1",
 port: process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8000,
-    plugins: ['file:webserver.FilesPlugin', 'webserver.RequestParsingPlugin', 'webserver.DispatcherPlugin', 'home:webserver.HomePlugin', 'webserver.DustPlugin', 'webserver.ResponsePlugin']
+    plugins: ['file:webserver.FilesPlugin', 'webserver.RequestParsingPlugin', 'webserver.DispatcherPlugin', 'home:webserver.HomePlugin', 'webserver.DustPlugin'
+    ,
+    'webserver.ResponsePlugin'
+    ,
+    {
+            id:'db:webserver.MongoPlugin'
+            ,
+            uri:process.env.MONGO
+            //    ,
+        //              getQuery: (opts,cb) -> @perform opts.path2, 'query', opts, cb
+        //    getCount: (opts,cb) -> @perform opts.path2, 'count', opts, cb
+        //      getDoc: (opts,cb) -> @perform opts.path2, 'find', opts, cb
+        //        postInsert: (opts,cb) -> @perform opts.path2, 'insert', opts, cb
+
+    }
+    
+    ]
 
 });
