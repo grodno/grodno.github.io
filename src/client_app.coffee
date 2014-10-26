@@ -12,13 +12,7 @@ Object.entity.create
             "settings:Settings"
 
             {
-                id: "entity:ScriptService"
-                scriptTypeC:"text/coffeescript"
-                methods : (_super) ->
-                    resolveUri: (uri) ->
-                        uri.path = ('/js/'+uri.domain.replace(/\./g,'/')+'.js').split('/')
-                        uri.domain = "*"
-                        _super.resolveUri.call @, uri
+                id: "entity:EntityLoader"
             }
             {
                 
@@ -28,7 +22,7 @@ Object.entity.create
             {            
                 id:"db:IndexedDatabase"
                 #syncPeriod: 1 * 6 *1000
-                syncUriExpression: "'script://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc=0AqQx4KOOt8TGdEZWZHpBdXAtNlVSMUFMOXppQ3ZuMkE&jsonp=callback&ts='+${?.lastSynchedTimestampOnce}"#ByPeriod
+                syncUriExpression: "'script://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc=0AqQx4KOOt8TGdEZWZHpBdXAtNlVSMUFMOXppQ3ZuMkE&jsonp=callback&ts='+<@lastSynchedTimestampOnce>"#ByPeriod
                 #socketChannel:'grodno.heroku.com'
                 version: 5
                 scheme: ['meta','links','enums','error']
@@ -36,26 +30,28 @@ Object.entity.create
             {
                 id:"gsheet:Cache"
                 storage: window.localStorage
-                uriPattern:'script://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc={{domain}}&sheet={{path}}&jsonp=callback&version={{version}}'
+                uriPattern:'script://script.google.com/macros/s/AKfycbx1AsNPawV5QDldh0obaSRkSzaYT1ZA3mbQK40_WFMPDvUjT5cl/exec?doc={{host}}&sheet={{path}}&jsonp=callback&version={{version}}'
             }
             {
                 id:"blogger:Cache"
                 storage: window.sessionStorage
-                uriPattern:"script://www.googleapis.com/blogger/v3/blogs/{{domain}}/posts?key=#{CONFIG.GOOGLE_API_KEY}&jsonp=callback&ssl=true&version={{version}}"
+                uriPattern:"script://www.googleapis.com/blogger/v3/blogs/{{host}}/posts?key=#{CONFIG.GOOGLE_API_KEY}&jsonp=callback&ssl=true&version={{version}}"
+                cacheSerializer:(data)->
+                    if (s = data?.items) and s.length then JSON.stringify(s) else null
             }
-            {
-               
-                id:'lexio:lexiomated.TextFactory'
-                plugins: [
-                        'lexiomated.plugin.ParseHtml'
-                        'lexiomated.plugin.SplitText'
-                        'lexiomated.plugin.Numerics'
-                        'lexiomated.plugin.Hardcoded'
-                        'lexiomated.plugin.Morpheus'
-                        'lexiomated.plugin.WordScore'
-                        'lexiomated.plugin.Sentences'
-                ]
-            }
+            #{
+               #
+                #id:'lexio:lexiomated.TextFactory'
+                #plugins: [
+                        #'lexiomated.plugin.ParseHtml'
+                        #'lexiomated.plugin.SplitText'
+                        #'lexiomated.plugin.Numerics'
+                        #'lexiomated.plugin.Hardcoded'
+                        #'lexiomated.plugin.Morpheus'
+                        #'lexiomated.plugin.WordScore'
+                        #'lexiomated.plugin.Sentences'
+                #]
+            #}
         ]
 
 doReload = ->

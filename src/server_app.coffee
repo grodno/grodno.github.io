@@ -24,6 +24,7 @@ Object.entity.create
         'file:webserver.FilesPlugin'
         'webserver.RequestParsingPlugin'
         'webserver.DispatcherPlugin'
+        'socket:webserver.SocketIoPlugin'
         'home:webserver.HomePlugin'
         'webserver.DustPlugin'
         'webserver.ResponsePlugin'
