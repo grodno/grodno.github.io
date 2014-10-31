@@ -28,9 +28,12 @@
         <meta name="ICBM" content="53.683111,23.823209">
         
         
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
-        <link href='//fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
-        <link href="/css/app.css" rel="stylesheet">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
+        <link href="css/ripples.min.css" rel="stylesheet">
+        <link href="css/material.min.css" rel="stylesheet">
+
+        <link href="css/app.css" rel="stylesheet">
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
         <script src="/libs/modernizr-2.6.1.min.js"></script>
@@ -44,7 +47,7 @@
 
     <body>
     
-        <div class="navbar navbar-fixed-top" >
+        <div class="navbar navbar-inverse navbar-fixed-top" >
         <div class="container">
             <div id="main" class="row">
             <a class="navbar-brand" href="/"><img class="logo" src="/res/herb.jpg" height="40px" title="Гродно"/></a>
@@ -73,9 +76,9 @@
         </div>
 
         <div class="container">
-            <div id="main" class="row panel main">
+            <div id="main" class="row jumbotron">
 
-                <article  class="col-12 col-lg-4">
+                <article  class="col-md-12 col-lg-4">
                     <a class="twitter-timeline" 
                     href="https://twitter.com/search?q=grodno+OR+%23%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE"
                     data-widget-id="292285277165207552">Tweets about Гродно</a>
@@ -92,20 +95,19 @@
                 </article>
                 <article  class="col-12 col-lg-6">
                     <div class="panel panel-info">
-                        <h5 class="panel-heading">Новости и объявления</h5>
+                        <div class="panel-heading">Новости и объявления</div>
                         <div style="height: 400px;overflow-y:scroll;overflow-x:hidden;">
-                        <ul id="news" class="media-list" data-widget="List" 
+                        <ul id="news" data-widget="List" 
                             data-data-uri="blogger://1638693468845489013"
                             data-item-template-uri="html://news_item"
-                            data-item-style="media-item"
                             ></ul>
                         </div>
                     </div>
                 </article>
-                <aside class="col-12 col-lg-2">
+                <aside class="col-md-12 col-lg-2">
                 
                     <div class="panel panel-info">
-                        <h5 class="panel-heading">Информация</h5>
+                        <div class="panel-heading">Информация</div>
                         <a href="http://forexbrest.info/kursy-valut/grodno/"><img src="http://forexbrest.info/i/kursy-valut-grodno-lite.gif" alt="Курсы валют в Гродно сегодня" border="0" /></a>
                         <br/><br/>
                         <a target="_BLANK" href="http://www.blr.cc/benzin/"><img src="http://www.blr.cc/img/benzin_belarus.gif" width="98" height="100" border="0" alt="Цена бензина в Беларуси" /></a>
@@ -116,53 +118,9 @@
 
             </div>
 
-            <div class="row panel panel-default">
-                    <h5 class="panel-heading">Гродно в Сети</h5>
-                    <div class="col-12 col-lg-3">
-                        <h6>Медиа</h6>
-                        <hr/>
-                        <ul>
-                            <li><a target="_blank" href="//forum.grodno.net/">Форум</a></li>
-                            <li><a target="_blank" href="//s13.ru">s13.ru</a></li>
-                            <li><a target="_blank" href="http://grodno.in/">grodno.in</a></li>
-                            <li><a target="_blank" href="http://gip.by/">gip.by</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-12 col-lg-3">
-                        <h6>Сообщества</h6>
-                        <hr/>
-                        <ul>
-                            <li><a target="_blank" href="https://plus.google.com/100705443782796510440/posts">Grodno Live24</a></li>
-                            <li><a target="_blank" href="https://plus.google.com/107891930911298943270/posts">Гродновости</a></li>
-                         </ul>
-                    </div>
-                    <div class="col-12 col-lg-3">
-                        <h6>Интересы</h6>
-                        <hr/>
-                        <ul>
-                            <li><a target="_blank" href="http://auto-grodno.by/">Автомобили</a></li>
-                            <li><a target="_blank" href="http://chess.grodno.co/">Шахматы</a></li>
-                            <li><a target="_blank" href="http://english.grodno.co/">English</a></li>
-                        </ul>
-                        <br/>  
-                        
-                    </div>
-                    <div class="col-12 col-lg-3">
-                        <h6>Партнёры</h6>
-                        <hr/>
-                        <ul>
-                            <li><a target="_blank" href="http://nordkamin.by/">НОРДКАМИН</a></li>
-                            <li><a target="_blank" href="http://www.astrela.by/">Астрэла</a></li>
-                            <li><a target="_blank" href="http://elektromontaz.by/">Elektromontaz</a></li>
-                        </ul>
-                        <br/>  
-                        
-                    </div>
-            </div>
-
-            <div class="row panel panel-info">
-                    <h5 class="panel-heading">VERA DESIGNATIO URBIS IN LITTAVIA GRODNA</h5>
-                    <div class="panel-body">
+            <div class="row well">
+                    <h5>VERA DESIGNATIO URBIS IN LITTAVIA GRODNA</h5>
+                    <div>
                         <div class="col-12 col-lg-3">
                         <small>
                             <p>
@@ -226,6 +184,48 @@
                         </div>
                     </div>
             </div>
+            <div class="row well">
+                    <div class="col-12 col-lg-3">
+                        <h6>Медиа</h6>
+                        <hr/>
+                        <ul>
+                            <li><a target="_blank" href="//forum.grodno.net/">Форум</a></li>
+                            <li><a target="_blank" href="//s13.ru">s13.ru</a></li>
+                            <li><a target="_blank" href="http://grodno.in/">grodno.in</a></li>
+                            <li><a target="_blank" href="http://gip.by/">gip.by</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <h6>Сообщества</h6>
+                        <hr/>
+                        <ul>
+                            <li><a target="_blank" href="https://plus.google.com/100705443782796510440/posts">Grodno Live24</a></li>
+                            <li><a target="_blank" href="https://plus.google.com/107891930911298943270/posts">Гродновости</a></li>
+                         </ul>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <h6>Интересы</h6>
+                        <hr/>
+                        <ul>
+                            <li><a target="_blank" href="http://auto-grodno.by/">Автомобили</a></li>
+                            <li><a target="_blank" href="http://chess.grodno.co/">Шахматы</a></li>
+                            <li><a target="_blank" href="http://english.grodno.co/">English</a></li>
+                        </ul>
+                        <br/>  
+                        
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <h6>Партнёры</h6>
+                        <hr/>
+                        <ul>
+                            <li><a target="_blank" href="http://nordkamin.by/">НОРДКАМИН</a></li>
+                            <li><a target="_blank" href="http://www.astrela.by/">Астрэла</a></li>
+                            <li><a target="_blank" href="http://elektromontaz.by/">Elektromontaz</a></li>
+                        </ul>
+                        <br/>  
+                        
+                    </div>
+            </div>
             
             <div class="row">
                 <div class="col-12 col-lg-12">
@@ -254,7 +254,14 @@
                         |  <a target="_blank" href="//www.google.com/">Google</a>
                     </small>
                 </div>
+
             </footer>
+
+        <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+        <script src="libs/ripples.min.js"></script>
+        <script src="libs/material.min.js"></script>
             
         <script src="/js/axoid/axoid_.js"></script>
         <script src="/js/axoid/axoid.js"></script>

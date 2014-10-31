@@ -5,13 +5,9 @@
     Description: Purpose of the stylesheet follows.
 */
 body {
-    padding-top: 75px;
-    padding-bottom: 40px;
-    overflow-y:scroll;
-    font-family: 'Abel', sans-serif;
+   margin-top: 75px;
 }
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
-    font-family: 'Abel', sans-serif;
     
 }
 ul{
@@ -22,13 +18,9 @@ hr {
  margin-top: 5px; 
  margin-bottom: 5px; 
 }
+
 a:hover {
     text-shadow: 1px 1px 1px rgba(67, 81, 188, 0.4);
-    text-decoration: none;
-}
-
-.brand, h2{
-    text-shadow: 2px 2px 2px rgba(67, 81, 188, 0.3);
     text-decoration: none;
 }
 
@@ -37,36 +29,13 @@ h4{
     text-decoration: none;
 }
 .main{
-    background: whiteSmoke;padding: 10px 0px 10px 10px;overflow: hidden;min-height: 100%;
 }
 
 .app{
-    background: #FAFAFA;padding: 10px 10px 10px 10px;
     min-height: 100%;
 }
 
-.navbar{
-    /*background-image: url(/res/bg1.png);*/
-}
-
-.navbar-brand, .navbar-nav, .navbar-nav>li {
-    float: left;
-}
-
-.navbar-nav>li>a {
-    font-size: large;
-    color1: midnightblue;
-}
 .margin-left {
     margin-left: 1em;
 }
-
-.breadcrumb li{
-    cursor: pointer;
-}
-
-.breadcrumb li.active{
-    color: orangered;
-}
-
 
