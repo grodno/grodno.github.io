@@ -1,18 +1,3 @@
-[submodule "src/axoid"]
-	path = src/axoid
-	url = git@github.com:alitskevich/axoid.git
 [submodule "src/lexiomated"]
 	path = src/lexiomated
 	url = git@github.com:alitskevich/lexiomated.git
-[submodule "src/commons"]
-	path = src/commons
-	url = git@github.com:alitskevich/axoid-commons.git
-[submodule "src/webclient"]
-	path = src/webclient
-	url = git@github.com:alitskevich/axoid-webclient.git
-[submodule "src/webserver"]
-	path = src/webserver
-	url = git@github.com:alitskevich/axoid-webserver.git
-[submodule "src/widgets"]
-	path = src/widgets
-	url = git@github.com:alitskevich/axoid-widgets.git
