@@ -29,18 +29,19 @@
     "npm": ">= 1.0.0"
   },
   "dependencies": {
-    "body-parser": "^1.8.2",
-    "coffee-script": "^1.8.0",
-    "dustjs-linkedin": "^2.4.2",
-    "express": "4.x",
-    "mongodb": "^1.4.17",
-    "nano": "^5.11.2",
-    "request": "^2.44.0",
-    "socket.io": "^1.1.0"
+    "axoid": "^3.0.2",
+    "coffee-script": "^1.8.0"
   },
   "devDependencies": {
-    "should": "*",
-    "mocha": "*"
+    "gulp": "^3.8.9",
+    "gulp-util": "*",
+    "gulp-plumber": "*",
+    "gulp-concat": "*",
+    "gulp-coffee": "*",
+    "gulp-uglify": "*",
+    "gulp-jshint": "*",
+    "gulp-cached": "*",
+    "gulp-remember": "*"
   },
   "main": "./index.js"
 }

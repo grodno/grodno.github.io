@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="pull-right" data-widget="Html" data-html-expression="<document._id>+'#'+<document._rev>"></div>
+        <h3 class="panel-title">Root Info</h3>
+    </div>
+
+    <div class="panel-body">
+        <div id="docName" data-widget="Input" data-caption="Name" data-value-binding="document.name"></div>
+        <div id="docAddress" data-widget="Input" data-caption="Address" data-value-binding="document.address"></div>
+        <div id="docState" data-widget="Dropdown" data-caption="State" data-value-binding="document.state" data-data-uri="enum://STATES"></div>
+    </div>
+
+    <div class="panel-footer">
+        <button class="btn btn-success"><span class="mdi-content-archive"></span> Save</button>
+        <button class="btn btn-default disabled"><span class="mdi-content-content-copy"></span> Clone</button>
+        <button class="btn btn-default disabled"><span class="mdi-content-block"></span> Disable</button>
+        <button class="btn btn-default disabled"><span class="mdi-content-reply-all"></span> History</button>
+    </div>
+</div>

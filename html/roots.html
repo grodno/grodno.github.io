@@ -1,0 +1,42 @@
+<div class="">
+    <div id="searchByName" class="pull-right" data-widget="Input" data-caption="none" data-hint="Search by Name"></div>
+    <h3>Roots list</h3>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 data-widget="Label" data-caption-expression="['Remote error', 'Loading...','No Roots yet'][<roots.dataCount>+2] || (<roots.dataCount>+' roots')"></h4>
+        </div>
+    
+        <div class="panel-body">
+            <ul id="roots" data-widget="couch.DbList" style="height:500px;overflow-y:scroll;"
+                data-item-template-uri='html://root_item'
+                data-value-binding="nav.index"
+                data-data-uri-expression="'db://kind/root#'+<db.rootTouch optional>">
+            </ul>
+        </div>
+    
+        <div class="panel-footer">
+        <button id="rootNew" class="btn btn-primary" data-widget="couch.DbAddNewButton"
+            data-value-uri="l10n://rootNewDoc"
+            data-need-prompt-id="true"
+            data-counter-binding="settings.rootsNewCounter"
+            ><span class="glyphicon glyphicon-add"></span>Add a new root</button>
+        </div>
+    </div>
+    </div>
+    <div class="col-md-9">
+        <ul id="tabs" class="nav nav-tabs" style="display:none;"
+        data-widget="List"
+        data-hidden-expression="!<roots optional>"
+        data-data-uri="enum://ROOT_TABS"
+        data-item-style=""
+        data-value-binding="nav.index1"
+        data-value-expression="@value || 'info'"></ul>
+        <form id="document" role="form" data-widget="couch.DbForm" data-value-uri-expression="'db://doc/'+<nav.index required>+'#'+<db.rootTouch optional>">
+            <div data-widget="Widget" style="display:none;" data-hidden-expression="!<roots optional>" data-html-uri-expression="<document required> && ('html://root-'+<tabs required>)"></div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+CACHE MANIFEST 
+# lifepipe - 1.4535476
+
+CACHE:
+/favicon.ico
+
+css/bootstrap.min.css
+css/material.min.css
+
+/libs/modernizr-2.6.1.min.js
+/libs/es5-shim.min.js
+/libs/respond.min.js
+
+#/libs/jquery1.11.1.min.js
+#/libs/bootstrap.min.js
+/libs/coffee-script.js
+/libs/chart.min.js
+
+/libs/ace/ace.js
+/libs/ace/theme-twilight.js
+/libs/ace/mode-coffee.js
+/libs/ace/worker-coffee.js
+
+
+# All other resources (e.g. sites) require the user to be online. 
+NETWORK:
+*
+
+# Fallback content
+FALLBACK:
+/index.html /index.html

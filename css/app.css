@@ -5,14 +5,8 @@
     Description: Purpose of the stylesheet follows.
 */
 body {
-   margin-top: 75px;
-}
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
-    
-}
-ul{
-    padding-left: 1em;
-    list-style: none;
+margin-padding: 70px;
+min-height: 2000px;
 }
 hr {
  margin-top: 5px; 
@@ -34,11 +28,44 @@ h4{
     background-color: #fff;
 }
 
-.app{
-    min-height: 100%;
-}
 
 .margin-left {
     margin-left: 1em;
 }
 
+
+.prep {color :lightsalmon;}
+.number {
+background-color: #5bc0de;
+display: inline;
+padding: .2em .6em .3em;
+font-size: 75%;
+font-weight: 700;
+line-height: 1;
+color: #fff;
+text-align: center;
+white-space: nowrap;
+vertical-align: baseline;
+border-radius: .25em;
+}
+
+.list-group .list-group-item {
+    padding: 10px 15px;
+}
+
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus{
+    background-color: #428bca;
+}
+
+
+.nav-tabs>li>a, .nav-tabs>li>a:hover, .nav-tabs>li>a:focus {
+    color: #555!important;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus, li.active a {
+    color: white!important;
+}
+.well{
+    box-shadow: 0 3px 6px rgba(0,0,0,.16),0 3px 6px rgba(0,0,0,.23);
+    border-radius: 2px;
+    background-color: #fff;
+}
