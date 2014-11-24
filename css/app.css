@@ -34,7 +34,8 @@ h4{
 }
 
 
-.prep {color :lightsalmon;}
+.prep,.det,.conj, .be, .pron, .mverb {color :lightsalmon;}
+
 .number {
 background-color: #5bc0de;
 display: inline;

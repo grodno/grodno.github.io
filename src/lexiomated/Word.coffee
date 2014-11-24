@@ -79,8 +79,8 @@ class this.Word
         cuttify: ->
             x = @x
 
-            @branch negation: ch2, score: 3, x: x[2..]                 if (ch2 = x[0..1]) in NEG
-            @branch negation: ch3, score: 4, x: x[3..]                 if (ch3 = x[0..2]) in NEG3
+            @branch negation: ch2, score: 3, x: x[2..]             if (ch2 = x[0..1]) in NEG
+            @branch negation: ch3, score: 4, x: x[3..]             if (ch3 = x[0..2]) in NEG3
             
             @branch appendix: ch2, score: 3, x: x[0..x.length-3]   if (ch2 = x[-2..]) in APP1
             @branch appendix: "е", score: 3, x: x[0..x.length-2]   if (ch2 = x[-3..]) in ETE

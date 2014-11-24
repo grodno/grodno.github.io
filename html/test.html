@@ -1,8 +1,18 @@
-<p>Test 222</p>
-<div id="list" x-widget="List" x-data-uri-expression="'db://query/links#'+${?db.touch}" x-item-template-uri="html://item"></div>
+<p>Langvar Test 222</p>
+<div id="source" data-widget="Textarea" data-caption="Current" data-value-uri="remote://*/tmp/sample.html"></div>
 
+<fieldset class="col-md-6">
+<style>
+.form-control{
+    height:350px!important;
+}
+</style>
+    <legend>123</legend>
+    <div id="output"data-widget="lexiomated.Widget" data-data-expression="<source>"></div>
+</fieldset>
 
-<fieldset x-widget="Fieldset" x-caption="form">
-
-    <div x-widget="Textarea" x-caption="Current" x-value-uri-expression="'db://field/links/?field=description&amp;id='+${+list.value}"></div>
+<fieldset class="col-md-6">
+    <legend>123</legend>
+    <div id="html" data-widget="Textarea" data-caption="Current" data-value-expression="<output.text required>.toHtml()"></div>
+    
 </fieldset>

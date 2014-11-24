@@ -29,8 +29,7 @@
       };
       return {
         init: function() {
-          _super.init.call(this);
-          return this.prop('data', this.prop('html'));
+          return _super.init.call(this);
         },
         dataChanged: function(ev) {
           return this.prop('textUri', 'lexio://#' + ev.value.replace(/&#(\d+);/g, function(s, d) {

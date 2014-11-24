@@ -24,7 +24,7 @@ Object.entity.define
         
         init: ->
             _super.init.call @
-            @prop 'data', (@prop 'html')
+            #@prop 'data', (@prop 'html')
             
         dataChanged: (ev) -> 
             @prop 'textUri', 'lexio://#'+ ev.value.replace /&#(\d+);/g, (s, d) -> String.fromCharCode(d)       

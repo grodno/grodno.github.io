@@ -79,9 +79,7 @@ class Record
                     @flags[cl[1..]] = 0
                 else
                     @flags[cl] = 1
-                    
         @
-
 
     doInBetween: (next, op)->
         p = @next
@@ -114,14 +112,14 @@ class this.Lexion extends Record
 
     constructor: (opts)->
         @attrs = {}
+        @flags = {}
         Object.update(@, opts)
         @tag = 'span' unless @tag
-        @flags = {}
-        @flags[@kind] = 1
+        @flags[@kind] = 1 if @kind
         @lowerText = @text.toLowerCase() if @text
         @parent.addLast @ if @parent
 
-    executeRegExp: (re, op)->
+    executeRegExp: (s, re, op)->
         
         pastLastIndex = 0
         while (e = re.exec(s)) 
@@ -191,45 +189,35 @@ class this.Lexion extends Record
         reDigits = /^\d+$/
             
         textOp = (text, e) ->
-            
+            flags={}
             opts= 
                 tag: 'span'
                 kind:'word'
                 text: text
+                flags: flags
                 parent: @
             if e 
                 opts.tag = 'i'
+                flags['dot'] = 1 if text is '.'
+                flags['comma'] = 1 if text is ','
+                flags['dash'] = 1 if text is '-'
                 opts.kind = if text is ' ' then 'space' else 'sign'
             else
                 if text.match(reDigits)
                     opts.kind = 'number'
-                
-            new Lexion opts if opts
-
-        normalizeNumbersOp = (e)->
-            
-            if e.kind is 'number'    
-                #sign
-                if (s=e.prev?.text) in '-+'
-                    e.setText(s+e.text)
-                    e.prev.detachMe()
+                else
+                    flags[text] = 1
+                    flags['l'+text.length] = 1 
+                    flags['abbr'] = 1 if text.toUpperCase() is text
+                    flags['capital'] = 1 if String.capitalize(text) is text
                     
-                n=e
                 
-                # x1000 series
-                while (next2 = (next=n.next)?.next) and next2.kind is 'number'  and next2.text.length is 3 and next.text in ' ,'
-                    e.splitTill(next2.next).setText(e.text+next.text+next2.text)
-                    n = next2
-                    
-                #float point
-                if (next2 = (next=n.next)?.next) and next2.kind is 'number'  and next.text in '.,'
-                    e.splitTill(next2.next).setText(e.text+next.text+next2.text)
-                    n = next2
+            new Lexion opts
 
         ->
             stack = [@]
             
-            @executeRegExp re, (text, e) ->
+            @executeRegExp @text, re, (text, e) ->
                 
                 if e # match
                     tag = e[2].toLowerCase()
@@ -263,15 +251,19 @@ class this.Lexion extends Record
                                     stack.unshift elt
 
                 else # text between matches
-                    if text = text.trim()
-                        elt = new Lexion
-                            kind: 'text'
-                            tag: 'span'
-                            text: text
-                            parent: stack[0]
-                        elt.executeRegExp /[^a-zа-я0-9]/gi, textOp#,;-~!'"@#$%^&*\(\)\[\]\{\}\|\\\/?=+
+                    if textx = text.trim()
+                        for txts in textx.split '.'
+                            elts = new Lexion
+                                kind: 'sentence'
+                                tag: 'p'
+                                parent: stack[0]
+                            for txtc in txts.split ','
+                                elt = new Lexion
+                                    kind: 'clause'
+                                    tag: 'span'
+                                    parent: elts
+                                elt.executeRegExp txtc, /[^a-zа-я0-9]/gi, textOp#,;-~!'"@#$%^&*\(\)\[\]\{\}\|\\\/?=+
                         
-            @eachChildInDeep normalizeNumbersOp
     )()
             
     toHtml:(ngap=0)->
@@ -280,23 +272,25 @@ class this.Lexion extends Record
          
         gap = '\n'+'\t'.multi(ngap)
         
-        @setAttr('title', r) if (r = @word)
+        if (r = @word)
+            @setAttr('title', r) 
+            @setFlags(r.best.root)
         
         #attributes
-        attrs = ("#{k}=\"#{v}\"" for own k, v of @attrs when v).join(' ')
+        attrs = (" #{k}=\"#{v}\"" for own k, v of @attrs when v).join('')
         
         #flags as className
-        fl = (f for f,v of @flags when v).join(' ')
-        fl = if fl then " class=\"#{fl}\"" else ''
+        fl = (f for f,v of @flags when v and (v isnt 'undefined')).join(' ')
+        fl = " class=\"#{fl}\"" if fl
         
-        opentag = "#{@tag}#{fl} #{attrs}"
+        opentag = "#{@tag}#{fl or ''}#{attrs}"
         if p=@first
             inner = []
             while p
              inner.push p.toHtml(ngap+1)
              p = p.next
             
-            "#{gap}<#{opentag}> #{inner.join('')}#{gap}</#{@tag}>"
+            "#{gap}<#{opentag}>(#{@tag}:#{inner.join('')}#{gap})</#{@tag}>"
 
         else if @text
         
@@ -306,3 +300,7 @@ class this.Lexion extends Record
         else
             
             "#{gap}<#{opentag}/>"
+            
+            
+            
+            
