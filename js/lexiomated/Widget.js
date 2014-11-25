@@ -32,7 +32,7 @@
           return _super.init.call(this);
         },
         dataChanged: function(ev) {
-          return this.prop('textUri', 'lexio://#' + ev.value.replace(/&#(\d+);/g, function(s, d) {
+          return this.prop('textUri', 'lexio://#' + ev.value.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#(\d+);/g, function(s, d) {
             return String.fromCharCode(d);
           }));
         },

@@ -24,7 +24,7 @@ Object.entity.define
                 count=2
                 e=word
                 key= word.text
-                while count and nextWord=e.nextWord()
+                while count and nextWord=e.nextToken()
                     if (r = @find  key+=e.next.text+nextWord.text )
                         word.splitTill(nextWord).setKind(r.kind).setText(key)
                     e = nextWord

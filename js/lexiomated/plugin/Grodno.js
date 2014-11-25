@@ -33,7 +33,7 @@
               e = word;
               key = word.text;
               _results = [];
-              while (count && (nextWord = e.nextWord())) {
+              while (count && (nextWord = e.nextToken())) {
                 if ((r = _this.find(key += e.next.text + nextWord.text))) {
                   word.splitTill(nextWord).setKind(r.kind).setText(key);
                 }

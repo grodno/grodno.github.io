@@ -17,9 +17,9 @@
               count = 3;
               e = word;
               _results = [];
-              while (count && (nextWord = e.nextWord())) {
+              while (count && (nextWord = e.nextToken())) {
                 if ((r = _this.hardcoded[key += e.next.text + nextWord.text])) {
-                  word.splitTill(nextWord).setKind(r.kind).setText(key);
+                  word.mergeFrom(e.next, nextWord).setKind(r.kind);
                 }
                 e = nextWord;
                 _results.push(count--);

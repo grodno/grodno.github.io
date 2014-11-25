@@ -27,7 +27,7 @@ Object.entity.define
             #@prop 'data', (@prop 'html')
             
         dataChanged: (ev) -> 
-            @prop 'textUri', 'lexio://#'+ ev.value.replace /&#(\d+);/g, (s, d) -> String.fromCharCode(d)       
+            @prop 'textUri', 'lexio://#'+ ev.value.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace /&#(\d+);/g, (s, d) -> String.fromCharCode(d)       
         
         textChanged: (ev, text) -> 
             if r = text?.toHtml() 

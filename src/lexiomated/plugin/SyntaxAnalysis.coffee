@@ -1,8 +1,9 @@
 Object.entity.define 
 
-    id:"lexiomated.plugin.Sentences extends lexiomated.Plugin"
+    id:"lexiomated.plugin.SyntaxAnalysis extends lexiomated.Plugin"
       
     methods: (_super) ->
+        
  
         normalizeNumbersOp = (e)->
             
@@ -55,49 +56,11 @@ Object.entity.define
                         
                 else      
                     eachPrep e.first if e.first
-                    
                 e = e.next
             e           
-
-         
-        sentences=(e) ->
-            while (e)
-            
-                if e.text is '.'
-                    e = e.surroundWith(kind:'sentence')
-                    
-                    # add next words into clause
-                    while (next = e.nextWord())
-                        e.doInBetween(next.next,'setParent',e)
-                        
-                else      
-                    sentences e.first if e.first
-                    
-                e = e.next
-            e   
-            
-        clauses=(e) ->
-            while (e)
-            
-                if e.text is ','
-                    e = e.surroundWith(kind:'clause')
-                    
-                    # add next words into clause
-                    while (next = e.nextWord())
-                        e.doInBetween(next.next,'setParent',e)
-                        
-                else      
-                    clauses e.first if e.first
-                    
-                e = e.next
-            e           
-
+           
         # handles text event passed 
         analyze: (event) ->
-            
-            #sentences event.rootElt
-            #clauses event.rootElt
-            #eachDet event.rootElt
-            #eachPrep event.rootElt
+
 
 

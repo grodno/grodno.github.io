@@ -21,6 +21,14 @@
             }
           });
         },
+        eachMatched: function(args, op) {
+          return this.rootElt.eachChildInDeep(function(elt) {
+            var elts;
+            if (elts = elt.isMatched.apply(elt, args)) {
+              return op.apply(this, elts);
+            }
+          });
+        },
         eachWord: function(op) {
           return this.rootElt.eachChildInDeep(function(elt) {
             if (elt.kind === 'word') {

@@ -45,7 +45,7 @@
         requires: ['remote://*/js/l10n.js']
       }, {
         id: 'lexio:lexiomated.TextEngine',
-        plugins: ['lexiomated.plugin.Hardcoded', 'lexiomated.plugin.Morpheus', 'lexiomated.plugin.WordScore', 'lexiomated.plugin.Grodno', 'lexiomated.plugin.Sentences']
+        plugins: ['lexiomated.plugin.Numerics', 'lexiomated.plugin.Hardcoded', 'lexiomated.plugin.Morpheus', 'lexiomated.plugin.WordScore', 'lexiomated.plugin.Grodno', 'lexiomated.plugin.SyntaxAnalysis']
       }
     ]
   });

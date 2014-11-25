@@ -15,6 +15,10 @@ Object.entity.define
             @rootElt.eachChildInDeep (elt)->
                 op.call @, elt if elt.kind is kind
                 
+        eachMatched: (args, op)->
+            @rootElt.eachChildInDeep (elt)->
+                op.apply @, elts if elts = elt.isMatched args...
+                
         eachWord: (op)->
             @rootElt.eachChildInDeep (elt)->
                 op.call @, elt if elt.kind is 'word'

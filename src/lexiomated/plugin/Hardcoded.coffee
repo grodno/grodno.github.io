@@ -15,8 +15,8 @@ Object.entity.define
                 
                 count=3
                 e=word
-                while count and nextWord=e.nextWord()
+                while count and nextWord=e.nextToken()
                     if (r = @hardcoded[key+=e.next.text+nextWord.text])
-                        word.splitTill(nextWord).setKind(r.kind).setText(key)
+                        word.mergeFrom(e.next, nextWord).setKind(r.kind)
                     e = nextWord
                     count--
