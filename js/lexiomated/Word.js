@@ -11,69 +11,65 @@
       p = 0;
       while (p < l && (c = x[p]) && sub && (sub = sub[c])) {
         if (r = sub["_"]) {
-          op.call(this, r, x.slice(p + 1));
+          op.call(this, r, r.id, x.slice(p + 1));
         }
         p++;
       }
     };
 
     _reverseMatchesInTree = function(sub, op) {
-      var c, p, x;
+      var c, p, r, x;
       x = this.x;
       p = x.length - 1;
       while (p > 1 && (c = x[p]) && sub && (sub = sub[c])) {
-        if (sub["_"]) {
-          op.call(this, x.slice(p), x.slice(0, +(p - 1) + 1 || 9e9));
+        if (r = sub["_"]) {
+          op.call(this, r, x.slice(p), x.slice(0, +(p - 1) + 1 || 9e9));
         }
         p--;
       }
     };
 
-    op_prefixize = function(key, rest) {
+    op_prefixize = function(r, key, rest) {
       if (rest.length > 1) {
         return this.branch({
           prefix: key,
           x: rest,
-          score: key.length - 2
+          score: key.length - 2,
+          flags: r.flags
         });
-      } else {
-        return 0;
       }
     };
 
-    op_flexify = function(key, rest) {
+    op_flexify = function(r, key, rest) {
       if (rest.length > 1) {
         return this.branch({
           flexie: key,
           x: rest,
-          score: key.length
+          score: key.length,
+          flags: r.flags
         });
-      } else {
-        return 0;
       }
     };
 
-    op_suffixize = function(key, rest) {
+    op_suffixize = function(r, key, rest) {
       if (rest.length > 1) {
         return this.branch({
           suffix: key,
           x: rest,
-          score: key.length
+          score: key.length,
+          flags: r.flags
         });
-      } else {
-        return 0;
       }
     };
 
-    op_complexify = function(key, rest) {
+    op_complexify = function(r, key, rest) {
       if (rest.length > 1) {
         return this.branch({
           complexie: key,
           x: rest,
-          score: 2 * key.length
+          score: 2 * key.length,
+          flags: r.flags
         });
-      } else {
-        return 0;
       }
     };
 
@@ -104,14 +100,21 @@
       };
 
       Case.prototype.update = function(params) {
-        var n, sc;
+        var fl, n, sc;
         if (params) {
+          fl = (this.setFlags(params.flags)).flags;
           sc = this.score + (params.score || 0);
           for (n in params) {
             this[n] = params[n];
           }
           this.score = sc;
+          this.flags = fl;
         }
+        return this;
+      };
+
+      Case.prototype.setFlags = function(fl) {
+        this.flags = (this.flags || '') + (fl ? ' ' + fl : '');
         return this;
       };
 
@@ -175,7 +178,8 @@
           this.branch({
             appendix: ch2,
             score: 3,
-            x: x.slice(0, +(x.length - 3) + 1 || 9e9)
+            x: x.slice(0, +(x.length - 3) + 1 || 9e9),
+            flags: 'reflect'
           });
         }
         if (_ref3 = (ch2 = x.slice(-3)), __indexOf.call(ETE, _ref3) >= 0) {
@@ -237,7 +241,7 @@
     Word.ALL = {};
 
     Word.applyDictionaries = function(data) {
-      var k, r, _ref, _ref1, _ref2;
+      var k, r, v;
       if (!data) {
         return null;
       }
@@ -250,27 +254,38 @@
       this.registry('COMPLEXIES', data.complexies);
       this.registry('FLEXIES', data.flexies);
       this.registry('ROOTS_MASKS', data.root_masks);
-      this.applyInTree("COMPLEXIES_TREE", (_ref = data.complexies) != null ? _ref.getKeys() : void 0);
-      this.applyInTree("PREFIXES_TREE", (_ref1 = data.prefixes) != null ? _ref1.getKeys() : void 0);
-      this.applyInTree("SUFFIXES_TREE", (_ref2 = data.suffixes) != null ? _ref2.getKeys().mirrorItems() : void 0);
-      this.applyInTree("FLEXIES_TREE", ((function() {
-        var _results;
+      this.applyInTree("COMPLEXIES_TREE", data.complexies);
+      this.applyInTree("PREFIXES_TREE", data.prefixes);
+      this.applyInTree("SUFFIXES_TREE", data.suffixes, function(x) {
+        return x.id.mirror();
+      });
+      this.applyInTree("FLEXIES_TREE", (function() {
+        var _ref, _results;
+        _ref = this.FLEXIES;
         _results = [];
-        for (k in this.FLEXIES) {
-          _results.push(k);
+        for (k in _ref) {
+          v = _ref[k];
+          _results.push(v);
         }
         return _results;
-      }).call(this)).mirrorItems());
+      }).call(this), function(x) {
+        return x.id.mirror();
+      });
       return data;
     };
 
-    Word.applyInTree = function(key, data) {
+    Word.applyInTree = function(key, data, keyFn) {
       var tree, v, _i, _len, _results;
+      if (keyFn == null) {
+        keyFn = function(x) {
+          return x.id;
+        };
+      }
       tree = this[key] || (this[key] = {});
       _results = [];
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         v = data[_i];
-        _results.push(Object.prop(tree, (v + "_").split("").join("."), v));
+        _results.push(Object.prop(tree, ((keyFn(v)) + "_").split("").join("."), v));
       }
       return _results;
     };

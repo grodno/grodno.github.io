@@ -24,15 +24,12 @@ Object.entity.define
                 if (next2 = (next=n.next)?.next) and next2.kind is 'number'  and next.text in '.,'
                     e.splitTill(next2.next).setText(e.text+next.text+next2.text)
                     n = next2
-         
-           
+
         # handles text event passed 
         analyze: (event) ->
             #event.eachMatched ['number', 'space','number'], (elt)-> elt.mergeFrom(elt.next, elt.next.next)
                 
-            event.eachMatched ['det+prep', 'word', '!word'], (elt, noun)->
-                noun.setFlags('noun');
-                
+               
 
 
 

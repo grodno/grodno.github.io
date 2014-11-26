@@ -23,7 +23,7 @@
           return null;
         },
         analyze: function(event) {
-          return event.eachWord((function(_this) {
+          return event.eachMatched('word', (function(_this) {
             return function(word) {
               var count, e, key, nextWord, r, _results;
               if (r = _this.find(word)) {

@@ -16,10 +16,6 @@ Object.entity.define
                 cl.push (if c.hardcoded then "hardcoded" else ((if sc > 49 then ((if sc > 99 then "good" else "norm")) else ((if sc > 10 then "weak" else "bad")))))
             (if t.kind is "s" then " " else String.format("<span title=\"{0}\" class=\"{1}\">{2}</span>", title, cl.concat(t.tags).join(" "), t.input))
     
-        _op = (d) ->
-            @value += _toHtml(d)
-            return
-
         #================================
         
         init: ->

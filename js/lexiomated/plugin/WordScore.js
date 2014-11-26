@@ -36,23 +36,27 @@
         if (r) {
           this.root = x;
           this.score += len * 8 + r.score;
+          this.setFlags(r.flags);
           return;
         }
         sf = this.suffix || this.flexie;
         if (sf && lang === "r" && (__indexOf.call("аеяюий", sf) >= 0) && (r = Word.ROOTS[x + "й"])) {
           this.root = r.id;
           this.score += len + r.score;
+          this.setFlags(r.flags);
           return;
         }
         if (lang === "e") {
           if (sf && (r = Word.ROOTS[x + "e"])) {
             this.root = r.id;
             this.score += len * 8 + r.score;
+            this.setFlags(r.flags);
             return;
           }
           if ((x[len - 1] === x[len - 2]) && (r = Word.ROOTS[x.substring(0, len - 1)])) {
             this.root = r.id;
             this.score += len * 8 + r.score;
+            this.setFlags(r.flags);
             return;
           }
         }
@@ -66,9 +70,8 @@
       };
       return {
         analyze: function(event) {
-          var c, k, tres, w, _i, _len, _ref, _ref1, _results;
+          var c, i, k, tres, w, _i, _len, _ref, _ref1;
           _ref = Word.ALL;
-          _results = [];
           for (k in _ref) {
             w = _ref[k];
             if (!(!w.best)) {
@@ -82,20 +85,30 @@
             Object.math.sort(w.cases, "score", -1);
             w.best = w.cases[0];
             tres = w.best.score * 0.2;
-            _results.push(w.cases = (function() {
-              var _j, _len1, _ref2, _results1;
+            w.cases = (function() {
+              var _j, _len1, _ref2, _results;
               _ref2 = w.cases;
-              _results1 = [];
-              for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-                c = _ref2[_j];
-                if (c.x && c.score >= tres) {
-                  _results1.push(c);
+              _results = [];
+              for (i = _j = 0, _len1 = _ref2.length; _j < _len1; i = ++_j) {
+                c = _ref2[i];
+                if (i < 3 && c.x && c.score >= tres) {
+                  _results.push(c);
                 }
               }
-              return _results1;
-            })());
+              return _results;
+            })();
           }
-          return _results;
+          return event.eachMatched('word', function(elt) {
+            var ci, _j, _ref2, _results;
+            w = elt.word;
+            _results = [];
+            for (ci = _j = _ref2 = w.cases.length - 1; _ref2 <= 0 ? _j <= 0 : _j >= 0; ci = _ref2 <= 0 ? ++_j : --_j) {
+              if ((c = w.cases[ci])) {
+                _results.push(elt.setFlags('rx' + (c.root || c.x) + ' px' + c.prefix + ' sx' + c.suffix + ' fx' + c.flexie + ' ' + (c.flags || '')));
+              }
+            }
+            return _results;
+          });
         }
       };
     }

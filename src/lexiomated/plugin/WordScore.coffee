@@ -30,6 +30,7 @@ Object.entity.define
             if r
                 @root = x
                 @score += len * 8 + r.score
+                @setFlags r.flags
                 return
                 
             sf = (@suffix or @flexie)
@@ -37,17 +38,20 @@ Object.entity.define
             if sf and lang is "r" and (sf in "аеяюий") and (r = Word.ROOTS[x + "й"])
                 @root = r.id
                 @score += len + r.score
+                @setFlags r.flags
                 return
             
             if lang is "e"
                 if sf and (r = Word.ROOTS[x + "e"])
                     @root = r.id
                     @score += len * 8 + r.score
+                    @setFlags r.flags
                     return
                     
                 if (x[len - 1] is x[len - 2]) and (r = Word.ROOTS[x.substring(0, len - 1)])
                     @root = r.id
                     @score += len * 8 + r.score
+                    @setFlags r.flags
                     return
             
             return if len < 3
@@ -69,5 +73,10 @@ Object.entity.define
                 Object.math.sort w.cases, "score", -1
                 w.best = w.cases[0]
                 tres = w.best.score * 0.2
-                w.cases = (c for c in w.cases when c.x and c.score >= tres)
+                w.cases = (c for c,i in w.cases when i<3 and c.x and c.score >= tres)
+                
+            event.eachMatched 'word', (elt)-> 
+                w = elt.word
+                for ci in [w.cases.length-1..0] when (c = w.cases[ci])
+                    elt.setFlags('rx'+(c.root or c.x) + ' px'+c.prefix+' sx'+c.suffix+' fx'+c.flexie+' '+(c.flags or ''))
 

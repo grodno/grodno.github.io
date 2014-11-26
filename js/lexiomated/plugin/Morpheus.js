@@ -17,8 +17,11 @@
           return _results;
         },
         analyze: function(event) {
-          return event.eachWord(function(e) {
-            return e.word = Word.get(e.text).analyze();
+          return event.eachMatched('word', function(e) {
+            var w;
+            w = e.word = Word.get(e.text).analyze();
+            e.setAttr('title', w);
+            return e.flags['lx' + e.text.length] = 1;
           });
         }
       };

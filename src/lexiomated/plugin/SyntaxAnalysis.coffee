@@ -1,66 +1,33 @@
 Object.entity.define 
-
     id:"lexiomated.plugin.SyntaxAnalysis extends lexiomated.Plugin"
-      
     methods: (_super) ->
         
- 
-        normalizeNumbersOp = (e)->
+        RULES=
             
-            if e.kind is 'number'    
-                #sign
-                if (s=e.prev?.text) in '-+'
-                    e.setText(s+e.text)
-                    e.prev.detachMe()
-                    
-                n=e
-                
-                # x1000 series
-                while (next2 = (next=n.next)?.next) and next2.kind is 'number'  and next2.text.length is 3 and next.text in ' ,'
-                    e.splitTill(next2.next).setText(e.text+next.text+next2.text)
-                    n = next2
-                    
-                #float point
-                if (next2 = (next=n.next)?.next) and next2.kind is 'number'  and next.text in '.,'
-                    e.splitTill(next2.next).setText(e.text+next.text+next2.text)
-                    n = next2
-                    
-        eachDet=(e) ->
-            while (e)
+            'det+prep<word>!word':'noun'
+            'quote<word>quote':'named'
+            '!dot<word capital':'named'
+            'named<named':'[<named'
             
-                if e.kind is 'det'
-                    e = e.surroundWith(kind:'clause').setFlags('noun')
-                    
-                    # add next words into clause
-                    while (next = e.next) and (next2 = next.next) and next2.kind is 'word'
-                        e.doInBetween(next2.next,'setParent',e)
-                        next2.setKind('adj')
-                    
-                    e.last.setKind('noun') unless e.last is e.first
-                    
-                else      
-                    eachDet e.first if e.first
-                    
-                e = e.next
-            e
-         
-        eachPrep=(e) ->
-            while (e)
+            'lat @noNextSpace>dot @noNextSpace>lat #by+#com+#ru':'url !word #[$0.$2]>#>#'
             
-                if e.kind is 'prep'
-                    e = e.surroundWith(kind:'clause').setFlags('prep object '+e.text)
-                    
-                    # add next words into clause
-                    if (next = e.nextWord())
-                        e.doInBetween(next.next,'setParent',e)
-                        
-                else      
-                    eachPrep e.first if e.first
-                e = e.next
-            e           
-           
+            'number>number lx3':'#$0$1>#'
+            'number lx4>#г>dot>#в>dot':'year born #$0_года_выпуска>#>#>#>#'
+            'number>percent':'percent #$0%>#'
+            'number>minus>lx2':'#$0-$2.textSlice.1>#>#'
+            
+            'dollar<number':'#<price usd #$$0'
+            'number>rxдоллар':'price usd #$$0>#'
+            'quote<word<word>quote':'named adj<named'
+            'det+prep<word<word>comma+dot':'adj<noun'
+            
+        fn = (elt, flags)-> elt.setFlags(flags)
+        
         # handles text event passed 
         analyze: (event) ->
 
+            event.eachMatched condition, fn, flags for condition, flags of RULES
+                
+            event
 
 

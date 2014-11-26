@@ -3,7 +3,7 @@
     id: "lexiomated.Widget extends Html",
     properties: ["text", "data"],
     methods: function(_super) {
-      var _op, _toHtml;
+      var _toHtml;
       _toHtml = function(t) {
         var c, cl, sc, title, w;
         if (!t.kind) {
@@ -23,9 +23,6 @@
         } else {
           return String.format("<span title=\"{0}\" class=\"{1}\">{2}</span>", title, cl.concat(t.tags).join(" "), t.input);
         }
-      };
-      _op = function(d) {
-        this.value += _toHtml(d);
       };
       return {
         init: function() {

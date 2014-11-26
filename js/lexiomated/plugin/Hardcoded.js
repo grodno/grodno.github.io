@@ -8,18 +8,18 @@
           return this.hardcoded = content.intoRegistry();
         },
         prepare: function(event) {
-          return event.eachWord((function(_this) {
+          return event.eachMatched('word', (function(_this) {
             return function(word) {
               var count, e, key, nextWord, r, _results;
               if ((r = _this.hardcoded[key = word.lowerText])) {
-                word.setKind(r.kind).setFlags(r.flags);
+                word.setFlags(r.flags + ' !word');
               }
               count = 3;
               e = word;
               _results = [];
               while (count && (nextWord = e.nextToken())) {
-                if ((r = _this.hardcoded[key += e.next.text + nextWord.text])) {
-                  word.mergeFrom(e.next, nextWord).setKind(r.kind);
+                if ((r = _this.hardcoded[key += " " + nextWord.text])) {
+                  word.mergeFrom(e.next, nextWord).setFlags(r.flags + ' !word');
                 }
                 e = nextWord;
                 _results.push(count--);

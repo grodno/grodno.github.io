@@ -5,7 +5,7 @@ class this.Word
         l = x.length - 2
         p = 0
         while p < l and (c = x[p]) and sub and (sub = sub[c])
-            op.call @, r, x[p + 1..] if r = sub["_"]
+            op.call @, r, r.id, x[p + 1..] if r = sub["_"]
             p++
         return
 
@@ -13,17 +13,25 @@ class this.Word
         x = @x
         p = x.length - 1
         while p > 1 and (c = x[p]) and sub and (sub = sub[c])
-            op.call @, x[p..], x[0..p-1] if sub["_"]
+            op.call @, r, x[p..], x[0..p-1] if r = sub["_"]
             p--
         return
 
-    op_prefixize =  (key, rest) -> if rest.length > 1 then @branch prefix: key,     x: rest, score: key.length - 2 else 0
+    op_prefixize =  (r, key, rest) -> 
+        if rest.length > 1 
+            @branch prefix: key, x: rest, score: key.length - 2, flags: r.flags 
 
-    op_flexify =    (key, rest) -> if rest.length > 1 then @branch flexie: key,     x: rest, score: key.length else 0
+    op_flexify =    (r, key, rest) -> 
+        if rest.length > 1 
+            @branch flexie: key, x: rest, score: key.length, flags: r.flags 
 
-    op_suffixize =  (key, rest) -> if rest.length > 1 then @branch suffix: key,     x: rest, score: key.length else 0
+    op_suffixize =  (r, key, rest) -> 
+        if rest.length > 1 
+            @branch suffix: key, x: rest, score: key.length, flags: r.flags
 
-    op_complexify = (key, rest) -> if rest.length > 1 then @branch complexie: key,  x: rest, score: 2 * key.length else 0
+    op_complexify = (r, key, rest) -> 
+        if rest.length > 1 
+            @branch complexie: key, x: rest, score: 2 * key.length, flags: r.flags 
 
     VOWEL_PREP = "aeoi"
     APP1 = ["ся","сь","те"]
@@ -46,9 +54,15 @@ class this.Word
 
         update: (params) ->
             if params
+                fl = (@setFlags params.flags).flags
                 sc = @score + (params.score or 0)
                 @[n] = params[n] for n of params
                 @score = sc
+                @flags = fl
+            @
+        
+        setFlags: (fl)->
+            @flags = (@flags or '') + (if fl then ' '+fl else '')
             @
 
         toString: ->
@@ -82,7 +96,7 @@ class this.Word
             @branch negation: ch2, score: 3, x: x[2..]             if (ch2 = x[0..1]) in NEG
             @branch negation: ch3, score: 4, x: x[3..]             if (ch3 = x[0..2]) in NEG3
             
-            @branch appendix: ch2, score: 3, x: x[0..x.length-3]   if (ch2 = x[-2..]) in APP1
+            @branch appendix: ch2, score: 3, x: x[0..x.length-3], flags:'reflect'  if (ch2 = x[-2..]) in APP1
             @branch appendix: "е", score: 3, x: x[0..x.length-2]   if (ch2 = x[-3..]) in ETE
 
             @
@@ -99,7 +113,7 @@ class this.Word
 
     toString: (sep=', ') ->
         (w.score + ":" + w for w in @cases).join sep
-    
+        
     @registry: (key, arr) ->
         @[key] = arr.intoRegistry @[key]
 
@@ -114,12 +128,13 @@ class this.Word
         @registry 'COMPLEXIES', data.complexies
         @registry 'FLEXIES', data.flexies
         @registry 'ROOTS_MASKS', data.root_masks
-        @applyInTree "COMPLEXIES_TREE", data.complexies?.getKeys()
-        @applyInTree "PREFIXES_TREE", data.prefixes?.getKeys()
-        @applyInTree "SUFFIXES_TREE", data.suffixes?.getKeys().mirrorItems()
-        @applyInTree "FLEXIES_TREE", (k for k of @FLEXIES).mirrorItems()
+        @applyInTree "COMPLEXIES_TREE", data.complexies
+        @applyInTree "PREFIXES_TREE", data.prefixes
+        @applyInTree "SUFFIXES_TREE", data.suffixes, (x)-> x.id.mirror()
+        @applyInTree "FLEXIES_TREE", (v for k,v of @FLEXIES), (x)-> x.id.mirror()
         data
 
-    @applyInTree = (key, data) ->
+    @applyInTree = (key, data, keyFn=(x)->x.id) ->
         tree = @[key] or (@[key] = {})
-        Object.prop tree, (v + "_").split("").join("."), v for v in data
+        Object.prop tree, ((keyFn v) + "_").split("").join("."), v for v in data
+    

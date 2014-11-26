@@ -14,4 +14,8 @@ Object.entity.define
 
         # handles text event passed 
         analyze: (event) ->
-            event.eachWord (e)-> e.word = Word.get(e.text).analyze()
+            event.eachMatched 'word', (e)-> 
+                
+                w = e.word = Word.get(e.text).analyze()
+                e.setAttr('title', w) 
+                e.flags['lx'+e.text.length] = 1

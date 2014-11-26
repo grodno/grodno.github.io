@@ -17,7 +17,7 @@ Object.entity.define
             
         analyze: (event) ->
             
-            event.eachWord (word)=>
+            event.eachMatched 'word', (word)=>
                 if r = @find word
                     word.setTag('a').setAttr('target','_blank').setAttr('href', r.url) 
                 

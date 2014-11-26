@@ -34,22 +34,27 @@ h4{
 }
 
 
-.prep,.det,.conj, .be, .pron, .mverb {color :lightsalmon;}
+.prep,.det,.conj {color :lightsalmon;}
 .word{color :darkblue;}
 .noun{color :red;}
+.pron{color :red;}
+.adj{color :green;}
+.verb{color :Crimson ; font-weight:bold;}
+.be, .mverb{color :Crimson ; font-weight:bold;font-size:smaller;}
+.named, .url{color :maroon ; font-weight:bold;}
 
 .number {
-background-color: #5bc0de;
-display: inline;
-padding: .2em .6em .3em;
-font-size: 75%;
-font-weight: 700;
-line-height: 1;
-color: #fff;
-text-align: center;
-white-space: nowrap;
-vertical-align: baseline;
-border-radius: .25em;
+    background-color: teal;
+    display: inline;
+    padding: .1em .4em .2em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
 }
 
 .list-group .list-group-item {

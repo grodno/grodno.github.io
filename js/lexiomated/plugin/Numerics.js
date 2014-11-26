@@ -24,11 +24,7 @@
         }
       };
       return {
-        analyze: function(event) {
-          return event.eachMatched(['det+prep', 'word', '!word'], function(elt, noun) {
-            return noun.setFlags('noun');
-          });
-        }
+        analyze: function(event) {}
       };
     }
   });

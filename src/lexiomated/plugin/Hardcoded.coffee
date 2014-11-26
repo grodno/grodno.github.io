@@ -10,13 +10,13 @@ Object.entity.define
 
         prepare: (event) ->
             
-            event.eachWord (word)=>
-                word.setKind(r.kind).setFlags(r.flags) if (r = @hardcoded[key = word.lowerText])
+            event.eachMatched 'word', (word)=>
+                word.setFlags(r.flags+' !word') if (r = @hardcoded[key = word.lowerText])
                 
                 count=3
                 e=word
                 while count and nextWord=e.nextToken()
-                    if (r = @hardcoded[key+=e.next.text+nextWord.text])
-                        word.mergeFrom(e.next, nextWord).setKind(r.kind)
+                    if (r = @hardcoded[key+=" "+nextWord.text])
+                        word.mergeFrom(e.next, nextWord).setFlags(r.flags+' !word')
                     e = nextWord
                     count--
