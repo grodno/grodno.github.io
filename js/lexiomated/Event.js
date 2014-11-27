@@ -126,12 +126,9 @@
     Lexion.prototype.setFlags = (function() {
       var fnResolveText;
       fnResolveText = function(cl, T) {
-        return cl.replace(/_/g, ' ').replace(/\$(\-?\d+)(?:\.([a-z][a-zA-Z0-9\.]*))?/g, function(s, n, method) {
+        return cl.replace(/_/g, ' ').replace(/\$(\-?\d+)(?:\.([a-z][a-zA-Z0-9\.]+))?/g, function(s, n, method) {
           var next;
           n = +n;
-          if (n === 0) {
-            return T.text;
-          }
           next = T;
           if (n > 0) {
             while (n--) {
@@ -139,7 +136,7 @@
                 return '';
               }
             }
-          } else {
+          } else if (n < 0) {
             while (n++) {
               if (!(next = next.prevToken())) {
                 return '';
@@ -240,6 +237,10 @@
     Lexion.prototype.setTag = function(v) {
       this.tag = v;
       return this;
+    };
+
+    Lexion.prototype.getYear = function() {
+      return (new Date()).getFullYear();
     };
 
     Lexion.prototype.numberBetween = function(s, e) {
@@ -543,6 +544,20 @@
         return ' ';
       }
       gap = '';
+      fl = ((function() {
+        var _ref, _results;
+        _ref = this.flags;
+        _results = [];
+        for (f in _ref) {
+          v = _ref[f];
+          if (v) {
+            _results.push(f);
+          }
+        }
+        return _results;
+      }).call(this)).join(' ');
+      tag = this.tag || 'span';
+      this.attrs.title = fl + (this.attrs.title ? '\n' + this.attrs.title : '');
       attrs = ((function() {
         var _ref, _results;
         _ref = this.attrs;
@@ -556,23 +571,8 @@
         }
         return _results;
       }).call(this)).join('');
-      fl = (function() {
-        var _ref, _results;
-        _ref = this.flags;
-        _results = [];
-        for (f in _ref) {
-          v = _ref[f];
-          if (v) {
-            _results.push(f);
-          }
-        }
-        return _results;
-      }).call(this);
-      if (fl.length) {
-        fl = " class=\"" + (fl.join(' ')) + "\"";
-      }
-      tag = this.tag || 'span';
-      opentag = "" + tag + (fl || '') + attrs;
+      fl = fl.length ? " class=\"" + fl + "\"" : '';
+      opentag = "" + tag + fl + attrs;
       if (p = this.first) {
         inner = [];
         while (p) {

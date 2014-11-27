@@ -20,8 +20,7 @@
           return event.eachMatched('word', function(e) {
             var w;
             w = e.word = Word.get(e.text).analyze();
-            e.setAttr('title', w);
-            return e.flags['lx' + e.text.length] = 1;
+            return e.setAttr('title', w);
           });
         }
       };

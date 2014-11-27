@@ -43,7 +43,7 @@ h4{
 .be, .mverb{color :Crimson ; font-weight:bold;font-size:smaller;}
 .named, .url{color :maroon ; font-weight:bold;}
 
-.number {
+.number, .date, .measuredNumber  {
     background-color: teal;
     display: inline;
     padding: .1em .4em .2em;
@@ -56,7 +56,9 @@ h4{
     vertical-align: baseline;
     border-radius: .25em;
 }
-
+.date {
+    background-color: blue;
+}
 .list-group .list-group-item {
     padding: 10px 15px;
 }

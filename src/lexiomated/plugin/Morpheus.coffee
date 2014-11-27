@@ -18,4 +18,3 @@ Object.entity.define
                 
                 w = e.word = Word.get(e.text).analyze()
                 e.setAttr('title', w) 
-                e.flags['lx'+e.text.length] = 1

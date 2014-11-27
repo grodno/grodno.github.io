@@ -81,14 +81,13 @@ class Lexion
     setFlags: (->
         
         fnResolveText = (cl, T)->
-            cl.replace(/_/g,' ').replace /\$(\-?\d+)(?:\.([a-z][a-zA-Z0-9\.]*))?/g, (s, n, method)-> 
+            cl.replace(/_/g,' ').replace /\$(\-?\d+)(?:\.([a-z][a-zA-Z0-9\.]+))?/g, (s, n, method)-> 
                 n=+n
-                return T.text if n is 0 
                 next = T
                 if n>0
                     while n-- 
                         return '' unless next = next.nextToken()
-                else
+                else if n<0
                     while n++ 
                         return '' unless next = next.prevToken()
                         
@@ -149,6 +148,8 @@ class Lexion
     setTag: (v) ->
         @tag = v
         @
+        
+    getYear: () -> (new Date()).getFullYear()
     
     numberBetween: (s=0,e=Number.MAX_VALUE) -> @numValue>+s  and @numValue<+e
     noNextSpace: ()-> not @next?.flags.space
@@ -402,16 +403,19 @@ class Lexion
          
         gap = ''#'\n'+'\t'.multi(ngap)
 
-        #attributes
-        attrs = (" #{k}=\"#{v}\"" for own k, v of @attrs when v).join('')
         
         #flags as className
-        fl = (f for f,v of @flags when v)
-        fl = " class=\"#{fl.join(' ')}\"" if fl.length
+        fl = (f for f,v of @flags when v).join(' ')
         
         tag = @tag or 'span'
+
+        #attributes
+        @attrs.title = fl+(if @attrs.title then '\n'+@attrs.title else '')
+        attrs = (" #{k}=\"#{v}\"" for own k, v of @attrs when v).join('')
         
-        opentag = "#{tag}#{fl or ''}#{attrs}"
+        fl = if fl.length then " class=\"#{fl}\"" else ''
+        
+        opentag = "#{tag}#{fl}#{attrs}"
         
         if p=@first
             inner = []
