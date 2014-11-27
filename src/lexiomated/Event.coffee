@@ -12,100 +12,129 @@ class Lexion
     
     # sets/remove class for elt. 
     # Classes to remove have to be prefixed with '!' sign.
-    isMatched: (delta) ->
-        return false unless delta
-        return true if delta is '*'
-        
-        if '<' in delta
-            prevC = delta.split("<")
-            delta = prevC[prevC.length-1]
+    isMatched: (->
 
-        if '>' in delta
-            nextC = delta.split(">")
-            delta = nextC.shift()
+        match = (cl) ->
+            c0 = cl[0]
+            if c0 is "#"
+                return false unless @text is cl[1..]
+            else if c0 is "@"
+                cl = cl[1..].split '.'
+                return false unless @[cl[0]] cl[1..]...
+            else if cl is "]"
+                return false if @next?.flags.space
+            else
+                return false unless @flags[cl]
+            true
+            
+        isMatchedAny = (delta) ->
+            return false unless delta
+            for cl in delta
+                if cl[0] is "!"
+                    return true unless match.call @, cl[1..]
+                else
+                    return true if match.call @, cl
+            false
 
-        delta = delta.split(" ")
-        
-        for cl in delta when cl
-            if '+' in cl
-                if cl[0] is "!"
-                    return false if @isMatchedAny cl[1..].split("+")
-                else
-                    return false unless @isMatchedAny cl.split("+")
-            else
-                if cl[0] is "!"
-                    return false if @flags[cl[1..]]
-                else if cl[0] is "#"
-                    return false unless @text is cl[1..]
-                else if cl[0] is "@"
-                    return false unless @[cl[1..]]()
-                else
-                    return false unless @flags[cl]
-        if nextC
-            lx = @
-            for c in nextC 
-                return false unless (lx = lx.nextToken()) and lx.isMatched(c)
-                
-        if prevC
-            lx = @
-            for ci in [prevC.length-2..0] 
-                return false unless (lx = lx.prevToken()) and lx.isMatched(prevC[ci])
-        true
-        
-    isMatchedAny: (delta) ->
-        return false unless delta
-        for cl in delta
-            if cl[0] is "!"
-                return true unless @flags[cl[1..]]
-            else if cl[0] is "#"
-                return true if @text is cl[1..]
-            else if cl[0] is "@"
-                return true if @[cl[1..]]()
-            else
-                return true if @flags[cl]
-        false
-        
+        (delta) ->
+            return true if not delta or delta is '*'
+            #extract previous conditions        
+            if '<' in delta
+                prevC = delta.split("<")
+                delta = prevC[prevC.length-1]
+            #extract previous conditions        
+            if '>' in delta
+                nextC = delta.split(">")
+                delta = nextC.shift()
+            #match current condition
+            if delta and (delta isnt '*')
+                delta = delta.split(" ")
+                for cl in delta when cl
+                    if '+' in cl
+                        if cl[0] is "!"
+                            return false if isMatchedAny.call @, cl[1..].split("+")
+                        else
+                            return false unless isMatchedAny.call @, cl.split("+")
+                    else
+                        if cl[0] is "!"
+                            return false if match.call @, cl[1..]
+                        else    
+                            return false unless match.call @, cl
+            #apply next conditions        
+            if nextC
+                lx = @
+                for c in nextC 
+                    return false unless (lx = lx.nextToken()) and lx.isMatched(c)
+            #apply previous conditions        
+            if prevC
+                lx = @
+                for ci in [prevC.length-2..0] 
+                    return false unless (lx = lx.prevToken()) and lx.isMatched(prevC[ci])
+            true
+    )()
+
     #------------------------------
     # Setters
     # sets/remove class for elt. 
     
     # Classes to remove have to be prefixed with '!' sign.
-    setFlags: (delta, v=1) ->
-        return @ unless delta
-                
-        if '<' in delta
-            prevC = delta.split("<")
-            delta = prevC[prevC.length-1]
-
-        if '>' in delta
-            nextC = delta.split(">")
-            delta = nextC.shift()
-
-        delta = delta.split(" ")
-        for cl in delta when cl
-            if cl[0] is "!"
-                @flags[cl[1..]] = 0
-            else if cl[0] is "#"
-                T = @
-                @text = cl[1..].replace(/_/g,' ').replace /\$(\-?\d+)(?:\.([a-z][a-zA-Z0-9\.]*))?/g, (s, n, method)-> 
-                    n=+n
-                    return T.text if n is 0 
-                    dir = if n>0 then 'nextToken' else 'prevToken'
-                    next = T
+    setFlags: (->
+        
+        fnResolveText = (cl, T)->
+            cl.replace(/_/g,' ').replace /\$(\-?\d+)(?:\.([a-z][a-zA-Z0-9\.]*))?/g, (s, n, method)-> 
+                n=+n
+                return T.text if n is 0 
+                next = T
+                if n>0
                     while n-- 
-                        return '' unless next = next[dir]()
-                    return next.getText() unless method 
-                    method = method.split '.'
-                    next?['get'+String.capitalize(method[0])] method[1..]...
-                    
-                @detachMe() unless @text
-            else
-                @flags[cl] = v
+                        return '' unless next = next.nextToken()
+                else
+                    while n++ 
+                        return '' unless next = next.prevToken()
+                        
+                return next.getText() unless method 
+                method = method.split '.'
+                next?['get'+String.capitalize(method[0])] method[1..]...
                 
-        next.setFlags(c) for ci in [prevC.length-2..0] when (c=prevC[ci]) and next = @prevToken() if prevC
-        next.setFlags(c) for c in nextC when next = @nextToken() if nextC
-
-        @
+        (delta, v=1) ->
+            return @ unless delta
+            #extract previous expressions        
+            if '<' in delta
+                prevC = delta.split("<")
+                delta = prevC[prevC.length-1]
+            #extract next expressions        
+            if '>' in delta
+                nextC = delta.split(">")
+                delta = nextC.shift()
+            #apply current
+            delta = delta.split(" ")
+            for cl in delta when cl
+                if cl[0] is "!"
+                    @flags[cl[1..]] = 0
+                else if cl[0] is "#"
+                    if cl is '#'
+                        @detachMe()
+                    else
+                        @text = fnResolveText cl[1..], @
+                else
+                    @flags[cl] = v
+            #apply previous expressions    
+            if prevC
+                lx = @.prevToken()
+                for ci in [prevC.length-2..0] when lx
+                    lxx =  lx.prevToken()
+                    lx.setFlags(prevC[ci])
+                    lx =lxx
+            #apply next expressions        
+            if nextC
+                lx = @.nextToken()
+                for c in nextC when lx
+                    lxx =  lx.nextToken()
+                    lx.setFlags(c)
+                    lx =lxx
+    
+            @
+    )()
 
     setAttr: (k, v) ->
         @attrs[k] = v
@@ -121,6 +150,7 @@ class Lexion
         @tag = v
         @
     
+    numberBetween: (s=0,e=Number.MAX_VALUE) -> @numValue>+s  and @numValue<+e
     noNextSpace: ()-> not @next?.flags.space
 
     #------------------------------
@@ -413,6 +443,19 @@ Object.entity.define
         eachMatched: (condition, action, params)->
             @rootElt.eachChildInDeep (elt)->
                 action.call @, elt, params if elt.isMatched condition
+            @
+                
+        evaluateRules:(->
+            fn = (elt, rules)-> 
+                for condition, flags of rules  when elt.isMatched condition
+                    if typeof flags is 'string'
+                        elt.setFlags(flags)
+                    else
+                        fn(elt, flags)
+        
+            (rules) ->
+                @eachMatched condition, fn, v for condition, v of rules
+        )()
                 
         isValidInput: ()->
             return false unless s = @input

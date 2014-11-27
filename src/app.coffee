@@ -43,11 +43,12 @@ Object.entity.create
             ,
                 id:'lexio:lexiomated.TextEngine'
                 plugins:[
-                    'lexiomated.plugin.Numerics'
                     'lexiomated.plugin.Hardcoded'
                     'lexiomated.plugin.Morpheus'
                     'lexiomated.plugin.WordScore'
                     'lexiomated.plugin.Grodno'
+                    'lexiomated.plugin.Numerics'
+                    'lexiomated.plugin.Calendar'
                     'lexiomated.plugin.SyntaxAnalysis'
                 ]
         ]

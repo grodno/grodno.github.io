@@ -4,32 +4,32 @@ Object.entity.define
       
     methods: (_super) ->
         
- 
-        normalizeNumbersOp = (e)->
+        RULES =
             
-            if e.kind is 'number'    
-                #sign
-                if (s=e.prev?.text) in '-+'
-                    e.setText(s+e.text)
-                    e.prev.detachMe()
-                    
-                n=e
-                
-                # x1000 series
-                while (next2 = (next=n.next)?.next) and next2.kind is 'number'  and next2.text.length is 3 and next.text in ' ,'
-                    e.splitTill(next2.next).setText(e.text+next.text+next2.text)
-                    n = next2
-                    
-                #float point
-                if (next2 = (next=n.next)?.next) and next2.kind is 'number'  and next.text in '.,'
-                    e.splitTill(next2.next).setText(e.text+next.text+next2.text)
-                    n = next2
+            'shrt ]>dot': '#$0.>#'
+            
+            
+            'number':
+                '*>number lx3':'x1000 #$0_$1>#'
+                'x1000>number lx3':'x1000000 #$0_$1>#'
 
-        # handles text event passed 
+                '*>numFactor x1000':'x1000 #$0$1>#'
+                '*>numFactor x1000000':'x1000000 #$0$1>#'
+
+                '*>percent':'percent #$0%>#'
+                '*>minus>cyr lx2':'#$0-$2.textSlice.1>#>#'
+            
+                'dollar<*':'#<price usd #$$0'
+                '*>rxдоллар':'price usd #$$0>#'
+
+                'adv<*':'#<degree #$-1_$0'
+                'adv<prep<*':'#<p2<degree #$-2_$0'
+
+            'number>measure': '#$0$1>#'
+
         analyze: (event) ->
-            #event.eachMatched ['number', 'space','number'], (elt)-> elt.mergeFrom(elt.next, elt.next.next)
-                
-               
+
+            event.evaluateRules RULES               
 
 
 

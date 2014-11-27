@@ -16,173 +16,202 @@
       }
     }
 
-    Lexion.prototype.isMatched = function(delta) {
-      var c, ci, cl, lx, nextC, prevC, _i, _j, _k, _len, _len1, _ref;
-      if (!delta) {
-        return false;
-      }
-      if (delta === '*') {
-        return true;
-      }
-      if (__indexOf.call(delta, '<') >= 0) {
-        prevC = delta.split("<");
-        delta = prevC[prevC.length - 1];
-      }
-      if (__indexOf.call(delta, '>') >= 0) {
-        nextC = delta.split(">");
-        delta = nextC.shift();
-      }
-      delta = delta.split(" ");
-      for (_i = 0, _len = delta.length; _i < _len; _i++) {
-        cl = delta[_i];
-        if (cl) {
-          if (__indexOf.call(cl, '+') >= 0) {
-            if (cl[0] === "!") {
-              if (this.isMatchedAny(cl.slice(1).split("+"))) {
-                return false;
-              }
-            } else {
-              if (!this.isMatchedAny(cl.split("+"))) {
-                return false;
-              }
-            }
-          } else {
-            if (cl[0] === "!") {
-              if (this.flags[cl.slice(1)]) {
-                return false;
-              }
-            } else if (cl[0] === "#") {
-              if (this.text !== cl.slice(1)) {
-                return false;
-              }
-            } else if (cl[0] === "@") {
-              if (!this[cl.slice(1)]()) {
-                return false;
-              }
-            } else {
-              if (!this.flags[cl]) {
-                return false;
-              }
-            }
-          }
-        }
-      }
-      if (nextC) {
-        lx = this;
-        for (_j = 0, _len1 = nextC.length; _j < _len1; _j++) {
-          c = nextC[_j];
-          if (!((lx = lx.nextToken()) && lx.isMatched(c))) {
+    Lexion.prototype.isMatched = (function() {
+      var isMatchedAny, match;
+      match = function(cl) {
+        var c0, _ref;
+        c0 = cl[0];
+        if (c0 === "#") {
+          if (this.text !== cl.slice(1)) {
             return false;
           }
-        }
-      }
-      if (prevC) {
-        lx = this;
-        for (ci = _k = _ref = prevC.length - 2; _ref <= 0 ? _k <= 0 : _k >= 0; ci = _ref <= 0 ? ++_k : --_k) {
-          if (!((lx = lx.prevToken()) && lx.isMatched(prevC[ci]))) {
+        } else if (c0 === "@") {
+          cl = cl.slice(1).split('.');
+          if (!this[cl[0]].apply(this, cl.slice(1))) {
             return false;
           }
-        }
-      }
-      return true;
-    };
-
-    Lexion.prototype.isMatchedAny = function(delta) {
-      var cl, _i, _len;
-      if (!delta) {
-        return false;
-      }
-      for (_i = 0, _len = delta.length; _i < _len; _i++) {
-        cl = delta[_i];
-        if (cl[0] === "!") {
-          if (!this.flags[cl.slice(1)]) {
-            return true;
-          }
-        } else if (cl[0] === "#") {
-          if (this.text === cl.slice(1)) {
-            return true;
-          }
-        } else if (cl[0] === "@") {
-          if (this[cl.slice(1)]()) {
-            return true;
+        } else if (cl === "]") {
+          if ((_ref = this.next) != null ? _ref.flags.space : void 0) {
+            return false;
           }
         } else {
-          if (this.flags[cl]) {
-            return true;
+          if (!this.flags[cl]) {
+            return false;
           }
         }
-      }
-      return false;
-    };
-
-    Lexion.prototype.setFlags = function(delta, v) {
-      var T, c, ci, cl, next, nextC, prevC, _i, _j, _k, _len, _len1, _ref;
-      if (v == null) {
-        v = 1;
-      }
-      if (!delta) {
-        return this;
-      }
-      if (__indexOf.call(delta, '<') >= 0) {
-        prevC = delta.split("<");
-        delta = prevC[prevC.length - 1];
-      }
-      if (__indexOf.call(delta, '>') >= 0) {
-        nextC = delta.split(">");
-        delta = nextC.shift();
-      }
-      delta = delta.split(" ");
-      for (_i = 0, _len = delta.length; _i < _len; _i++) {
-        cl = delta[_i];
-        if (cl) {
+        return true;
+      };
+      isMatchedAny = function(delta) {
+        var cl, _i, _len;
+        if (!delta) {
+          return false;
+        }
+        for (_i = 0, _len = delta.length; _i < _len; _i++) {
+          cl = delta[_i];
           if (cl[0] === "!") {
-            this.flags[cl.slice(1)] = 0;
-          } else if (cl[0] === "#") {
-            T = this;
-            this.text = cl.slice(1).replace(/_/g, ' ').replace(/\$(\-?\d+)(?:\.([a-z][a-zA-Z0-9\.]*))?/g, function(s, n, method) {
-              var dir, next;
-              n = +n;
-              if (n === 0) {
-                return T.text;
-              }
-              dir = n > 0 ? 'nextToken' : 'prevToken';
-              next = T;
-              while (n--) {
-                if (!(next = next[dir]())) {
-                  return '';
-                }
-              }
-              if (!method) {
-                return next.getText();
-              }
-              method = method.split('.');
-              return next != null ? next['get' + String.capitalize(method[0])].apply(next, method.slice(1)) : void 0;
-            });
-            if (!this.text) {
-              this.detachMe();
+            if (!match.call(this, cl.slice(1))) {
+              return true;
             }
           } else {
-            this.flags[cl] = v;
+            if (match.call(this, cl)) {
+              return true;
+            }
           }
         }
-      }
-      if (prevC) {
-        for (ci = _j = _ref = prevC.length - 2; _ref <= 0 ? _j <= 0 : _j >= 0; ci = _ref <= 0 ? ++_j : --_j) {
-          if ((c = prevC[ci]) && (next = this.prevToken())) {
-            next.setFlags(c);
+        return false;
+      };
+      return function(delta) {
+        var c, ci, cl, lx, nextC, prevC, _i, _j, _k, _len, _len1, _ref;
+        if (!delta || delta === '*') {
+          return true;
+        }
+        if (__indexOf.call(delta, '<') >= 0) {
+          prevC = delta.split("<");
+          delta = prevC[prevC.length - 1];
+        }
+        if (__indexOf.call(delta, '>') >= 0) {
+          nextC = delta.split(">");
+          delta = nextC.shift();
+        }
+        if (delta && (delta !== '*')) {
+          delta = delta.split(" ");
+          for (_i = 0, _len = delta.length; _i < _len; _i++) {
+            cl = delta[_i];
+            if (cl) {
+              if (__indexOf.call(cl, '+') >= 0) {
+                if (cl[0] === "!") {
+                  if (isMatchedAny.call(this, cl.slice(1).split("+"))) {
+                    return false;
+                  }
+                } else {
+                  if (!isMatchedAny.call(this, cl.split("+"))) {
+                    return false;
+                  }
+                }
+              } else {
+                if (cl[0] === "!") {
+                  if (match.call(this, cl.slice(1))) {
+                    return false;
+                  }
+                } else {
+                  if (!match.call(this, cl)) {
+                    return false;
+                  }
+                }
+              }
+            }
           }
         }
-      }
-      if (nextC) {
-        for (_k = 0, _len1 = nextC.length; _k < _len1; _k++) {
-          c = nextC[_k];
-          if (next = this.nextToken()) {
-            next.setFlags(c);
+        if (nextC) {
+          lx = this;
+          for (_j = 0, _len1 = nextC.length; _j < _len1; _j++) {
+            c = nextC[_j];
+            if (!((lx = lx.nextToken()) && lx.isMatched(c))) {
+              return false;
+            }
           }
         }
-      }
-      return this;
-    };
+        if (prevC) {
+          lx = this;
+          for (ci = _k = _ref = prevC.length - 2; _ref <= 0 ? _k <= 0 : _k >= 0; ci = _ref <= 0 ? ++_k : --_k) {
+            if (!((lx = lx.prevToken()) && lx.isMatched(prevC[ci]))) {
+              return false;
+            }
+          }
+        }
+        return true;
+      };
+    })();
+
+    Lexion.prototype.setFlags = (function() {
+      var fnResolveText;
+      fnResolveText = function(cl, T) {
+        return cl.replace(/_/g, ' ').replace(/\$(\-?\d+)(?:\.([a-z][a-zA-Z0-9\.]*))?/g, function(s, n, method) {
+          var next;
+          n = +n;
+          if (n === 0) {
+            return T.text;
+          }
+          next = T;
+          if (n > 0) {
+            while (n--) {
+              if (!(next = next.nextToken())) {
+                return '';
+              }
+            }
+          } else {
+            while (n++) {
+              if (!(next = next.prevToken())) {
+                return '';
+              }
+            }
+          }
+          if (!method) {
+            return next.getText();
+          }
+          method = method.split('.');
+          return next != null ? next['get' + String.capitalize(method[0])].apply(next, method.slice(1)) : void 0;
+        });
+      };
+      return function(delta, v) {
+        var c, ci, cl, lx, lxx, nextC, prevC, _i, _j, _k, _len, _len1, _ref;
+        if (v == null) {
+          v = 1;
+        }
+        if (!delta) {
+          return this;
+        }
+        if (__indexOf.call(delta, '<') >= 0) {
+          prevC = delta.split("<");
+          delta = prevC[prevC.length - 1];
+        }
+        if (__indexOf.call(delta, '>') >= 0) {
+          nextC = delta.split(">");
+          delta = nextC.shift();
+        }
+        delta = delta.split(" ");
+        for (_i = 0, _len = delta.length; _i < _len; _i++) {
+          cl = delta[_i];
+          if (cl) {
+            if (cl[0] === "!") {
+              this.flags[cl.slice(1)] = 0;
+            } else if (cl[0] === "#") {
+              if (cl === '#') {
+                this.detachMe();
+              } else {
+                this.text = fnResolveText(cl.slice(1), this);
+              }
+            } else {
+              this.flags[cl] = v;
+            }
+          }
+        }
+        if (prevC) {
+          lx = this.prevToken();
+          for (ci = _j = _ref = prevC.length - 2; _ref <= 0 ? _j <= 0 : _j >= 0; ci = _ref <= 0 ? ++_j : --_j) {
+            if (!(lx)) {
+              continue;
+            }
+            lxx = lx.prevToken();
+            lx.setFlags(prevC[ci]);
+            lx = lxx;
+          }
+        }
+        if (nextC) {
+          lx = this.nextToken();
+          for (_k = 0, _len1 = nextC.length; _k < _len1; _k++) {
+            c = nextC[_k];
+            if (!(lx)) {
+              continue;
+            }
+            lxx = lx.nextToken();
+            lx.setFlags(c);
+            lx = lxx;
+          }
+        }
+        return this;
+      };
+    })();
 
     Lexion.prototype.setAttr = function(k, v) {
       this.attrs[k] = v;
@@ -211,6 +240,16 @@
     Lexion.prototype.setTag = function(v) {
       this.tag = v;
       return this;
+    };
+
+    Lexion.prototype.numberBetween = function(s, e) {
+      if (s == null) {
+        s = 0;
+      }
+      if (e == null) {
+        e = Number.MAX_VALUE;
+      }
+      return this.numValue > +s && this.numValue < +e;
     };
 
     Lexion.prototype.noNextSpace = function() {
@@ -569,12 +608,40 @@
           return this.rootElt.parse();
         },
         eachMatched: function(condition, action, params) {
-          return this.rootElt.eachChildInDeep(function(elt) {
+          this.rootElt.eachChildInDeep(function(elt) {
             if (elt.isMatched(condition)) {
               return action.call(this, elt, params);
             }
           });
+          return this;
         },
+        evaluateRules: (function() {
+          var fn;
+          fn = function(elt, rules) {
+            var condition, flags, _results;
+            _results = [];
+            for (condition in rules) {
+              flags = rules[condition];
+              if (elt.isMatched(condition)) {
+                if (typeof flags === 'string') {
+                  _results.push(elt.setFlags(flags));
+                } else {
+                  _results.push(fn(elt, flags));
+                }
+              }
+            }
+            return _results;
+          };
+          return function(rules) {
+            var condition, v, _results;
+            _results = [];
+            for (condition in rules) {
+              v = rules[condition];
+              _results.push(this.eachMatched(condition, fn, v));
+            }
+            return _results;
+          };
+        })(),
         isValidInput: function() {
           var s;
           if (!(s = this.input)) {
