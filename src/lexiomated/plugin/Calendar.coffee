@@ -1,34 +1,52 @@
 Object.entity.define 
 
     id:"lexiomated.plugin.Calendar extends lexiomated.Plugin"
+    name:'Calendar plugin'
       
     methods: (_super) ->
         
         RULES =
             
             'number':
+                'lx4 @between.1000.2200': 'yearNum'
+                'lx1+lx2 @between.1.31': 'dayOfMonthNum'
+                '@between.10.24': 'hourNum'
+ 
+            'yearNumber': 
+                '*>#г ]>dot>':
+                    '*':'year #$0_года>#>#'
+                    '*>#в ]>dot':'born #$0_выпуска>#>#'
+                    '*>#р ]>dot':'born #$0_рождения>#>#'
+                    
+                'phase<*': '#<#$-1_$0'
 
-                'lx2+lx3':
-                    '*>year': 'year age #$0_$1>#'
-                    '*>minus>year': 'year age #$0-$2>#>#'
+            'measure':
+                'year':
+                    'yearNumber<*': '{year}<^'
+                    'rxслед<*': '{year} #$0.year.1<^_ next'
 
-                'lx4 @numberBetween.1000.2200': 'likeYear'
-                
-                'likeYear': 
-                    '*>measure year': 'year #$0_$1>#'
-                    '*>#г ]>dot>':
-                        '*':'year #$0_года>#>#'
-                        '*>#в+#р ]>dot':'born #$0_выпуска>#>#>'
+                    'lx2+lx3<*': '{age}<^'
+                    'lx2+lx3<minus<*': '{age}<^<^'
+
+            'month':
+                    'dayOfMonthNum<*': '{dayOfMonth}<^'
+                    
+                    '*>yearNum':
+                        '*': '{date}>#'
+                        '::else': '#$0_$0.year current'
                         
-                    'phase<*': '#<#$-1_$0'
-                        
+            'dayOfMonth':
+                '*>year': '{date}>^_'
                 
-            'date':
-                'month':
-                    'number<*': '#<#$-1_$0'
-                    '*>!likeYear': '#$0_$0.year'
-                    '*>likeYear': '#$0_$1>#'
-    
+            'hourNum':
+                '*>dot+colon>lx2 @between.0.59': '{time} #$0:$2>#>#'
+
+
+        testData: ()->
+            [
+                'в гродненской кирхе 6 декабря в 14.00'
+            ]
+
         analyze: (event) ->
 
             event.evaluateRules RULES               

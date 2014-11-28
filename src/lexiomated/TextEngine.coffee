@@ -3,7 +3,7 @@
 # Lexio Text Factory.
 Object.entity.define 
     id:"lexiomated.Plugin"
-    properties:['requires:Requires']
+    properties:['requires:Requires','testData']
            
 
 # Lexio Text Factory.
@@ -16,7 +16,10 @@ Object.entity.define
         "entity://lexiomated.Event"
     ]
     methods: (_super) ->
-        
+        init: ->
+            _super.init.call @
+            @prop 'testData', [].concat (({id:p.id or p._id, title:p.name or p.id, content: d} for d in data) for p in @plugins when data=p.testData?())...
+
         onEvent : (ev) ->
 
             event = Object.entity.create id:'lexiomated.Event', input: ev.uri.hash

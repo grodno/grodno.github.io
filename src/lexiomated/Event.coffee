@@ -1,4 +1,4 @@
-class Lexion 
+class Lexon 
 
     constructor: (opts)->
         @attrs = {}
@@ -13,64 +13,102 @@ class Lexion
     # sets/remove class for elt. 
     # Classes to remove have to be prefixed with '!' sign.
     isMatched: (->
-
-        match = (cl) ->
-            c0 = cl[0]
+        
+        _CACHE={}
+        
+        match = (conj) ->
+            val = conj.expr
+            r = conj.invert
+            c0 = conj.char0
             if c0 is "#"
-                return false unless @text is cl[1..]
+                return r unless @text is conj.rest0
             else if c0 is "@"
-                cl = cl[1..].split '.'
-                return false unless @[cl[0]] cl[1..]...
-            else if cl is "]"
-                return false if @next?.flags.space
+                val = conj.rest0.split '.'
+                return r unless @[val[0]] val[1..]...
+            else if val is "]"
+                return r if @next?.flags.space
             else
-                return false unless @flags[cl]
-            true
+                return r unless @flags[val]
+            not r
             
-        isMatchedAny = (delta) ->
-            return false unless delta
-            for cl in delta
-                if cl[0] is "!"
-                    return true unless match.call @, cl[1..]
-                else
-                    return true if match.call @, cl
-            false
+        matchAny = (disj) ->
+            for conj in disj.conjuctions
+                return not disj.invert if match.call @, conj
+            disj.invert
+            
+        compile = (s='*') ->
+            
+            return r if r = _CACHE[s]
+            
+            r = _CACHE[s] ={disjunctions:[]}
+            
+            return r if r.isTrue = (s is '*')
+            
+            #extract previous conditions        
+            if '<' in s
+                arr = s.split("<")
+                len = arr.length
+                s = arr[len-1]
+                r.prevChain = (compile arr[ci] for ci in [len-2..0])
+            #extract next conditions        
+            if '>' in s
+                arr = s.split(">")
+                s = arr.shift() 
+                r.nextChain = (compile c for c in arr)
+                
+            return r if not s or s is '*'
+            
+            s = s.split(" ")
+            for cl in s when cl
+                disj={conjuctions:conjuctions = []}
+                
+                if cl[0] is "!" and cl[1] is '('
+                    disj.invert=true
+                    cl=cl[2..0]
 
-        (delta) ->
-            return true if not delta or delta is '*'
-            #extract previous conditions        
-            if '<' in delta
-                prevC = delta.split("<")
-                delta = prevC[prevC.length-1]
-            #extract previous conditions        
-            if '>' in delta
-                nextC = delta.split(">")
-                delta = nextC.shift()
+                for cl1 in cl.split("+") when cl1
+                    conj = {invert:false}
+                    if cl1[0] is "!" 
+                        conj.invert=true
+                        cl1=cl1[1..]
+                    conj.expr= cl1                        
+                    conj.char0 = cl1[0]
+                    conj.rest0= cl1[1..]                        
+                    conjuctions.push conj
+                    
+                disj.single = conjuctions[0] if conjuctions.length is 1
+                    
+                r.disjunctions.push disj
+                
+            r.single = r.disjunctions[0].single if r.disjunctions.length is 1
+
+            r
+
+        impl = (condition)->
             #match current condition
-            if delta and (delta isnt '*')
-                delta = delta.split(" ")
-                for cl in delta when cl
-                    if '+' in cl
-                        if cl[0] is "!"
-                            return false if isMatchedAny.call @, cl[1..].split("+")
-                        else
-                            return false unless isMatchedAny.call @, cl.split("+")
+            if condition.single
+                return false unless match.call @, condition.single
+            else                
+                for disj in condition.disjunctions
+                    if disj.single
+                        return false unless match.call @, disj.single
                     else
-                        if cl[0] is "!"
-                            return false if match.call @, cl[1..]
-                        else    
-                            return false unless match.call @, cl
+                        return false unless matchAny.call @, disj
+                        
             #apply next conditions        
-            if nextC
+            if condition.nextChain
                 lx = @
-                for c in nextC 
-                    return false unless (lx = lx.nextToken()) and lx.isMatched(c)
+                for c in condition.nextChain
+                    return false unless (lx = lx.nextToken()) and impl.call lx, c
             #apply previous conditions        
-            if prevC
+            if condition.prevChain
                 lx = @
-                for ci in [prevC.length-2..0] 
-                    return false unless (lx = lx.prevToken()) and lx.isMatched(prevC[ci])
+                for c in condition.prevChain
+                    return false unless (lx = lx.prevToken()) and impl.call lx, c
             true
+
+        (s) -> if not s or s is '*' then true else impl.call @, compile s
+
     )()
 
     #------------------------------
@@ -80,58 +118,53 @@ class Lexion
     # Classes to remove have to be prefixed with '!' sign.
     setFlags: (->
         
-        fnResolveText = (cl, T)->
+        fnResolveText = (cl, ev)->
             cl.replace(/_/g,' ').replace /\$(\-?\d+)(?:\.([a-z][a-zA-Z0-9\.]+))?/g, (s, n, method)-> 
-                n=+n
-                next = T
-                if n>0
-                    while n-- 
-                        return '' unless next = next.nextToken()
-                else if n<0
-                    while n++ 
-                        return '' unless next = next.prevToken()
-                        
+                return '' unless next = ev['$'+n]
                 return next.getText() unless method 
                 method = method.split '.'
                 next?['get'+String.capitalize(method[0])] method[1..]...
                 
-        (delta, v=1) ->
+        (delta, ev={'$0':@}) ->
             return @ unless delta
             #extract previous expressions        
             if '<' in delta
                 prevC = delta.split("<")
                 delta = prevC[prevC.length-1]
+                prevC = (prevC[ci] for ci in [prevC.length-2..0])
+                lx = @
+                prevLxs = (ev['$-'+ci] = lx for ci in [1..prevC.length] when lx and lx =lx.prevToken())
+                
             #extract next expressions        
             if '>' in delta
                 nextC = delta.split(">")
                 delta = nextC.shift()
+                lx = @
+                nextLxs = (ev['$'+ci] = lx for ci in [1..nextC.length] when lx and lx =lx.nextToken())
+
+            #apply previous/next expressions    
+            lx.setFlags(prevC[i], ev) for lx,i in prevLxs if prevLxs
+
             #apply current
             delta = delta.split(" ")
-            for cl in delta when cl
-                if cl[0] is "!"
+            for cl in delta when cl and c0=cl[0]
+                if c0 is "!"
                     @flags[cl[1..]] = 0
-                else if cl[0] is "#"
-                    if cl is '#'
-                        @detachMe()
-                    else
-                        @text = fnResolveText cl[1..], @
+                else if c0 is "#"
+                    if cl is c0 then @detachMe() else @text = fnResolveText cl[1..], ev
+                else if c0 is "{"
+                    (ev.parent = (ev.parent or @).surroundWith()).setFlags cl[1..-2].replace('_',' ')+' clause'
+                else if c0 is "^"
+                    if cl[1] is '_'
+                        (new Lexon flags:{space:1}).setParent(ev.parent or ev.$0)
+                        cl = cl[1..]
+                    (if cl is c0 then @ else @getSibling(cl[1..]))?.setParent(ev.parent or ev.$0)
                 else
-                    @flags[cl] = v
-            #apply previous expressions    
-            if prevC
-                lx = @.prevToken()
-                for ci in [prevC.length-2..0] when lx
-                    lxx =  lx.prevToken()
-                    lx.setFlags(prevC[ci])
-                    lx =lxx
-            #apply next expressions        
-            if nextC
-                lx = @.nextToken()
-                for c in nextC when lx
-                    lxx =  lx.nextToken()
-                    lx.setFlags(c)
-                    lx =lxx
-    
+                    @flags[cl] = 1
+                    
+            #apply previous/next expressions    
+            lx.setFlags(nextC[i], ev) for lx,i in nextLxs if nextLxs
+
             @
     )()
 
@@ -149,9 +182,9 @@ class Lexion
         @tag = v
         @
         
-    getYear: () -> (new Date()).getFullYear()
+    getYear: (gap=0) -> (new Date()).getFullYear()+(+gap)
     
-    numberBetween: (s=0,e=Number.MAX_VALUE) -> @numValue>+s  and @numValue<+e
+    between: (s=0,e=Number.MAX_VALUE) -> +@text >= +s  and +@text <= +e
     noNextSpace: ()-> not @next?.flags.space
 
     #------------------------------
@@ -225,10 +258,21 @@ class Lexion
     eachChildInDeep: (op) ->
         p = @first
         while (p)
-            p.eachChildInDeep op
             op.call @, p
+            p.eachChildInDeep op
             p = p.next
         @
+        
+    getSibling: (n=1)->
+        n=+n
+        next = @
+        if n>0
+            while n-- 
+                return null unless next = next.nextToken()
+        else if n<0
+            while n++ 
+                return null unless next = next.prevToken()
+        next
         
     nextToken: ->
         next = @next
@@ -243,7 +287,7 @@ class Lexion
         next
             
     surroundWith: (opts) ->
-        p = (new Lexion(opts))
+        p = (new Lexon(opts))
         @setNext(p).setParent(p)
         p
 
@@ -288,6 +332,7 @@ class Lexion
             ',':'comma'
             '+':'plus'
             '-':'minus'
+            '—':'dash'
             '$':'dollar'
             '%':'percent'
             '«':'quote'
@@ -334,10 +379,11 @@ class Lexion
                 flags: flags = {}
                 parent: @
             if e 
-                flags[SIGN_FLAGS[text] or 'sign'] = 1
+                flags['sign'] = 1 unless text is ' '
+                flags[fl] = 1 if fl=SIGN_FLAGS[text]
+                
             else if text.match(reDigits)
                 flags.number = 1
-                opts.numValue = +text
                 flags['lx'+text.length] = 1
             else
                 flags.word = 1
@@ -352,7 +398,7 @@ class Lexion
                 flags['abbr'] = 1 if text.toUpperCase() is text
                 flags['capital'] = 1 if String.capitalize(text) is text
                 
-            new Lexion opts
+            new Lexon opts
 
         ->
             stack = [@]
@@ -374,7 +420,7 @@ class Lexion
                             flags: flags = {ex:1}
                             parent: stack[0]
                             
-                        elt = new Lexion opts
+                        elt = new Lexon opts
                             
                         if e[4] is '/' #single tag
                         else 
@@ -441,7 +487,7 @@ Object.entity.define
             _super.init.call @
             
         parse: ()->
-            @rootElt = new Lexion kind:'root', tag: 'article', text: @input
+            @rootElt = new Lexon kind:'root', tag: 'article', text: @input
             @rootElt.parse()
 
         eachMatched: (condition, action, params)->
@@ -451,11 +497,14 @@ Object.entity.define
                 
         evaluateRules:(->
             fn = (elt, rules)-> 
-                for condition, flags of rules  when elt.isMatched condition
+                for condition, flags of rules when condition isnt '::else' 
                     if typeof flags is 'string'
-                        elt.setFlags(flags)
+                        elt.setFlags(flags) if elt.isMatched condition
                     else
-                        fn(elt, flags)
+                        if elt.isMatched condition
+                            fn(elt, flags)
+                        else if elseCond = flags['::else']
+                            fn(elt, '*': elseCond)
         
             (rules) ->
                 @eachMatched condition, fn, v for condition, v of rules

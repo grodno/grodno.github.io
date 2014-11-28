@@ -10,7 +10,7 @@
           'x1000>number lx3': 'x1000000 #$0_$1>#',
           '*>numFactor x1000': 'x1000 #$0_$1>#',
           '*>numFactor x1000000': 'x1000000 #$0_$1>#',
-          '*>percent': 'percent #$0%>#',
+          '*>percent': '{percent}>^',
           '*>minus>cyr lx2': '#$0-$2.textSlice.1>#>#',
           'dollar<*': '#<currency usd #$$0',
           'degree<*': '#<degree #$-1_$0',

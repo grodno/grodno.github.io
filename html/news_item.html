@@ -2,7 +2,12 @@
     <span class="pull-left"><a target="_blank" href="{{url}}"><img class="img-rounded media-object" width="32" src="res/herb.jpg"></a></span>
     <div class="media-body">
         <h5 class="media-header">
-            <div data-widget="lexiomated.Widget" data-data-expression="@prop('html')">{{title}} {{content}}</div> <a target="_blank" href="{{url}}">далее&nbsp;→</a></h5>
+            <h4>{{title}}</h4>
+            <div>{{content}}</div> 
+            <div data-widget="lexiomated.Widget" data-data-expression="@prop('html')"><p>{{title}}</p> {{content}}</div> 
+            <a target="_blank" href="{{url}}">далее&nbsp;→</a>
+                
+            </h5>
         
     </div>
 </div>

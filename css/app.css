@@ -43,18 +43,22 @@ h4{
 .be, .mverb{color :Crimson ; font-weight:bold;font-size:smaller;}
 .named, .url{color :maroon ; font-weight:bold;}
 
-.number, .date, .measuredNumber  {
-    background-color: teal;
+
+.clause, .number, .date, .measuredNumber  {
+    background-color: gray;
     display: inline;
     padding: .1em .4em .2em;
-    font-size: 75%;
-    font-weight: 700;
+    font-size: 100%;
+    font-weight: 100;
     line-height: 1;
     color: #fff;
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25em;
+}
+.number, .measuredNumber  {
+    background-color: teal;
 }
 .date {
     background-color: blue;
