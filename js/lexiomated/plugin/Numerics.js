@@ -1,6 +1,7 @@
 (function() {
   Object.entity.define({
     id: "lexiomated.plugin.Numerics extends lexiomated.Plugin",
+    name: 'Numerics plugin',
     methods: function(_super) {
       var RULES;
       RULES = {
@@ -8,6 +9,7 @@
         'number': {
           '*>number lx3': 'x1000 #$0_$1>#',
           'x1000>number lx3': 'x1000000 #$0_$1>#',
+          '* >comma >number': 'float #$0_$1>#',
           '*>numFactor x1000': 'x1000 #$0_$1>#',
           '*>numFactor x1000000': 'x1000000 #$0_$1>#',
           '*>percent': '{percent}>^',
@@ -26,6 +28,9 @@
         }
       };
       return {
+        testData: function() {
+          return ['1400', '14 000', '14 000 000', '140,1', '140%', '$140'];
+        },
         analyze: function(event) {
           return event.evaluateRules(RULES);
         }

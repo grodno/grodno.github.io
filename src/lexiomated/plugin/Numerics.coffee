@@ -1,17 +1,19 @@
 Object.entity.define 
 
     id:"lexiomated.plugin.Numerics extends lexiomated.Plugin"
+    name:'Numerics plugin'
       
     methods: (_super) ->
         
         RULES =
             
             'shrt ]>dot': '#$0.>#'
-            
-            
+
             'number':
                 '*>number lx3':'x1000 #$0_$1>#'
                 'x1000>number lx3':'x1000000 #$0_$1>#'
+                
+                '* >comma >number':'float #$0_$1>#'
 
                 '*>numFactor x1000':'x1000 #$0_$1>#'
                 '*>numFactor x1000000':'x1000000 #$0_$1>#'
@@ -32,6 +34,17 @@ Object.entity.define
 
                     '*': 'measuredNumber #$0_$1>#'
 
+
+        testData: ()->
+            [
+                '1400'
+                '14 000'
+                '14 000 000'
+                '140,1'
+                '140%'
+                '$140'
+            ]
+            
         analyze: (event) ->
 
             event.evaluateRules RULES               

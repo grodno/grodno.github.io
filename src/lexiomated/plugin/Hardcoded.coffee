@@ -5,6 +5,10 @@ Object.entity.define
     ]    
     methods: (_super) ->
 
+        RULES =     
+            'shrt ]>dot': '#$0.>#'
+
+
         onRequiredLoaded: (err, count, content)->
             @hardcoded = content.intoRegistry()
 
@@ -20,3 +24,5 @@ Object.entity.define
                         word.mergeFrom(e.next, nextWord).setFlags(r.flags+' !word')
                     e = nextWord
                     count--
+
+            event.evaluateRules RULES 

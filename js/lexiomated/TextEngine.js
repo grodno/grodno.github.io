@@ -11,7 +11,7 @@
     methods: function(_super) {
       return {
         init: function() {
-          var d, data, p, _ref;
+          var data, p, _ref;
           _super.init.call(this);
           return this.prop('testData', (_ref = []).concat.apply(_ref, (function() {
             var _i, _len, _ref, _results;
@@ -20,19 +20,11 @@
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               p = _ref[_i];
               if (data = typeof p.testData === "function" ? p.testData() : void 0) {
-                _results.push((function() {
-                  var _j, _len1, _results1;
-                  _results1 = [];
-                  for (_j = 0, _len1 = data.length; _j < _len1; _j++) {
-                    d = data[_j];
-                    _results1.push({
-                      id: p.id || p._id,
-                      title: p.name || p.id,
-                      content: d
-                    });
-                  }
-                  return _results1;
-                })());
+                _results.push({
+                  id: p.id || p._id,
+                  title: p.name || p.id,
+                  content: data
+                });
               }
             }
             return _results;

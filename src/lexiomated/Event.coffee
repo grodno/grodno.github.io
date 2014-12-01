@@ -125,8 +125,10 @@ class Lexon
                 method = method.split '.'
                 next?['get'+String.capitalize(method[0])] method[1..]...
                 
-        (delta, ev={'$0':@}) ->
+        (delta, ev={}) ->
             return @ unless delta
+            
+            ev['$0'] = @
             #extract previous expressions        
             if '<' in delta
                 prevC = delta.split("<")
@@ -496,18 +498,20 @@ Object.entity.define
             @
                 
         evaluateRules:(->
-            fn = (elt, rules)-> 
+            fn = (elt, ev, rules)-> 
                 for condition, flags of rules when condition isnt '::else' 
                     if typeof flags is 'string'
-                        elt.setFlags(flags) if elt.isMatched condition
+                        if elt.isMatched condition
+                            elt.setFlags(flags) 
                     else
                         if elt.isMatched condition
-                            fn(elt, flags)
+                            fn(elt, ev, flags)
                         else if elseCond = flags['::else']
-                            fn(elt, '*': elseCond)
+                            fn(elt, ev, '*': elseCond)
         
-            (rules) ->
-                @eachMatched condition, fn, v for condition, v of rules
+            (rules, ev={}) ->
+                @rootElt.eachChildInDeep (elt)->
+                    fn elt, ev, rules
         )()
                 
         isValidInput: ()->

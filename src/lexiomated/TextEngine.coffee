@@ -18,7 +18,7 @@ Object.entity.define
     methods: (_super) ->
         init: ->
             _super.init.call @
-            @prop 'testData', [].concat (({id:p.id or p._id, title:p.name or p.id, content: d} for d in data) for p in @plugins when data=p.testData?())...
+            @prop 'testData', [].concat ({id:p.id or p._id, title:p.name or p.id, content: data} for p in @plugins when data=p.testData?())...
 
         onEvent : (ev) ->
 

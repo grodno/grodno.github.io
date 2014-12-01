@@ -209,13 +209,12 @@
       return function(delta, ev) {
         var c0, ci, cl, i, lx, nextC, nextLxs, prevC, prevLxs, _i, _j, _k, _len, _len1, _len2, _ref;
         if (ev == null) {
-          ev = {
-            '$0': this
-          };
+          ev = {};
         }
         if (!delta) {
           return this;
         }
+        ev['$0'] = this;
         if (__indexOf.call(delta, '<') >= 0) {
           prevC = delta.split("<");
           delta = prevC[prevC.length - 1];
@@ -739,7 +738,7 @@
         },
         evaluateRules: (function() {
           var fn;
-          fn = function(elt, rules) {
+          fn = function(elt, ev, rules) {
             var condition, elseCond, flags, _results;
             _results = [];
             for (condition in rules) {
@@ -753,9 +752,9 @@
                   }
                 } else {
                   if (elt.isMatched(condition)) {
-                    _results.push(fn(elt, flags));
+                    _results.push(fn(elt, ev, flags));
                   } else if (elseCond = flags['::else']) {
-                    _results.push(fn(elt, {
+                    _results.push(fn(elt, ev, {
                       '*': elseCond
                     }));
                   } else {
@@ -766,14 +765,13 @@
             }
             return _results;
           };
-          return function(rules) {
-            var condition, v, _results;
-            _results = [];
-            for (condition in rules) {
-              v = rules[condition];
-              _results.push(this.eachMatched(condition, fn, v));
+          return function(rules, ev) {
+            if (ev == null) {
+              ev = {};
             }
-            return _results;
+            return this.rootElt.eachChildInDeep(function(elt) {
+              return fn(elt, ev, rules);
+            });
           };
         })(),
         isValidInput: function() {

@@ -3,12 +3,16 @@
     id: "lexiomated.plugin.Hardcoded extends lexiomated.Plugin",
     requires: ['gsheet://1r9wwsGFHeJ_rxC-zNJ8ysoEcznk76PmGah1uLdus3iQ/content'],
     methods: function(_super) {
+      var RULES;
+      RULES = {
+        'shrt ]>dot': '#$0.>#'
+      };
       return {
         onRequiredLoaded: function(err, count, content) {
           return this.hardcoded = content.intoRegistry();
         },
         prepare: function(event) {
-          return event.eachMatched('word', (function(_this) {
+          event.eachMatched('word', (function(_this) {
             return function(word) {
               var count, e, key, nextWord, r, _results;
               if ((r = _this.hardcoded[key = word.lowerText])) {
@@ -27,6 +31,7 @@
               return _results;
             };
           })(this));
+          return event.evaluateRules(RULES);
         }
       };
     }
