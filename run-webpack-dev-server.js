@@ -59,6 +59,9 @@ var server = new WebpackDevServer(compiler, {
 });
 
   server.use(connect.static('./assets'));
+  server.use('/*', function (req, res) {
+    res.send('<meta location="/">');
+  });
 
   server.listen(8082, '0.0.0.0', function () {
     console.log('Demo is available at', server.listeningApp._connectionKey);

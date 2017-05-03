@@ -39,7 +39,7 @@ module.exports = {
     }
   ],
   // resolve modules
-  modulesDirectories: ['app', 'vendor', 'node_modules'],
+  modulesDirectories: ['app', 'src', 'vendor', 'node_modules'],
   // entry with vendors modules
   vendor: [
     // 'core-js',
