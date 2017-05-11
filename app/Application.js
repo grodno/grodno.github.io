@@ -1,9 +1,10 @@
 import { Component } from 'ui';
 // import Store from './Store.js';
 import TEMPLATE from './Application.html';
-import { capitalize } from './str.js';
+import { capitalize } from './lib/str.js';
 import './components';
 import './pages';
+import Store from './Store.js';
 
 export default class Application extends Component {
 
@@ -22,7 +23,7 @@ export default class Application extends Component {
 
   onInit() {
     window.onhashchange = () => this.invalidate();
-
+    Store.update({ ready:true });
     // Store.addObserver((event)=>this.invalidate(), this._id);
   }
 

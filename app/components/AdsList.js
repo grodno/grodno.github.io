@@ -1,38 +1,43 @@
 import { Component } from 'ui';
+import { translit } from 'mova';
 import moment from 'moment';
 import Store from '../Store.js';
 
 export default class AdsList extends Component {
 
   static TEMPLATE =
-    `<div class="ui styled accordion">
+
+    `<section>
+      <div class="ui blue mini labels">
+        <a class="ui label" each="tag of tags"> {{tag.id}} <div class="detail">{{tag.count}}</div> <i class="icon close"></i> </a>
+      </div>
+      <div class="ui styled accordion">
+
       <block each="item of data" class="item">
-        <div class="title">
+        <div class="title segment">
           <i class="dropdown icon"></i>
-          <a class="header">{{itemSubject}}</a><span class="small gray date"> - {{itemDate}} </span>
-          <a each="tag of itemTags" class="ui teal mini tag label">{{tag}}</a>
-          <div class="description">{{itemPreview}}</div>
+          <a class="header" title="{{item.preview}}">{{itemSubject}}</a>
+          <span class="small gray date"> - {{itemDate}} </span>
+          <br/>
+          <span class="ui yellow tag mini label" if="item.location">{{item.location}}</span>
+          <span class="ui red tag mini label" if="item.price">{{item.price}}</span>
+          <span class="ui tag mini labels"><a each="tag of itemTags" class="ui teal label">{{tag}}</a></span>
         </div>
         <div class="content">
           <p class="transition hidden">
-            {{item.body}}
-
-
+            <div each="line of itemPreviewLines">{{line}}</div>
+            -- <a href="https://forum.grodno.net/index.php?topic={{item.topicId}}.0" target="_blank">forum:{{item.topicId}}</a>
           </p>
           <p class="transition hidden">
-            <a class="ui yellow image label">
-              <i class="jp flag"></i>
-              {{item.userName}}
-              <div class="detail">Citizen</div>
-            </a>
-
+            <UserInfo uid="{{item.userId}}"/>
           </p>
         </div>
       </block>
       <block if="data.length">
         <else><small class="empty">No ads</small></else>
       </block>
-    </div>`;
+    </div>
+    </section>`;
 
   static PROPS = {
     data: { default: [] }
@@ -41,14 +46,26 @@ export default class AdsList extends Component {
   get itemSubject() {
 
     const item = this.get('item');
-    return item.subject.slice(0, 50) +
-     decodeURIComponent(item.subject.length > 50 ? '...' : '');
+    return translit(item.subject.slice(0, 50) +
+     decodeURIComponent(item.subject.length > 50 ? '...' : ''));
   }
 
-  get itemPreview() {
-    const val = this.get('item.preview') || '';
-    return val.replace(/<.*?>/g, ' ').slice(0, 60) +
-     (val.length > 60 ? '...' : '');
+  get itemPreviewLines() {
+    const val = this.get('item.body') || '';
+    return translit(val
+    .replace(/<br\s?\/?>/g, '~')
+    .replace(/<.*?>/g, ' ')
+    .trim()).split('~');
+  }
+
+  get tags() {
+    const tags = this.data.reduce((r, e) => {
+      e.tags.split(',').forEach(t=>{
+        r[t] = (r[t] || 0) + 1;
+      });
+      return r;
+    }, {});
+    return Object.keys(tags).sort().map(id=>({ id, count:tags[id] }));
   }
 
   get itemTags() {
@@ -62,9 +79,10 @@ export default class AdsList extends Component {
   }
 
   onInit() {
-    Store.subscribe('changed', { handleEvent: ({ target })=>{
-      this.data = target.adsList;
+    Store.subscribe('changed', { handleEvent: ({ data })=>{
+      this.update({ data: data.adsList });
     } });
     $('.ui.accordion').accordion();
+    // $('.header').popup();
   }
 }

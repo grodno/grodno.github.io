@@ -13,7 +13,7 @@ var config = {
     ]
   },
   output: {
-    path: __dirname + '/assets',
+    path: __dirname + '/public',
     filename: '[name].js',
     devtoolModuleFilenameTemplate: '[resource-path]'
   },

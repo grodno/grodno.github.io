@@ -2,20 +2,24 @@ export const PRE = [
 ];
 
 export const POST = [
+
+  // vyprawlenne sq
   [/shq/g, function (s) { return 'sq';}],
 
+  // zvarotnae 'sa'
   [/cca\b/g, function (s) { return 'c sa';}],
-  [/[ayil][wji]sja\b/g, function (s) { return s[0] + s[1] + ' sa';}],
+  [/[auyielq][wjiy]sja\b/g, function (s) { return s[0] + s[1] + ' sa';}],
 
+  // lishniae 'j'
   [/dzj/gi, function (s) { return s[0] + s[1]; }],
+  [/[zc]j\b/gi, function (s) { return s[0]; }],
+  [/[t]j/gi, function (s, g1, g2) { return 'cj';}],
+  [/[clne]j[clne]/g, function (s, g1, g2) { return s[0] + (s[0] === s[2] ? '' : s[1]) + s[2];}],
 
-  [/[nlmszkpbvaouye]je/gi, function (s, g1, g2) { return s[0] + 'e';}],
-  [/\b[klmvsnzy]ja/gi, function (s, g1, g2) { return s[0] + 'e';}],
-
-  [/eje/g, function (s, g1, g2) { return 'ee';}],
-  [/njn/g, function (s, g1, g2) { return 'nn';}],
-  [/cjc/g, function (s, g1, g2) { return 'cc';}],
-  [/ljl/g, function (s, g1, g2) { return 'll';}]
+  [/[nlmszkpbvaouye]je/gi, function (s, g1, g2) { return s[0] + s[2];}],
+  [/[aouiye]j[aou]/gi, function (s, g1, g2) { return s[0] + (s[0] === s[2] ? s[1] : '') + s[2];}],
+  [/[klmvsnzbp]ja(\w\w\w)/gi, function (s, g1, g2) { return s[0] + 'e' + g1;}],
+  [/[bcdgfklmnpstvz]j[ae]/gi, function (s) { return s[0] + 'i' + s[2];}]
 ];
 
 export const MAP = {
@@ -27,6 +31,7 @@ export const MAP = {
   ё:'jo',
   ж:'zh',
   ш:'sh',
+  щ:'sq',
   б:'b',
   в:'v',
   г:'g',

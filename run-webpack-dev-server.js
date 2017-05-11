@@ -12,14 +12,14 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var config = {
   entry: {
-    app: [
+    index: [
       'webpack-dev-server/client?http://localhost:8082',
       'webpack/hot/only-dev-server',
       './app/index.js'
     ]
   },
   output: {
-    path: __dirname + '/assets',
+    path: __dirname + '/public',
     filename: '[name].js',
     devtoolModuleFilenameTemplate: '[resource-path]'
   },
@@ -31,13 +31,7 @@ var config = {
     alias: {}
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new HtmlWebpackPlugin({
-      title: 'Demo',
-      template: './app/index.html',
-      inject: 'body',
-      filename: 'index.html'
-    })
+    new webpack.HotModuleReplacementPlugin()
   ],
   devtoolLineToLine: true
 };
@@ -45,7 +39,7 @@ var config = {
 var compiler = webpack(config);
 
 var server = new WebpackDevServer(compiler, {
-  publicPath: '/',
+  contentBase: __dirname + '/public',
   debug: true,
   hot: true,
   verbose: true,
@@ -58,10 +52,10 @@ var server = new WebpackDevServer(compiler, {
   }
 });
 
-  server.use(connect.static('./assets'));
-  server.use('/*', function (req, res) {
-    res.send('<meta location="/">');
-  });
+  // server.use(connect.static('./assets'));
+  // server.use('/*', function (req, res) {
+  //   res.send('<meta location="/">');
+  // });
 
   server.listen(8082, '0.0.0.0', function () {
     console.log('Demo is available at', server.listeningApp._connectionKey);

@@ -1,4 +1,4 @@
-import { createWidgetType } from '../utils.js';
+import { createWidgetType } from '../lib/ui.js';
 import Main from './main.html';
 import Construction from './construction.html';
 // export { default as List } from './List.js';

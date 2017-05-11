@@ -25,10 +25,8 @@ class Store extends EventBus {
 
     this.data = restoreHotReload(this);
 
-    window.firebase.database().ref('ads').on('value', ev => {
-      const value = ev.val();
-      const ads = Object.keys(value).map(k => value[k]).sort((a, b)=>(a.date < b.date ? 1 : -1));
-      this.update({ ads });
+    window.firebase.database().ref().on('value', snapshot => {
+      this.update(snapshot.val());
     });
 
     // window.fetch(value)
@@ -43,15 +41,69 @@ class Store extends EventBus {
   }
 
   get adsList() {
+    const boardId = this.data.boardId;
+    const hash = this.data.ads || {};
+    const list = Object.keys(hash)
+      .map(k => hash[k])
+      .filter(e=> boardId && e.boardId == boardId)
+      .sort((a, b)=>(a.date < b.date ? 1 : -1));
 
-    return this.data.ads.filter(e=> e.boardId == this.data.boardId);
+    return list;
+  }
+
+  get newsList() {
+    const hash = this.data.news || {};
+    const list = Object.keys(hash)
+      .map(k => hash[k])
+      .sort((a, b)=>(a.date < b.date ? 1 : -1));
+
+    return list;
+  }
+
+  get currentBoard() {
+    const boardId = this.data.boardId;
+    return (this.data.boards || {})[boardId] || { id: '', name:'...' };
+  }
+
+  get boardsList() {
+
+    const hash = this.data.boards || {};
+    const ads = this.data.ads || {};
+    const counts = {};
+    Object.keys(ads).forEach(e => (counts[ads[e].boardId] = ((counts[ads[e].boardId] || 0) + 1)));
+    const list = Object.keys(hash).map(k => ({ count: counts[hash[k].id], ...hash[k] }));
+
+    return list
+    .filter(e=> e.count)
+    .sort((a, b)=>(a.id < b.id ? 1 : -1));
+  }
+
+  userInfo(uid) {
+    const users = this.data.users || {};
+    return users[uid] || { name: uid };
   }
 
   update(delta) {
 
     Object.assign(this.data, delta);
 
-    this.emitEvent({ type: 'changed', target: this });
+    Object.assign(this.data, {
+      boardsList: this.boardsList,
+      currentBoard: this.currentBoard,
+      adsList: this.adsList,
+      newsList: this.newsList
+    });
+
+    this.emitEvent({ type: 'changed', target: this, data: this.data });
+  }
+
+  subscribeAndEmit(key, handler0) {
+
+    const handler = (typeof handler0 === 'function' ) ? { handleEvent: handler0 } : handler0;
+
+    this.subscribe(this.data, handler);
+
+    handler.handleEvent({ type: key, data: this.data });
   }
 
   setBoard(boardId) {

@@ -10,18 +10,19 @@ export default class AdsBoards extends Component {
   <div class="content">
     Ab'javy pa themje
     <div class="ui inline dropdown">
-      <div class="text">...</div>
+      <div class="text">{{caption}}</div>
       <i class="dropdown icon"></i>
       <div class="menu">
         <div class="header">Ukazhycje</div>
-        <div each="item of data" class="item" data-value="{{item.id}}" data-text="{{item.name}}">{{item.name}}</div>
+        <div each="item of data" class="item" data-value="{{item.id}}" data-text="{{item.name}} ({{item.count}})">{{item.name}} ({{item.count}})</div>
       </div>
     </div>
   </div>
 </h4>`;
 
   static PROPS = {
-    data: { default: [] }
+    data: { default: [{}] },
+    caption: { default: 'loading...' }
   }
 
   get itemPreview() {
@@ -31,17 +32,16 @@ export default class AdsBoards extends Component {
 
   onInit() {
 
-    window.firebase.database().ref('boards').on('value', ev => {
-      const value = ev.val();
-      this.data = Object.keys(value).map(k => value[k]);
+    Store.subscribe('changed', ({ data })=>{
+      this.update({ data: data.boardsList, caption: data.currentBoard.name });
     });
 
-    $('.ui.dropdown', this.element).dropdown({
+    $(this.element).find('.ui.dropdown').dropdown({
       on:'hover',
-      action(text, value) {
+      onChange(value, text, $selectedItem) {
         Store.setBoard(value);
       }
     });
-
+    Store.setBoard(0);
   }
 }
