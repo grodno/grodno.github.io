@@ -36,12 +36,12 @@ export default class AdsBoards extends Component {
       this.update({ data: data.boardsList, caption: data.currentBoard.name });
     });
 
-    $(this.element).find('.ui.dropdown').dropdown({
+    window.$(this.element).find('.ui.dropdown').dropdown({
       on:'hover',
       onChange(value, text, $selectedItem) {
         Store.setBoard(value);
       }
     });
-    Store.setBoard(0);
+    // Store.setBoard(0);
   }
 }

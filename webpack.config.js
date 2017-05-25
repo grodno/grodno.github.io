@@ -16,7 +16,7 @@ module.exports = {
     },
     {
       test: /\.scss$/,
-      loader: 'style!css?outputStyle=expanded&' +
+      loader: 'style!css!sass?outputStyle=expanded&' +
         'includePaths[]=' +
           (path.resolve(__dirname, './src/styles'))
     },
@@ -39,7 +39,7 @@ module.exports = {
     }
   ],
   // resolve modules
-  modulesDirectories: ['app', 'src', 'vendor', 'node_modules'],
+  modulesDirectories: ['app', 'src', 'nlp', 'vendor', 'node_modules'],
   // entry with vendors modules
   vendor: [
     // 'core-js',

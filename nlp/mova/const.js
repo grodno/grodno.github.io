@@ -5,21 +5,21 @@ export const POST = [
 
   // vyprawlenne sq
   [/shq/g, function (s) { return 'sq';}],
+  [/dzh/g, function (s) { return 'dh';}],
 
   // zvarotnae 'sa'
   [/cca\b/g, function (s) { return 'c sa';}],
-  [/[auyielq][wjiy]sja\b/g, function (s) { return s[0] + s[1] + ' sa';}],
+  [/[auyoielq][wjiya]sja\b/g, function (s) { return s[0] + s[1] + ' sa';}],
 
-  // lishniae 'j'
+  // 'j'
   [/dzj/gi, function (s) { return s[0] + s[1]; }],
-  [/[zc]j\b/gi, function (s) { return s[0]; }],
-  [/[t]j/gi, function (s, g1, g2) { return 'cj';}],
-  [/[clne]j[clne]/g, function (s, g1, g2) { return s[0] + (s[0] === s[2] ? '' : s[1]) + s[2];}],
-
-  [/[nlmszkpbvaouye]je/gi, function (s, g1, g2) { return s[0] + s[2];}],
-  [/[aouiye]j[aou]/gi, function (s, g1, g2) { return s[0] + (s[0] === s[2] ? s[1] : '') + s[2];}],
-  [/[klmvsnzbp]ja(\w\w\w)/gi, function (s, g1, g2) { return s[0] + 'e' + g1;}],
-  [/[bcdgfklmnpstvz]j[ae]/gi, function (s) { return s[0] + 'i' + s[2];}]
+  [/[zcs]j\b/gi, function (s) { return s[0]; }],
+  [/[cln]j[cln]/g, function (s, g1, g2) { return s[0] + (s[0] === s[2] ? '' : s[1]) + s[2];}],
+  // 'je'
+  [/je/gi, function (s) { return (' bcdgfpsvz'.indexOf(s[0]) > 0 ? '' : '') + s[1];}],
+  // 'ja'
+  [/[iy]ja/gi, function (s) { return s[0] + 'e';}]
+  // [/[cklmvsnzbp]ja/gi, function (s, g1) { return s[0] + 'i' + s[2];}]
 ];
 
 export const MAP = {

@@ -34,7 +34,7 @@ export default class AdsList extends Component {
         </div>
       </block>
       <block if="data.length">
-        <else><small class="empty">No ads</small></else>
+        <else><small class="empty">...</small></else>
       </block>
     </div>
     </section>`;
@@ -51,7 +51,7 @@ export default class AdsList extends Component {
   }
 
   get itemPreviewLines() {
-    const val = this.get('item.body') || '';
+    const val = '' + (this.get('item.body') || '');
     return translit(val
     .replace(/<br\s?\/?>/g, '~')
     .replace(/<.*?>/g, ' ')
@@ -79,10 +79,10 @@ export default class AdsList extends Component {
   }
 
   onInit() {
-    Store.subscribe('changed', { handleEvent: ({ data })=>{
-      this.update({ data: data.adsList });
-    } });
-    $('.ui.accordion').accordion();
+    Store.subscribeAndEmit('changed', ()=> {
+      Store.adsList.then(data=>this.update({ data }));
+    });
+    window.$('.ui.accordion').accordion();
     // $('.header').popup();
   }
 }

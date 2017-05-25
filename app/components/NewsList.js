@@ -24,8 +24,7 @@ export default class NewsList extends Component {
           </div>
           </div>
           <div class="content">
-            <a class="header"  href="//s13.ru/archives/{{item.id}}" target="_blank">{{itemSubject}}</a>
-
+            <a class="header"  href="{{item.link}}" target="_blank">{{itemSubject}}</a>
             <div class="description">
               <p>
               {{itemPreview}}
@@ -36,7 +35,7 @@ export default class NewsList extends Component {
         </div>
       </block>
       <block if="data.length">
-        <else><small class="empty">No news</small></else>
+        <else><small class="empty">...</small></else>
       </block>
     </div>
     </section>`;
@@ -82,9 +81,16 @@ export default class NewsList extends Component {
     ;
   }
 
+  reload() {
+    Store.db.news.orderBy('date').reverse().toArray().then((data)=>{
+      this.update({ data });
+    });
+  }
+
   onInit() {
-    Store.subscribe('changed', { handleEvent: ({ data })=>{
-      this.update({ data: data.newsList });
+    Store.subscribeAndEmit('changed', { handleEvent: ()=>{
+      this.reload();
     } });
+
   }
 }

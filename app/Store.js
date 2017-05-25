@@ -1,12 +1,11 @@
 import { EventBus } from 'ui';
-
+import Db from './Db.js';
 function restoreHotReload($) {
   const hot = module && module.hot;
   if (hot) {
-
     hot.addStatusHandler(function (d) {});
     // hot.accept();
-    hot.dispose( d => {
+    hot.dispose(d => {
       d.data = $.data;
     });
     const data = hot.data;
@@ -20,53 +19,32 @@ function restoreHotReload($) {
 class Store extends EventBus {
 
   constructor() {
-
     super();
 
     this.data = restoreHotReload(this);
-
     window.firebase.database().ref().on('value', snapshot => {
-      this.update(snapshot.val());
+      const val = snapshot.val();
+      this.update(val);
+      this.db.update(val);
     });
-
-    // window.fetch(value)
-    // .then(function (response) {
-    //   return response.json();
-    // })
-    // .then( (json) => {
-    //   this.data = Object.keys(json).map(k=>json[k]);
-    // }).catch(function (ex) {
-    //   this.log('parsing failed', ex);
-    // });
   }
 
   get adsList() {
     const boardId = this.data.boardId;
-    const hash = this.data.ads || {};
-    const list = Object.keys(hash)
-      .map(k => hash[k])
-      .filter(e=> boardId && e.boardId == boardId)
-      .sort((a, b)=>(a.date < b.date ? 1 : -1));
-
-    return list;
+    return this.db.ads.orderBy('date').reverse().toArray()
+      .then(l=>l.filter(e => !boardId || e.boardId == boardId));
   }
 
-  get newsList() {
-    const hash = this.data.news || {};
-    const list = Object.keys(hash)
-      .map(k => hash[k])
-      .sort((a, b)=>(a.date < b.date ? 1 : -1));
-
-    return list;
+  get db() {
+    return Db;
   }
 
   get currentBoard() {
     const boardId = this.data.boardId;
-    return (this.data.boards || {})[boardId] || { id: '', name:'...' };
+    return (this.data.boards || {})[boardId] || { id: '', name: 'All' };
   }
 
   get boardsList() {
-
     const hash = this.data.boards || {};
     const ads = this.data.ads || {};
     const counts = {};
@@ -74,8 +52,8 @@ class Store extends EventBus {
     const list = Object.keys(hash).map(k => ({ count: counts[hash[k].id], ...hash[k] }));
 
     return list
-    .filter(e=> e.count)
-    .sort((a, b)=>(a.id < b.id ? 1 : -1));
+    .filter(e => e.count)
+    .sort((a, b) => (a.id < b.id ? 1 : -1));
   }
 
   userInfo(uid) {
@@ -84,22 +62,18 @@ class Store extends EventBus {
   }
 
   update(delta) {
-
     Object.assign(this.data, delta);
 
     Object.assign(this.data, {
       boardsList: this.boardsList,
-      currentBoard: this.currentBoard,
-      adsList: this.adsList,
-      newsList: this.newsList
+      currentBoard: this.currentBoard
     });
 
     this.emitEvent({ type: 'changed', target: this, data: this.data });
   }
 
   subscribeAndEmit(key, handler0) {
-
-    const handler = (typeof handler0 === 'function' ) ? { handleEvent: handler0 } : handler0;
+    const handler = (typeof handler0 === 'function') ? { handleEvent: handler0 } : handler0;
 
     this.subscribe(this.data, handler);
 
@@ -107,7 +81,6 @@ class Store extends EventBus {
   }
 
   setBoard(boardId) {
-
     this.update({ boardId });
   }
 

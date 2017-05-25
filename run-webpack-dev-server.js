@@ -6,9 +6,9 @@
 
 var WebpackDevServer = require('webpack-dev-server');
 var webpack = require('webpack');
-var connect = require('express');
+// var connect = require('express');
 var commons = require('./webpack.config.js');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+// var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var config = {
   entry: {
