@@ -18,16 +18,16 @@ var config = {
     devtoolModuleFilenameTemplate: '[resource-path]'
   },
   module: {
-    loaders: commons.loaders
+    rules: commons.rules
   },
   resolve: {
-    modulesDirectories: commons.modulesDirectories,
+    modules: commons.modules,
     alias: {}
   },
   plugins: [
     // new webpack.optimize.CommonsChunkPlugin({ name: 'vendor' })
-  ],
-  devtoolLineToLine: true
+  ]
+  // devtoolLineToLine: true
 };
 
 var compiler = webpack(config);

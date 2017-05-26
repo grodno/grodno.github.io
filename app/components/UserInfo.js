@@ -51,9 +51,9 @@ export default class UserInfo extends Component {
   }
 
   onInit() {
-    Store.subscribe('changed', { handleEvent: ({ target })=>{
-      this.profile = target.userInfo(this.uid);
-    } });
+    // Store.subscribe('changed', { handleEvent: ({ target })=>{
+    //   this.profile = target.userInfo(this.uid);
+    // } });
     // $('.ui.accordion').accordion();
   }
 }

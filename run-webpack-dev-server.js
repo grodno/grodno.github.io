@@ -24,25 +24,25 @@ var config = {
     devtoolModuleFilenameTemplate: '[resource-path]'
   },
   module: {
-    loaders: commons.loaders
+    rules: commons.rules
   },
   resolve: {
-    modulesDirectories: commons.modulesDirectories,
+    modules: commons.modules,
     alias: {}
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()
-  ],
-  devtoolLineToLine: true
+  ]
+  // devtoolLineToLine: true
 };
 
 var compiler = webpack(config);
 
 var server = new WebpackDevServer(compiler, {
   contentBase: __dirname + '/public',
-  debug: true,
+  // debug: true,
   hot: true,
-  verbose: true,
+  // verbose: true,
   stats: {
     colors: true,
     assets:       false,
@@ -52,11 +52,6 @@ var server = new WebpackDevServer(compiler, {
   }
 });
 
-  // server.use(connect.static('./assets'));
-  // server.use('/*', function (req, res) {
-  //   res.send('<meta location="/">');
-  // });
-
-  server.listen(8082, '0.0.0.0', function () {
-    console.log('Demo is available at', server.listeningApp._connectionKey);
-  });
+server.listen(8082, '0.0.0.0', function () {
+  console.log('Demo is available at', server.listeningApp._connectionKey);
+});

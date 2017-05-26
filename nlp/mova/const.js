@@ -16,9 +16,9 @@ export const POST = [
   [/[zcs]j\b/gi, function (s) { return s[0]; }],
   [/[cln]j[cln]/g, function (s, g1, g2) { return s[0] + (s[0] === s[2] ? '' : s[1]) + s[2];}],
   // 'je'
-  [/je/gi, function (s) { return (' bcdgfpsvz'.indexOf(s[0]) > 0 ? '' : '') + s[1];}],
+  [/ij[aoue]/gi, function (s) { return s[0] + s[2];}]
   // 'ja'
-  [/[iy]ja/gi, function (s) { return s[0] + 'e';}]
+  // [/[iy]ja/gi, function (s) { return s[0] + 'e';}]
   // [/[cklmvsnzbp]ja/gi, function (s, g1) { return s[0] + 'i' + s[2];}]
 ];
 
@@ -27,7 +27,7 @@ export const MAP = {
   ь:'j',
   ю:'ju',
   я:'ja',
-  е:'je',
+  е:'e',
   ё:'jo',
   ж:'zh',
   ш:'sh',
