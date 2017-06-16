@@ -8,12 +8,10 @@ export default class NewsList extends Component {
   static TEMPLATE =
 
     `<section>
-      <div class="ui blue mini labels">
-        <a class="ui label" each="tag of tags"> {{tag.id}} <div class="detail">{{tag.count}}</div> <i class="icon close"></i> </a>
-      </div>
+      <Tags data="{{data}}" selectionChanged="{{onTagsChanged}}"/>
       <div class="ui divided items">
-      <block each="item of data" class="item">
-        <div class="item">
+
+        <div class="item"  each="item of data">
           <div class="image">
           <img src="{{item.image}}"/>
           <div class="meta">
@@ -33,16 +31,12 @@ export default class NewsList extends Component {
 
           </div>
         </div>
-      </block>
+
       <block if="data.length">
         <else><small class="empty">...</small></else>
       </block>
     </div>
     </section>`;
-
-  static PROPS = {
-    data: { default: [] }
-  }
 
   get itemSubject() {
 
@@ -54,16 +48,6 @@ export default class NewsList extends Component {
   get itemPreview() {
     const val = this.get('item.preview') || '';
     return translit(val);
-  }
-
-  get tags() {
-    const tags = this.data.reduce((r, e) => {
-      e.tags.split(',').forEach(t=>{
-        r[t] = (r[t] || 0) + 1;
-      });
-      return r;
-    }, {});
-    return Object.keys(tags).sort().map(id=>({ id, count:tags[id] }));
   }
 
   get itemTags() {
@@ -82,8 +66,18 @@ export default class NewsList extends Component {
   }
 
   reload() {
+    const keys = this.tagIds ? [...this.tagIds.values()] : [];
     Store.db.news.orderBy('date').reverse().toArray().then((data)=>{
-      this.update({ data });
+        this.update({ data: data.filter(e=>{
+          const tags = e.tags.split(',');
+          for (let tag of keys) {
+            if (!tags.includes(tag)) {
+              return false;
+            }
+          }
+          return true;
+        })
+      });
     });
   }
 
@@ -92,5 +86,11 @@ export default class NewsList extends Component {
       this.reload();
     } });
 
+  }
+
+  onTagsChanged(value) {
+    this.tagIds = value;
+    this.log(value);
+    this.reload();
   }
 }

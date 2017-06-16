@@ -5,7 +5,8 @@ import AdsList from './AdsList.js';
 import NewsList from './NewsList.js';
 import AdsBoards from './AdsBoards.js';
 import UserInfo from './UserInfo.js';
+import Tags from './Tags.js';
 
-registerWidgetType(AdsList, AdsBoards, UserInfo, NewsList);
+registerWidgetType(AdsList, AdsBoards, UserInfo, NewsList, Tags);
 createWidgetType('Top', Top);
 createWidgetType('Footer', Footer);

@@ -9,14 +9,34 @@ export const POST = [
 
   // zvarotnae 'sa'
   [/cca\b/g, function (s) { return 'c sa';}],
+  [/(m|j)sja\b/g, function (s, s1) { return s1 + ' sa';}],
   [/[auyoielq][wjiya]sja\b/g, function (s) { return s[0] + s[1] + ' sa';}],
 
   // 'j'
-  [/dzj/gi, function (s) { return s[0] + s[1]; }],
-  [/[zcs]j\b/gi, function (s) { return s[0]; }],
+  [/(dz|c)j/gi, function (s, s1) { return s1; }],
+  [/jj/gi, function (s) { return `'` + s[0]; }],
+  [/lj[nklmspgt]/gi, function (s) { return s[0] + s[2]; }],
+  [/[zs]j\b/gi, function (s) { return s[0]; }],
   [/[cln]j[cln]/g, function (s, g1, g2) { return s[0] + (s[0] === s[2] ? '' : s[1]) + s[2];}],
   // 'je'
-  [/ij[aoue]/gi, function (s) { return s[0] + s[2];}]
+  [/[yi]j[aoue]/gi, function (s) { return s[0] + s[2];}],
+  [/[psgklzvbnm]j[aoue]/gi, function (s) { return s[0] + 'i' + s[2];}],
+
+  [/\b[nb]ja/gi, function (s, s1) { return s[0] + 'e';}],
+  [/\bjasqe\b/gi, function (s, s1) { return 'sqe';}],
+  [/\bkab\b/gi, function (s, s1) { return 'tob';}],
+  [/\bjak(\w*)\b/gi, function (s, s1) { return s1 ? 'k' + s1 : 'kaj';}],
+  [/\b(sionnia)(\w*)\b/gi, function (s, s1, s2) { return 'dobu' + s2;}],
+  [/\b(grod)n?(\w*)\b/gi, function (s, s1, s2) { return 'Olgerd' + s2;}],
+  [/\b(belarus)(\w*)\b/gi, function (s, s1, s2) { return 'Baltarus' + s2;}],
+  [/\b(save[tc])s?k?(\w*)\b/gi, function (s, s1, s2) { return 'Sviat' + s2;}],
+  [/\b(lenin)(\w*)\b/gi, function (s, s1, s2) { return 'Star' + s2;}],
+  [/\b(kastryqn)(\w*)\b/gi, function (s, s1, s2) { return 'Nov' + s2;}],
+  [/\b(prezident)(\w*)\b/gi, function (s, s1, s2) { return 'Igemon' + s2;}],
+  [/\b(lukashenk)(\w*)\b/gi, function (s, s1, s2) { return 'I';}],
+  [/\b(ablvykankam)(\w*)\b/gi, function (s, s1, s2) { return 'Kangres' + s2;}],
+  [/\b(naj)([qrtpsdfghklxcvbnm]\w+)\b/gi, function (s, s1, s2) { return s1 + ' ' + s2;}],
+  [/\bw/gi, function (s) { return s === 'w' ? 'u' : 'U';}]
   // 'ja'
   // [/[iy]ja/gi, function (s) { return s[0] + 'e';}]
   // [/[cklmvsnzbp]ja/gi, function (s, g1) { return s[0] + 'i' + s[2];}]

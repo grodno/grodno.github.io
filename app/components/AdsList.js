@@ -8,9 +8,8 @@ export default class AdsList extends Component {
   static TEMPLATE =
 
     `<section>
-      <div class="ui blue mini labels">
-        <a class="ui label" each="tag of tags"> {{tag.id}} <div class="detail">{{tag.count}}</div> <i class="icon close"></i> </a>
-      </div>
+      <Tags data="{{data}}" selectionChanged="{{onTagsChanged}}"/>
+
       <div class="ui styled accordion">
 
       <block each="item of data" class="item">
@@ -78,11 +77,37 @@ export default class AdsList extends Component {
     return moment(val).fromNow();
   }
 
-  onInit() {
-    Store.subscribeAndEmit('changed', ()=> {
-      Store.adsList.then(data=>this.update({ data }));
+  reload() {
+    const boardId = Store.boardId;
+    const keys = this.tagIds ? [...this.tagIds.values()] : [];
+    Store.db.ads.orderBy('date').reverse().toArray().then((data)=>{
+        this.update({ data: data.filter(e=> {
+          if (!boardId || e.boardId != boardId) {
+            return false;
+          }
+          const tags = e.tags.split(',');
+          for (let tag of keys) {
+            if (!tags.includes(tag)) {
+              return false;
+            }
+          }
+          return true;
+        })
+      });
     });
+  }
+
+  onInit() {
+
+    Store.subscribeAndEmit('changed', ()=> this.reload());
+
     window.$('.ui.accordion').accordion();
     // $('.header').popup();
+  }
+
+  onTagsChanged(value) {
+    this.tagIds = value;
+
+    this.reload();
   }
 }

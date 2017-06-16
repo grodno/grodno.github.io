@@ -31,15 +31,9 @@ class Store extends EventBus {
       Object.keys(ads).forEach(e => (counts[ads[e].boardId] = ((counts[ads[e].boardId] || 0) + 1)));
       Object.keys(boards).forEach(k => { boards[k].count = counts[k]; });
 
-      // this.update(val);
+      this.update(val);
       this.db.update(val);
     });
-  }
-
-  get adsList() {
-    const boardId = this.data.boardId;
-    return this.db.ads.orderBy('date').reverse().toArray()
-      .then(l=>l.filter(e => !boardId || e.boardId == boardId));
   }
 
   get db() {

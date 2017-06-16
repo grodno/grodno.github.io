@@ -21,7 +21,7 @@ export default class AdsBoards extends Component {
 
   static PROPS = {
     data: { default: [{}] },
-    caption: { default: 'loading...' }
+    caption: { default: '...' }
   }
 
   reload() {
