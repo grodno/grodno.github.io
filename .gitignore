@@ -49,7 +49,7 @@ what
 .project
 .settings
 .tmproj
-nbproject
+.idea
 Thumbs.db.c9
 .c9/
 .zedstate

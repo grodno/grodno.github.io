@@ -34,16 +34,21 @@ module.exports = {
     },
     {
       test: /\.js$/,
-      exclude: /(node_modules|vendor)/,
-      loader: 'babel-loader?cacheDirectory=true',
-        query: {
-          presets: ['env'],
-          plugins: [
-            'transform-class-properties',
-            'transform-object-rest-spread'
-          ]
-        }
-
+      exclude: /(node_modules)/,
+      use:[
+         {
+          loader: 'babel-loader',
+          options:{
+            cacheDirectory: true,
+            presets: ['env'],
+            plugins: [
+              'transform-runtime',
+              'transform-class-properties',
+              'transform-object-rest-spread'
+            ]
+          }
+         }
+       ]
     }
   ],
   // resolve modules

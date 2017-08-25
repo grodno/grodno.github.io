@@ -27,12 +27,22 @@ class Store extends EventBus {
 
       const boards = val.boards || {};
       const ads = val.ads || {};
+      const news = val.news || {};
       const counts = {};
-      Object.keys(ads).forEach(e => (counts[ads[e].boardId] = ((counts[ads[e].boardId] || 0) + 1)));
+
+      Object.keys(ads).forEach(id => {
+        const e = ads[id];
+        e.tags = `board-${e.boardId},${e.tags || ''}`.split(',').filter(t=>t);
+        counts[e.boardId] = ((counts[e.boardId] || 0) + 1);
+      });
+      Object.keys(news).forEach(id => {
+        const e = news[id];
+        e.tags = `${e.tags || ''}`.split(',').filter(t=>t);
+      });
       Object.keys(boards).forEach(k => { boards[k].count = counts[k]; });
 
-      this.update(val);
       this.db.update(val);
+      this.update(val);
     });
   }
 
@@ -40,8 +50,12 @@ class Store extends EventBus {
     return Db;
   }
 
+  get boardId() {
+    return this.data.boardId;
+  }
+
   get currentBoard() {
-    const boardId = this.data.boardId;
+    const boardId = this.boardId;
     return (this.data.boards || {})[boardId] || { id: '', name: 'All' };
   }
 

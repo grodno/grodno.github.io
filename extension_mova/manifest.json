@@ -1,0 +1,48 @@
+{
+"manifest_version": 2,
+    "name": "Mova for charter97.org/be",
+    "description": "Mova lacinkaj dla charter97.org/be",
+    "version": "1.0",
+    "content_scripts": [
+        {
+            "matches": [
+              "*://charter97.org/be/*",
+              "*://s13.ru/*",
+              "*://*.tut.by/*"
+            ],
+            "js": [
+              "content.js"
+            ],
+            "run_at": "document_start"
+        },
+      {
+        "matches": [
+          "*://charter97.org/be/*",
+          "*://s13.ru/*",
+          "*://*.tut.by/*"
+        ],
+        "js": [
+          "cyrlat.js",
+          "normalize.js",
+          "content_idle.js"
+        ],
+        "run_at": "document_idle"
+      }
+    ],
+    "options_page": "options.html",
+    "icons": {
+        "16": "icon128.png",
+        "48": "icon128.png",
+        "128": "icon128.png"
+    },
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "permissions": [
+        "webRequest",
+        "webRequestBlocking",
+        "*://charter97.org/be/*",
+        "*://s13.ru/*",
+        "*://*.tut.by/*"
+    ]
+}

@@ -19,14 +19,19 @@ export default class Tags extends Component {
   }
 
   get tags() {
+
     const tags = this.data.reduce((r, e) => {
-      const etags = e.tags.split(',');
+
+      const etags = e.tags || [];
+
       const match = !this.selection.size || etags.find(t=>this.selection.has(t));
-      if (match) {
-        etags.forEach(t=>{ r[t] = (r[t] || 0) + 1; });
-      }
-      return r;
+        if (match) {
+          etags.forEach(t=>{ r[t] = (r[t] || 0) + 1; });
+        }
+        return r;
+
     }, {});
+
     return Object.keys(tags).sort().map(id=>({ id, count:tags[id] }));
   }
 
@@ -38,6 +43,7 @@ export default class Tags extends Component {
   }
 
   onItemClick({ dataset: { id } }) {
+
     if (this.selection.has(id)) {
       this.selection.delete(id);
     } else {

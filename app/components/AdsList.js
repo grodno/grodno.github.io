@@ -8,11 +8,11 @@ export default class AdsList extends Component {
   static TEMPLATE =
 
     `<section>
-      <Tags data="{{data}}" selectionChanged="{{onTagsChanged}}"/>
+      <Tags data="{{filteredData}}" selectionChanged="{{onTagsChanged}}"/>
 
       <div class="ui styled accordion">
 
-      <block each="item of data" class="item">
+      <block each="item of filteredData" class="item">
         <div class="title segment">
           <i class="dropdown icon"></i>
           <a class="header" title="{{item.preview}}">{{itemSubject}}</a>
@@ -57,44 +57,39 @@ export default class AdsList extends Component {
     .trim()).split('~');
   }
 
-  get tags() {
-    const tags = this.data.reduce((r, e) => {
-      e.tags.split(',').forEach(t=>{
-        r[t] = (r[t] || 0) + 1;
-      });
-      return r;
-    }, {});
-    return Object.keys(tags).sort().map(id=>({ id, count:tags[id] }));
-  }
-
   get itemTags() {
-    const val = this.get('item.tags') || '';
-    return val.split(',');
+    const val = this.get('item.tags') || [];
+    return val;
   }
 
   get itemDate() {
     const val = this.get('item.date') || '';
     return moment(val).fromNow();
   }
+  get filteredData() {
+    return this.data.filter(e=> {
+      const tags = e.tags;
+      for (let tag of this.filterKeys) {
+        if (!tags.includes(tag)) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+
+  get filterKeys() {
+    const keys = [ ...(this.tagIds ? this.tagIds.values() : [])];
+    if (Store.boardId) {
+      keys.push(`board-${Store.boardId}`);
+    }
+    return keys;
+  }
 
   reload() {
-    const boardId = Store.boardId;
-    const keys = this.tagIds ? [...this.tagIds.values()] : [];
-    Store.db.ads.orderBy('date').reverse().toArray().then((data)=>{
-        this.update({ data: data.filter(e=> {
-          if (!boardId || e.boardId != boardId) {
-            return false;
-          }
-          const tags = e.tags.split(',');
-          for (let tag of keys) {
-            if (!tags.includes(tag)) {
-              return false;
-            }
-          }
-          return true;
-        })
-      });
-    });
+
+    Store.db.ads.where('tags').anyOf(this.filterKeys).reverse().sortBy('date')
+      .then((data)=>this.update({ data }));
   }
 
   onInit() {

@@ -13,11 +13,18 @@ db.version(1).stores({
 
 // Open the database
 db.open().catch(function (error) {
-  // window.alert('Uh oh : ' + error);
+  window.console.error('DB.open: ' + error);
 });
 
 db.update = function (val) {
-  ['ads', 'users', 'boards', 'news'].forEach(c => db[c].bulkPut(hashToArray(val[c])));
+  Promise.all(
+    ['ads', 'users', 'boards', 'news'].map(c => db[c].bulkPut(hashToArray(val[c])))
+  ).then(function () {
+    window.console.log('DB.update: ok' );
+  })
+  .catch(function (error) {
+    window.console.error('DB.update: ' + error);
+  });
 };
 
 export default db;

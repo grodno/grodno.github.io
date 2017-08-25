@@ -1,5 +1,7 @@
 import { ReCj, ReKoranj, RePrefixKoranj } from './const.js';
-import { cyrlat } from './utils.js';
+import { mreplace } from './utils.js';
+import { cyrlat } from './cyrlat.js';
+import { NORMALIZE_LETTERS, NORMALIZE_WORDS } from './const.js';
 
 export function parse(input, output = {}) {
 
@@ -40,7 +42,7 @@ export function parse(input, output = {}) {
 
 export function translit(s) {
 
-  return cyrlat(s);
+  return mreplace(NORMALIZE_WORDS, mreplace(NORMALIZE_LETTERS, cyrlat(s)));
 }
 
 export function analyze(text) {
@@ -58,7 +60,7 @@ export function analyze(text) {
 
   output.normalized = text
     .replace(/[a-z]+/gi, addWord)
-    .replace(/[а-яiіў]+/gi, s => addWord(cyrlat(s).split(' ')[0]))
+    .replace(/[а-яiіў]+/gi, s => addWord(translit(s)))
     ;
 
   parse(Object.keys(input).map(key=>input[key]), output);
