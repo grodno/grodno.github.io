@@ -40,4 +40,4 @@ function sanitize() {
 
 }
 
-perform()
+window.setTimeout(perform, 1000);

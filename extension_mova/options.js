@@ -1,33 +1,99 @@
-// Saves options to chrome.storage
-function save_options() {
-  var color = document.getElementById('color').value;
-  var likesColor = document.getElementById('like').checked;
-  chrome.storage.sync.set({
-    favoriteColor: color,
-    likesColor: likesColor
-  }, function () {
-    // Update status to let user know options were saved.
-    var status = document.getElementById('status');
-    status.textContent = 'Options saved.';
-    setTimeout(function () {
-      status.textContent = '';
-    }, 750);
-  });
+
+function getRedirects() {
+  var json = localStorage.getItem('redirects');
+  return json ? JSON.parse(json) : getRedirectsDefaults();
 }
 
-// Restores select box and checkbox state using the preferences
-// stored in chrome.storage.
-function restore_options() {
-  // Use default value color = 'red' and likesColor = true.
-  chrome.storage.sync.get({
-    favoriteColor: 'red',
-    likesColor: true
-  }, function (items) {
-    document.getElementById('color').value = items.favoriteColor;
-    document.getElementById('like').checked = items.likesColor;
-  });
+function getRedirectsDefaults() {
+  var json = localStorage.getItem('redirects') || '[]';
+  return JSON.parse(json);
 }
 
-document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click',
-  save_options);
+function setRedirects(list) {
+  localStorage.setItem('redirects', JSON.stringify(list));
+  storageUpdate();
+}
+
+function add() {
+  var $from = $('#from');
+  var $to = $('#to');
+  if ($from.val() == '') {
+    alert('Enter a url pattern', 'error');
+    return;
+  }
+  if ($to.val() == '') {
+    alert('Enter a redirect url', 'error');
+    return;
+  }
+  try {
+    new RegExp($from.val());
+  } catch(err) {
+    alert('Error: '+err, 'error');
+    return;
+  }
+  redirects = getRedirects();
+  redirects.push([$from.val(), $to.val()]);
+  setRedirects(redirects);
+  $from.val('');
+  $to.val('');
+  alert('Redirect added.');
+}
+
+function remove() {
+  redirects = getRedirects();
+  if (!redirects) {
+    // something odd happened, trigger storage update.
+    storageUpdate();
+    return;
+  }
+  redirects.splice(this.value, 1);
+  setRedirects(redirects);
+  alert('Redirect removed.');
+}
+
+function alert(msg, type) {
+  var $alert = $('#alert');
+  var timeout;
+  type = type || 'success'
+  $alert.find('span.msg').html(msg);
+  $alert.attr('class', 'alert fade in alert-'+type);
+  $alert.show();
+  clearTimeout(timeout);
+  timeout = setTimeout(function() {
+    $alert.slideUp();
+  }, 3000);
+}
+
+function storageUpdate() {
+  var redirects = getRedirects();
+  var $tbody = $('#redirects table tbody');
+  $tbody.html('');
+  $('#redirects').toggle(redirects.length>0);
+  for (var i=0; i<redirects.length; i++) {
+    addToTable(i, redirects[i][0], redirects[i][1]);
+  }
+}
+
+function tmpl(id, context) {
+  var tmpl = $('#'+id).html()
+  for (var v in context) {
+    tmpl = tmpl.replace('{{'+v+'}}', context[v]);
+  }
+  return $(tmpl);
+}
+
+function addToTable(id, from, to) {
+  var $row = tmpl('table_row_tpl', {
+    'id': id,
+    'from': from,
+    'to': to
+  });
+  $row.find('button.remove').on('click', remove);
+  $row.appendTo($('#redirects table tbody'));
+}
+
+$(document).ready(function(){
+  $('#add').on('click', add);
+  $('#alert').alert();
+  storageUpdate();
+});

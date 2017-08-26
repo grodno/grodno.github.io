@@ -86,7 +86,7 @@ var NORMALIZE_WORDS = [
   [ /\b(save[tc])s?k?(\w*)\b/gi, function (s, s1, s2) {
     return 'Slavian' + s2;
   } ],
-  [ /\bj?ewr(o|a)(\w*)\b/gi, function (s, s1, s2) {
+  [ /\bj?e[vw]r(o|a)(\w*)\b/gi, function (s, s1, s2) {
     return 'Euro' + s2;
   } ],
   [ /\respublik(\w*)\b/gi, function (s, s1, s2) {
@@ -104,6 +104,9 @@ var NORMALIZE_WORDS = [
   [ /\bpols(q|k)(\w+)\b/gi, function (s, s1, s2) {
     return 'Panstv' + s2;
   } ],
+  [ /\b(mosko?v|rossi)(\w+)\b/gi, function (s, s1, s2) {
+    return 'Moskal' + s2;
+  } ],
   [ /\b(lenin)(\w*)\b/gi, function (s, s1, s2) {
     return 'Staryn' + s2;
   } ],
@@ -117,7 +120,7 @@ var NORMALIZE_WORDS = [
     return 'Vizir';
   } ],
   [ /\b(Luk[ao]shenk)(\w*)\b/gi, function (s, s1, s2) {
-    return 'Karabas'+ (s2 === 'a' || s2 === 'o' ? '' : s2);
+    return 'Karabas' + (s2 === 'a' || s2 === 'o' ? '' : s2);
   } ],
   [ /\b((?:abl|gar|raj)vykankam|parlament)(\w*)\b/gi, function (s, s1, s2) {
     return 'Kurultaj' + s2;
