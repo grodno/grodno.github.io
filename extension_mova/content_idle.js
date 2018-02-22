@@ -1,43 +1,80 @@
-
 function translit(s) {
 
-  return normalize( cyrlat(s));
+  return normalize(cyrlat(s));
 }
 
-function perform() {
+var RE_TEST = /[а-яА-Я]/;
 
-  window.translit = translit;
-  var elements = document.getElementsByTagName('*');
+function removeElements(sel) {
 
+  var elements = document.querySelectorAll(sel);
   for (var i = 0; i < elements.length; i++) {
     var element = elements[ i ];
+    element.remove();
+  }
+}
 
+function reduceAllTextNodes() {
+
+  var elements = document.body.getElementsByTagName('*');
+  var all = [];
+  for (var i = 0; i < elements.length; i++) {
+    var element = elements[ i ];
+    var name = element.tagName;
+    if (name === 'SCRIPT' || name === 'STYLE') {
+      continue;
+    }
     for (var j = 0; j < element.childNodes.length; j++) {
       var node = element.childNodes[ j ];
-
       if (node.nodeType === 3) {
-        var text = node.nodeValue;
-        var replacedText = translit(text);
-
-        if (replacedText !== text) {
-          element.replaceChild(document.createTextNode(replacedText), node);
+        var text = node.nodeValue.trim();
+        if (text.length > 2 && text.match(RE_TEST)) {
+          all.push(node);
+          element.title = (element.title || '') + '\n' + text;
         }
       }
     }
   }
-  sanitize();
+  return all;
 }
 
-function sanitize() {
+function perform() {
 
-  var elements = [].concat.apply([], document.getElementsByTagName('script'));
+  removeElements('footer');
 
-  for (var i = 0; i < elements.length; i++) {
-    var element = elements[ i ];
+  var nodes = reduceAllTextNodes();
+  var payload = nodes.map(function (e) {
+    return e.nodeValue;
+  });
 
-    element.remove();
+  var workerFactory = function (packet, offset) {
+    return function () {
+      API.translate(packet).then(
+        function (result) {
+          result.forEach(function (e, i) {
+            var node = nodes[ offset + i ];
+            var parent = node.parentElement;
+            if (parent) {
+              parent.replaceChild(document.createTextNode(translit(e)), node);
+            }
+          });
+        }
+      );
+    };
+  };
+
+  for (var offset = 0, max = payload.length, num = 0; offset < max;) {
+    for (var packet = [], len = 0, pos = offset; len < 1000 && pos < max; pos++) {
+      var s = payload[ pos ];
+      len += s.length;
+      packet.push(s);
+    }
+    if (packet.length) {
+      window.setTimeout(workerFactory(packet, offset), (num++) * 500);
+    }
+    offset = pos;
   }
 
 }
 
-window.setTimeout(perform, 1000);
+window.setTimeout(perform, 500);
