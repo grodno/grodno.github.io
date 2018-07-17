@@ -1,9 +1,9 @@
 
-const admin = {};// require('firebase-admin');
+const admin = {}// require('firebase-admin');
 
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp(functions.config().firebase)
 
-const WEBHOOK_URL = 'http://requestb.in/1mqw97l1';
+const WEBHOOK_URL = 'http://requestb.in/1mqw97l1'
 
 // Reads the content of the node that triggered the function and sends it to the registered Webhook
 // URL.
@@ -16,8 +16,8 @@ exports.webhook = functions.database.ref('/hooks/{hookId}').onWrite(event => {
     resolveWithFullResponse: true
   }).then(response => {
     if (response.statusCode >= 400) {
-      throw new Error(`HTTP Error: ${response.statusCode}`);
+      throw new Error(`HTTP Error: ${response.statusCode}`)
     }
-    console.log('SUCCESS! Posted', event.data.ref);
-  });
-});
+    console.log('SUCCESS! Posted', event.data.ref)
+  })
+})

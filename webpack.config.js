@@ -1,29 +1,29 @@
 /* global __dirname */
 
-var path = require('path');
+var path = require('path')
 
 module.exports = {
   rules: [
     {
       test: /(\.jpg|\.jpeg|\.png|\.eot|\.ttf|\.svg|\.woff|\.woff2)$/,
-      loader: 'file-loader?name=shinobi-fonts/[name]-[sha1:hash].[ext]'
+      loader: 'file-loader?name=assets/[name]-[sha1:hash].[ext]'
     },
     {
       test: /\.scss$/,
-      use:[
+      use: [
         {
           loader: 'style-loader'
         },
-         {
-            loader: 'css-loader'
-          },
-           {
-            loader: 'fast-sass-loader',
-            options:{
-              outputStyle: 'expanded',
-              includePaths:[path.resolve(__dirname, './src/styles')]
-            }
+        {
+          loader: 'css-loader'
+        },
+        {
+          loader: 'fast-sass-loader',
+          options: {
+            outputStyle: 'expanded',
+            includePaths: [path.resolve(__dirname, './src/styles')]
           }
+        }
 
       ]
     },
@@ -35,10 +35,10 @@ module.exports = {
     {
       test: /\.js$/,
       exclude: /(node_modules)/,
-      use:[
-         {
+      use: [
+        {
           loader: 'babel-loader',
-          options:{
+          options: {
             cacheDirectory: true,
             presets: ['env'],
             plugins: [
@@ -47,14 +47,14 @@ module.exports = {
               'transform-object-rest-spread'
             ]
           }
-         }
-       ]
+        }
+      ]
     }
   ],
   // resolve modules
-  modules: ['app', 'src', 'nlp', 'vendor', 'node_modules'],
+  modules: ['node_modules'],
   // entry with vendors modules
   vendor: [
     // 'core-js',
   ]
-};
+}

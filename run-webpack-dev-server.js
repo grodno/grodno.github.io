@@ -4,18 +4,18 @@
 /* eslint one-var: "off" */
 /* eslint vars-on-top: "off" */
 
-var WebpackDevServer = require('webpack-dev-server');
-var webpack = require('webpack');
+var WebpackDevServer = require('webpack-dev-server')
+var webpack = require('webpack')
 // var connect = require('express');
-var commons = require('./webpack.config.js');
+var commons = require('./webpack.config.js')
 // var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var config = {
   entry: {
     index: [
-      'webpack-dev-server/client?http://localhost:8082',
+      'webpack-dev-server/client?http://localhost:8080',
       'webpack/hot/only-dev-server',
-      './app/index.js'
+      './public/js/index.js'
     ]
   },
   output: {
@@ -31,12 +31,17 @@ var config = {
     alias: {}
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.LoaderOptionsPlugin({
+      // test: /\.xxx$/, // may apply this only for some modules
+      options: {
+        devtoolLineToLine: true
+      }
+    })
   ]
-  // devtoolLineToLine: true
-};
+}
 
-var compiler = webpack(config);
+var compiler = webpack(config)
 
 var server = new WebpackDevServer(compiler, {
   contentBase: __dirname + '/public',
@@ -45,13 +50,13 @@ var server = new WebpackDevServer(compiler, {
   // verbose: true,
   stats: {
     colors: true,
-    assets:       false,
-    chunks:       false,
+    assets: false,
+    chunks: false,
     chunkModules: false,
-    modules:      true
+    modules: true
   }
-});
+})
 
-server.listen(8082, '0.0.0.0', function () {
-  console.log('Demo is available at', server.listeningApp._connectionKey);
-});
+server.listen(8080, '0.0.0.0', function () {
+  console.log('Demo is available at', server.listeningApp._connectionKey)
+})

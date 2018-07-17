@@ -1,7 +1,7 @@
 {
   "name": "grodno-co",
   "version": "3.0.1",
-  "description": "Grodno.Co",
+  "description": "grodno.co",
   "keywords": [
     "web",
     "framework",
@@ -12,15 +12,12 @@
     "email": "alitskevich@gmail.com"
   },
   "private": true,
-  "license": {
-    "type": "APACHE20",
-    "url": "https://github.com/grodno/grodno.co/blob/master/LICENSE"
-  },
+  "license": "APACHE20",
   "scripts": {
     "start": "node run-webpack-dev-server",
     "build": "node run-build",
     "mocha": "mocha -w --compilers js:babel-register src/**/*.test.js",
-    "firebase:deploy": "node run-firebase-build.js && firebase deploy --only hosting"
+    "deploy": "firebase deploy --only hosting"
   },
   "repository": {
     "type": "git",
@@ -65,5 +62,13 @@
     "webpack": "^2.5.1",
     "webpack-dev-server": "^2.4.5"
   },
-  "main": "./index.js"
+  "main": "./index.js",
+  "standard": {
+      "ignore": [
+          "**/out/",
+          "/public/js/vendor/",
+          "/node_modules/",
+          "tmp.js"
+      ]
+  }
 }
