@@ -4,10 +4,10 @@
 /* eslint one-var: "off" */
 /* eslint vars-on-top: "off" */
 
-var WebpackDevServer = require('webpack-dev-server')
-var webpack = require('webpack')
+var WebpackDevServer = require('webpack-dev-server');
+var webpack = require('webpack');
 // var connect = require('express');
-var commons = require('./webpack.config.js')
+var commons = require('./webpack.config.js');
 // var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var config = {
@@ -39,9 +39,9 @@ var config = {
       }
     })
   ]
-}
+};
 
-var compiler = webpack(config)
+var compiler = webpack(config);
 
 var server = new WebpackDevServer(compiler, {
   contentBase: __dirname + '/public',
@@ -55,8 +55,8 @@ var server = new WebpackDevServer(compiler, {
     chunkModules: false,
     modules: true
   }
-})
+});
 
-server.listen(8080, '0.0.0.0', function () {
-  console.log('Demo is available at', server.listeningApp._connectionKey)
-})
+server.listen(8089, '0.0.0.0', function () {
+  console.log('Demo is available at', server.listeningApp._connectionKey);
+});

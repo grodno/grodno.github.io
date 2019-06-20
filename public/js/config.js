@@ -1,4 +1,4 @@
-export const version = '3.0.0'
+export const version = '3.0.0';
 /**
  * IndexedDb schema.
  * Auto-generated file. Do not edit.
@@ -8,7 +8,7 @@ export const schema = {
   news: 'id, created_at',
   users: 'id, created_at',
   comments: 'id, target, created_at'
-}
+};
 export const firebaseConfig = {
   apiKey: 'AIzaSyBZ4bR8ArGmHxo-ExfKrlhkMMAj86lSIpw',
   authDomain: 'grodno-24aa8.firebaseapp.com',
@@ -16,4 +16,4 @@ export const firebaseConfig = {
   projectId: 'grodno-24aa8',
   storageBucket: 'grodno-24aa8.appspot.com',
   messagingSenderId: '1045179719966'
-}
+};

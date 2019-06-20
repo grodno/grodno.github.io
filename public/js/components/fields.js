@@ -1,5 +1,5 @@
 export class TextField {
-  TEMPLATE () {
+  TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
@@ -9,12 +9,12 @@ export class TextField {
           <input class="form-input" id="input-example-4" type="text" 
           placeholder="{{caption}}" value="{{value}}" change="{{onChange}}">
         </div>
-      </div>`
+      </div>`;
   }
 }
 
 export class SwitchField {
-  TEMPLATE () {
+  TEMPLATE() {
     return /* html */`
       <div class="form-group">
         <div class="col-9 col-sm-12 col-ml-auto">
@@ -24,12 +24,12 @@ export class SwitchField {
             checked="{{value}}"><i class="form-icon"></i> {{caption}}
           </label>
         </div>
-      </div>`
+      </div>`;
   }
 }
 
 export class TextareaField {
-  TEMPLATE () {
+  TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
@@ -38,12 +38,12 @@ export class TextareaField {
         <div class="col-9 col-sm-12">
           <textarea class="form-input" style="min-height: 15vh;" id="input-example-6" placeholder="{{caption}}" rows="3" change="{{onChange}}"  value="{{value}}"></textarea>
         </div>
-      </div>`
+      </div>`;
   }
 }
 
 export class RadioField {
-  TEMPLATE () {
+  TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
@@ -57,12 +57,12 @@ export class RadioField {
             <input type="radio" name="gender" checked=""><i class="form-icon"></i> Female
           </label>
         </div>
-      </div>`
+      </div>`;
   }
 }
 
 export class EnumField {
-  TEMPLATE () {
+  TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
@@ -71,12 +71,12 @@ export class EnumField {
         <div class="col-9 col-sm-12">
           <Select change="{{onChange}}" options="<- res:{{typeSpec}}"/>
         </div>
-      </div>`
+      </div>`;
   }
 }
 
 export class DictField {
-  TEMPLATE () {
+  TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
@@ -85,12 +85,12 @@ export class DictField {
         <div class="col-9 col-sm-12">
         <Select change="{{onChange}}" options="<- db:dict/{{typeSpec}}"/>
         </div>
-      </div>`
+      </div>`;
   }
 }
 
 export class RefField {
-  TEMPLATE () {
+  TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
@@ -99,6 +99,6 @@ export class RefField {
         <div class="col-9 col-sm-12">
           <Select change="{{onChange}}" options="<- {{typeSpec}}"/>
         </div>
-      </div>`
+      </div>`;
   }
 }

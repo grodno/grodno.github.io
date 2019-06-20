@@ -17,7 +17,7 @@ export const MainModule = /* template */ `
             <CardLinks caption=":parners" data=":media_links"/>
         </div>
     </div>
-</div>`
+</div>`;
 
 export const CardNews = /* template */`
 <div class="card">
@@ -35,14 +35,14 @@ export const CardNews = /* template */`
         <a class="btn btn-primary btn-sm" href="#module/news">Bolsh</a>
     </div>
 </div>
-`
+`;
 
 export const Toast = /* html */`
   <div class="toast toast-primary" style="position:fixed; right:5rem; bottom:1rem; width: 20rem;">
     <button class="btn btn-clear float-right" click="->" data-touch="{{text}}"></button>
     <p>{{top.ts}}</p>
   </div>
-  `
+  `;
 export const Header = /* html */`
   <header class="navbar bg-secondary">
     <section class="navbar-section mx-2">
@@ -55,29 +55,15 @@ export const Header = /* html */`
     <UserBar ui:props="<- user:info"/>
 
     </section>
-  </header>`
+  </header>`;
 
-export const Sidebar = /* html */`
-  <div class="off-canvas off-canvas-sidebar-show">
-    <a class="off-canvas-toggle btn btn-primary btn-action show-lg" href="#sidebar">
-      <i class="icon icon-menu"/>
-    </a>
-    <div id="sidebar" class="off-canvas-sidebar">
-      <ui:transclude key="aside"/>
-    </div>
-    <a class="off-canvas-overlay" href="#"></a>
-    <div class="off-canvas-content">
-      <ui:transclude key="content"/>
-    </div>
-  </div>
-  `
 export const Tabs = /* html */`
   <ul class="tab tab-block">
     <li class="tab-item" ui:each="item of data">
       <a href="#tab?tab={{item.value}}">{{item.name}}</a>
     </li>
   </ul>
-  `
+  `;
 
 export const Aside = /* html */`
   <div class="panel" style="height: 100%;">
@@ -96,7 +82,7 @@ export const Aside = /* html */`
     Settings
   </div>
   </div>
-  `
+  `;
 export const NavTree = /* html */`
   <ul class="nav">
     <li class="nav-item {{item.cl}}" ui:each="item of data">
@@ -104,10 +90,10 @@ export const NavTree = /* html */`
       <NavTree ui:if="item.subs" data="{{item.subs}}"/>
     </li>
   </ul>
-  `
+  `;
 export const Home = /* html */`
   <p>Home</p>
-  `
+  `;
 
 export const Navs = /* html */`
   <div class="panel" style="height: 100%;">
@@ -126,7 +112,7 @@ export const Navs = /* html */`
     Settings
   </div>
   </div>
-  `
+  `;
 
 export const Breadcrumbs = /* html */`
   <ul class="breadcrumb">
@@ -153,4 +139,4 @@ export const Breadcrumbs = /* html */`
       </div>
   </li>
 </ul>
-`
+`;

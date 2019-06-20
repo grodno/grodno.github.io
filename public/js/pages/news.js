@@ -5,7 +5,7 @@ export const NewsModule = /* template */ `
     <BigRedButton tooltip="Add a new record" action="-> nav:addNew"/>
     <NewsUpdateModal ui:if="id" id="{{id}}" open="{{open}}" data="<- db:one/news/{{id}}"/>
     <NewsCreateModal ui:if="newEntry" open="{{open}}" data="{{newEntry}}"/> 
-</div>`
+</div>`;
 
 export const NewsCreateModal = /* template */ `
 <Modal ui:if="" open="{{open}}" title="Add a new record" close="-> nav:close">
@@ -13,7 +13,7 @@ export const NewsCreateModal = /* template */ `
   <ui:fragment ui:key="footer">
     <button class="btn btn-primary" data="{{data}}" click="-> db:create/news">:create_new</button>
   </ui:fragment>
-</Modal>`
+</Modal>`;
 
 export const NewsUpdateModal = /* template */ `
 <Modal ui:if="id" open="{{open}}" title="Edit record ({{id}})" close="-> nav:close">
@@ -22,7 +22,7 @@ export const NewsUpdateModal = /* template */ `
     <button class="btn btn-primary" data="{{data}}" click="-> db:update/news">:update</button>
     <button class="btn btn-danger" click="-> db:delete/news/{{id}}">:delete</button>
   </ui:fragment>
-</Modal>`
+</Modal>`;
 
 export const NewsListItemFeatured = /* template */ `
     <div class="card column col-12 col-sm-12">
@@ -39,7 +39,7 @@ export const NewsListItemFeatured = /* template */ `
         <div class="card-footer">
             <button class="btn btn-primary btn-sm">Do</button>
         </div>
-    </div>`
+    </div>`;
 
 // NewsListItem
 export const NewsListItem = /* template */ `
@@ -61,16 +61,16 @@ export const NewsListItem = /* template */ `
         </p>
     </div>
   </div>
-</div>`
+</div>`;
 
 export const NewsList = /* html */ `
 <div>
   <div><Tags data="{{data}}" selectionChanged="{{assign}}"/></div>
   <div class="columns">
-      <NewsListItem ui:props="{{item}}" ui:each="item of data|transformNews"/>
+      <NewsListItem ui:props="{{item}}" ui:each="item of {{data|transformNews}}"/>
       <div class="column col-9 col-sm-12 loading" ui:if="!data">
         <ui:else><h6 class="column col-9 col-sm-12" ui:if="!data.length">Empty list</h6></ui:else>
       </div>
   </div>
 </div>
-`
+`;

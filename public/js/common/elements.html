@@ -1,0 +1,16 @@
+<body id="app">
+    <script type="text/template" id="BigRedButton">
+        <button 
+            class="btn tooltip tooltip-left fixed bg-error circle" 
+            style="right:1rem; bottom:1rem; width: 2rem;" 
+            data-tooltip="{{tooltip}}" 
+            click="{{action}}"><i class="icon icon-plus"></i>
+        </button>
+    </script>
+    <script type="text/x-template" id="Select">
+        <select class="form-select" change="{{change}}">
+            <option selected="{{selected}}" value="" ui:if="!required">...</option>
+            <option ui:each="option of options" selected="{{selected}}" value="{{option.id}}">{{optionName}}</option>
+        </select>
+    </script>
+</body>
