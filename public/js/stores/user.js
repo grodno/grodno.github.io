@@ -1,12 +1,15 @@
 export class UserStore {
-  constructor(top, auth) {
+
+  get TEMPLATE() {
+    return '<p></p>';
+  }
+  constructor({ api }, auth) {
     Object.assign(this, {
-      log: top.log,
-      top,
+      top: api,
       auth
     });
   }
-  init() {
+  init2() {
     this.auth.listenUser((user) => {
       if (user) {
         // User is signed in.

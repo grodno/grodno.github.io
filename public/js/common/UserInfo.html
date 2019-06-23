@@ -6,27 +6,30 @@
           <a click="-> user:login" class="anchor" aria-hidden="true">:login</a>
         </ui:then>
         <ui:else>
-          <div class="tile tile-centered">
-            <div class="tile-icon" ui:if="photoURL">
-              <div class="example-tile-icon">
-                <figure class="avatar avatar">
-                  <img src="{{photoURL}}" alt=":avatar" />
-                </figure>
-              </div>
-            </div>
-            <div class="tile-content">
-              <div class="tile-title" ui:if="displayName">{{displayName}}</div>
-              <a class="tile-subtitle text-gray" href="mailto:{{email}}">{{email}}</a>
-            </div>
-            <div class="tile-action">
-              <button class="btn btn-link">
-                <i class="icon icon-more-vert"></i>
-              </button>
-            </div>
-          </div>
+          <UserPanel ui:props="<- user:info"/>
         </ui:else>
       </ui:fragment>
     </div>
+  </script>
+  <script type="text/x-template" id="UserPanel">
+    <div class="tile tile-centered">
+        <div class="tile-icon" ui:if="photoURL">
+          <div class="example-tile-icon">
+            <figure class="avatar avatar">
+              <img src="{{photoURL}}" alt=":avatar" />
+            </figure>
+          </div>
+        </div>
+        <div class="tile-content">
+          <div class="tile-title" ui:if="displayName">{{displayName}}</div>
+          <a class="tile-subtitle text-gray" href="mailto:{{email}}">{{email}}</a>
+        </div>
+        <div class="tile-action">
+          <button class="btn btn-link">
+            <i class="icon icon-more-vert"></i>
+          </button>
+        </div>
+      </div>
   </script>
   <script type="text/x-template" id="UserInfo">
     <div class="ui raised segment">

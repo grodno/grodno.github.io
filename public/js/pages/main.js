@@ -43,19 +43,6 @@ export const Toast = /* html */`
     <p>{{top.ts}}</p>
   </div>
   `;
-export const Header = /* html */`
-  <header class="navbar bg-secondary">
-    <section class="navbar-section mx-2">
-      <Breadcrumbs ui:props="<- nav://item"/>
-    </section>
-    <section class="navbar-center">
-        <img src="/assets/grodno2.svg" alt="Spectre.css" height="40" width="40"/>
-    </section>
-    <section class="navbar-section mx-2">
-    <UserBar ui:props="<- user:info"/>
-
-    </section>
-  </header>`;
 
 export const Tabs = /* html */`
   <ul class="tab tab-block">
@@ -65,24 +52,6 @@ export const Tabs = /* html */`
   </ul>
   `;
 
-export const Aside = /* html */`
-  <div class="panel" style="height: 100%;">
-  <div class="panel-header">
-    <div class="panel-title">
-    <h1>:olgard</h1>
-    </div>
-  </div>
-  <div class="panel-nav">
-    <!-- navigation components: tabs, breadcrumbs or pagination -->
-  </div>
-  <div class="panel-body">
-    <NavTree data="<- nav://items"/>
-  </div>
-  <div class="panel-footer">
-    Settings
-  </div>
-  </div>
-  `;
 export const NavTree = /* html */`
   <ul class="nav">
     <li class="nav-item {{item.cl}}" ui:each="item of data">
@@ -114,29 +83,3 @@ export const Navs = /* html */`
   </div>
   `;
 
-export const Breadcrumbs = /* html */`
-  <ul class="breadcrumb">
-  <li class="breadcrumb-item">
-    <div class="dropdown">
-        <a class="btn btn-link dropdown-toggle" tabindex="0">Naviny<i class="icon icon-caret"></i></a>
-        <ul class="menu">
-          <li class="menu-item">
-            <a href="#dropdowns">
-              Naviny
-            </a>
-          </li>
-          <li class="menu-item">
-            <a href="#dropdowns">
-              Calendar
-            </a>
-          </li>
-          <li class="menu-item">
-            <a href="#dropdowns">
-              Ljudzi
-            </a>
-          </li>
-        </ul>
-      </div>
-  </li>
-</ul>
-`;

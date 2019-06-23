@@ -1,10 +1,29 @@
-import { resolveTemplate } from './resolve.js';
 import { render } from './render.js';
 import { Element } from './dom.js';
 import { ensureApi } from './api.js';
 import { dig, boundFn } from './utils.js';
 
 const cleanUp = c => ['parent', 'children', 'owner', 'impl', 'app', 'ctx'].forEach(k => { delete c[k]; });
+
+const doSlot = (owner, partial, acc) => {
+  owner.content.forEach((v, k) => { if (partial ? v.key === partial : !v.key) { acc.set(k, v); } });
+  return acc;
+};
+
+const resolveTemplateArray = (owner, tmpl, acc = new Map()) => tmpl && tmpl.length ? tmpl.reduce((m, t) => resolveTemplate(owner, t, m), acc) : null;
+const resolveProps = (props, owner) => props && props.length ? props.reduce((acc, fnProp) => { fnProp(owner, acc); return acc; }, {}) : null;
+
+function resolveRegular(acc, owner, { type, updates, inits, nodes, uid, key, ref }, tag = type(owner)) {
+  if (tag === 'slot') { return doSlot(owner, key, acc); }
+  return acc.set(tag + uid, { tag, key, ref, owner, inits, props: resolveProps(updates, owner), content: resolveTemplateArray(owner, nodes) });
+}
+
+export function resolveTemplate(owner, tmpl, acc = new Map()) {
+  if (!tmpl) { return acc; }
+  if (tmpl.reduce) { return tmpl.length ? resolveTemplateArray(owner, tmpl, acc) : acc; }
+  if (tmpl.iff && !tmpl.iff(owner)) { return resolveTemplate(owner, tmpl.iff.else, acc); }
+  return resolveRegular(acc, owner, tmpl);
+}
 
 export class Component {
   constructor(Ctor, options) {
@@ -15,8 +34,37 @@ export class Component {
     } else {
       this.api = this.impl = ensureApi(new Ctor());
     }
+    if (this.ref) { this.api.addRef(this.ref, this.impl); }
+  }
+  render() {
+    this.ctx.cursor = this.prevElt;
+    if (this.impl.render) {
+      this.impl.render(this.ctx);
+    } else {
+      const tmpl = this.impl.constructor.$TEMPLATE();
+      const acc = new Map();
+      if (this.impl.$each) {
+        const { $data: data, $each } = this.impl;
+        const { itemId, itemNode } = $each;
+        const { type, updates, nodes, uid } = itemNode;
+        this.content = new Map();
+        if (data && data.length) {
+          data.forEach((d, index) => {
+            this.owner.impl[itemId] = d;
+            this.owner.impl[itemId + 'Index'] = index;
+            const id = `${uid}-$${d.id || index}`;
+            resolveTemplate(this.owner, { type, updates, nodes, uid: id }, acc);
+          });
+        } else {
+        }
+      } else {
+        resolveTemplate(this, tmpl, acc);
+      }
+      render(this, acc, this.ctx);
+    }
   }
   init() {
+    if (this.isDone) { return; }
     this.isInited = true;
     if (this.inits) {
       this.inits.forEach(f => this.defer(f(this)));
@@ -42,12 +90,8 @@ export class Component {
     }
     cleanUp(this);
   }
-  defer(fn) {
-    if (fn) { (this.defered || (this.defered = [])).push(fn); }
-  }
-  eachChild(fn, ch = this.children) {
-    if (ch) { ch.forEach(fn); }
-  }
+  defer(fn) { if (fn) { (this.defered || (this.defered = [])).push(fn); } }
+  eachChild(fn, ch = this.children) { if (ch) { ch.forEach(fn); } }
   up(Δ) {
     if (this.isDone) { return; }
     if (Δ && Δ.then) { Δ.then(r => this.up(r)); return; }
@@ -62,34 +106,19 @@ export class Component {
         const mine = impl[k];
         if (typeof their !== 'undefined' && their !== mine) {
           const setter = impl['set' + k[0].toUpperCase() + k.slice(1)];
-          if (setter) {
-            setter.call(impl, their);
-          } else {
-            impl[k] = their;
-          }
+          if (setter) { setter.call(impl, their); } else { impl[k] = their; }
         }
       });
     }
-
-    if (--c.$assignDepth === 0) {
-      this.render();
-    }
-  }
-  render() {
-    this.ctx.cursor = this.prevElt;
-    if (this.impl.render) {
-      this.impl.render(this.ctx);
-    } else {
-      render(this, resolveTemplate(this, this.impl.constructor.$TEMPLATE()), this.ctx);
-    }
+    if (--c.$assignDepth === 0) { this.render(); }
   }
   prop(propId) {
     const $ = this.impl;
     const v = dig(($.get) ? $.get() : $, propId);
     return (typeof v === 'function') ? boundFn(this, v) : v;
   }
-  connect(url, k) {
-    return this.api.connect(url, (error, r) => this.up({ error, [k]: r }));
+  connect(url, applicator) {
+    return this.api.connect(url, (error, r) => error ? this.up({ error }) : this.up(applicator ? applicator(r) : r));
   }
   emit(...args) {
     this.api.emit(...args).then(r => this.up(r)).catch(error => this.up({ error }));
@@ -98,6 +127,7 @@ export class Component {
     return this.api.res(...args);
   }
   pipe(pk, r) {
-    return this.api.pipe(pk, r, this.impl);
+    const t = this.impl.pipe ? this.impl : this.api;
+    return t.pipe.call(t, pk, r, this.impl);
   }
 }

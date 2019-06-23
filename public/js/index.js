@@ -3,8 +3,10 @@ import { MyApi } from './api.js';
 import components from './components/index.js';
 import pages from './pages/index.js';
 import common from './common/index.js';
+import { NavStore } from './stores/nav.js';
+import { UserStore } from './stores/user.js';
 
-framework(...common, ...components, ...pages).run(MyApi);
+framework(...common, ...components, ...pages, NavStore, UserStore).run(MyApi);
 
 const hot = typeof module === 'undefined' ? null : module.hot;
 if (hot) {

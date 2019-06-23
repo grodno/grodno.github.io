@@ -1,12 +1,26 @@
 <body id="app">
+    <!-- <script type="text/x-template" id="Test">
+        <div>
+        <li class="menu-item" ui:each="item of <-:tags">
+            <a href="#{{item.id}}">{{item.name}}</a>
+        </li>
+    </div>
+    </script> -->
     <script type="text/template" id="Application2">
+    <ui:fragment>
+            <NavStore ui:ref="nav"/>
+            <UserStore ui:ref="user"/>
         <Sidebar>
-             <Aside key="aside" />
-             <p ui:ref="sss">123</p>
-
-            <ModuleContainer module="NewsModule" context="<- nav://context" />
+            <Aside key="aside">
+                <h3 key="title">:olgard</h3>
+                <NavTree data="<- nav://items"/>
+                <div key="footer">Settings</div>
+            </Aside>
+            <ModuleContainer ui:props="<- nav://context" />
         </Sidebar>
+    </ui:fragment>
     </script>
+
     <script type="text/x-template" id="ModuleContainer">
         <ui:fragment>
                 <Header />
@@ -14,19 +28,62 @@
         </ui:fragment >
     </script>
     <script type="text/x-template" id="Sidebar">
-
         <div class="off-canvas off-canvas-sidebar-show">
             <a class="off-canvas-toggle btn btn-primary btn-action show-lg" href="#sidebar">
-            <i class="icon icon-menu"/>
+                <i class="icon icon-menu"/>
             </a>
             <div id="sidebar" class="off-canvas-sidebar">
-            <ui:slot key="aside"/>
+                <ui:slot key="aside"/>
             </div>
             <a class="off-canvas-overlay" href="#"></a>
             <div class="off-canvas-content">
-            <ui:slot/>
+                <ui:slot/>
             </div>
         </div>
-  
+    </script>
+    <script type="text/x-template" id="Breadcrumbs">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item">
+            <div class="dropdown">
+                <a class="btn btn-link dropdown-toggle" tabindex="0">Naviny<i class="icon icon-caret"></i></a>
+                <ul class="menu">
+                    <li class="menu-item" ui:each="item of <-nav://items">
+                        <a href="#{{item.id}}">{{item.name}}</a>
+                    </li>
+                </ul>
+                </div>
+            </li>
+        </ul>
+    </script>
+    <script type="text/x-template" id="Header">
+    <header class="navbar bg-secondary">
+        <section class="navbar-section mx-2">
+            <Breadcrumbs/>
+        </section>
+        <section class="navbar-center">
+            <img src="/assets/grodno2.svg" alt="Spectre.css" height="40" width="40"/>
+        </section>
+        <section class="navbar-section mx-2">
+            <UserBar/>
+        </section>
+    </header>
+    </script>
+    <script type="text/x-template" id="Aside">
+        <div class="panel" style="height: 100%;">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <ui:slot key="title"/>
+                </div>
+            </div>
+            <div class="panel-nav">
+                <ui:slot key="nav"/>
+            </div>
+            <div class="panel-body">
+                <ui:slot/>
+            </div>
+            <div class="panel-footer">
+                <ui:slot key="footer"/>
+            </div>
+        </div>
     </script>
 </body>

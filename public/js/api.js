@@ -14,13 +14,20 @@ export class MyApi {
     this.get = (key) => local.get(key);
     this.assign = (key, cb) => local.assign(key, cb);
     this.fire = new Firestore(firebaseConfig);
-    this.refs = {
+    this.refs2 = {
       local,
       user: new UserStore(this, this.fire),
-      db: new IDB(this, 1, schema, this.fire),
-      nav: new NavStore(this)
+      db: new IDB(this, 1, schema, this.fire)
     };
-    Object.values(this.refs).forEach(r => r.init && r.init());
+    this.getTags = () => {
+      return [
+        { name: 'Naviny-tag', id: 'news' },
+        { name: 'Calendar', id: 'calendar' },
+        { name: 'Liudzi', id: 'people' }
+      ];
+    };
+    // Object.values(this.refs).forEach(r => r.init && r.init());
   }
+
 }
 

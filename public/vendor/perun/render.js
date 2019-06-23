@@ -6,10 +6,10 @@ export const render = (c, $content, ctx) => {
     c.eachChild(cc => !$content.has(cc.uid) ? cc.done() : 0);
     if (!$content.size) { return; }
     const ch = c.children || (c.children = new Map());
-    $content.forEach(({ tag, content, owner, props, inits }, uid) => {
+    $content.forEach(({ tag, content, owner, props, inits, ref }, uid) => {
         let cc = ch.get(uid);
         if (!cc) {
-            cc = new Component(typeByTag(tag), { tag, uid, ctx, owner, inits, parent: c });
+            cc = new Component(typeByTag(tag), { tag, ref, uid, ctx, owner, inits, parent: c });
             ch.set(uid, cc);
         }
         cc.content = content;

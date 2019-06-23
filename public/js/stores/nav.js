@@ -1,15 +1,22 @@
 import { urlParse } from '../utils/index.js';
 
 export class NavStore {
-  constructor(top) {
-    this.get = x => top.get(x);
-    this.assign = (x, cb) => top.assign(x, cb);
+
+  get TEMPLATE() {
+    return '<p></p>';
+  }
+  constructor({ api, ref }) {
+    this.top = api;
+    this.ref = ref;
+    const state = {};
+    this.get = x => state[x];
+    this.assign = (x, cb = () => { }) => { Object.assign(state, x); cb(); };
   }
 
   init() {
-    // const hashchange = () => this.emit('nav:hashchange', { value: window.location.hash.slice(1) });
-    // window.addEventListener('hashchange', hashchange);
-    // hashchange();
+    const hashchange = () => this.top.emit(this.ref + ':hashchange', { value: window.location.hash.slice(1) });
+    window.addEventListener('hashchange', hashchange);
+    hashchange();
   }
 
   onHashchange({ data: { value } }, cb) {
