@@ -4,7 +4,8 @@ import { render } from './render.js';
 import { runInBrowser } from './utils.js';
 
 export default function (...types) {
-  const meta = registerTypes(...types);
+  registerTypes(...types);
+  const meta = new Map([[0, { tag: types[0].NAME }]]);
   return {
     run(Api, ctx) {
       const boot = new Component(Api || function () { }, {});

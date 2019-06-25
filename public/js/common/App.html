@@ -1,4 +1,12 @@
 <body id="app">
+
+    <!-- <script type="text/x-template" id="UserBarTest">
+        <ui:fragment>
+        <Firebase ui:ref="firebase"/>
+        <UserStore ui:ref="user"/>
+        <UserBar/>
+    </ui:fragment> -->
+    </script>
     <!-- <script type="text/x-template" id="Test">
         <div>
         <li class="menu-item" ui:each="item of <-:tags">
@@ -6,8 +14,9 @@
         </li>
     </div>
     </script> -->
-    <script type="text/template" id="Application2">
+    <script type="text/template" id="Top">
     <ui:fragment>
+            <Firebase ui:ref="firebase"/>
             <NavStore ui:ref="nav"/>
             <UserStore ui:ref="user"/>
         <Sidebar>
@@ -16,17 +25,18 @@
                 <NavTree data="<- nav://items"/>
                 <div key="footer">Settings</div>
             </Aside>
-            <ModuleContainer ui:props="<- nav://context" />
+            <ui:fragment>
+                <Navbar logo="/assets/grodno2.svg">
+                    <Breadcrumbs key="left"/>
+                    <UserBar key="right"/>
+                </Navbar>
+                <ui:module ui:props="<- nav://context" />
+            </ui:fragment >
         </Sidebar>
     </ui:fragment>
     </script>
 
-    <script type="text/x-template" id="ModuleContainer">
-        <ui:fragment>
-                <Header />
-                <ui:module ui:props="{{context}}" />
-        </ui:fragment >
-    </script>
+
     <script type="text/x-template" id="Sidebar">
         <div class="off-canvas off-canvas-sidebar-show">
             <a class="off-canvas-toggle btn btn-primary btn-action show-lg" href="#sidebar">
@@ -55,16 +65,16 @@
             </li>
         </ul>
     </script>
-    <script type="text/x-template" id="Header">
+    <script type="text/x-template" id="Navbar">
     <header class="navbar bg-secondary">
         <section class="navbar-section mx-2">
-            <Breadcrumbs/>
+                <ui:slot key="left"/>
         </section>
-        <section class="navbar-center">
-            <img src="/assets/grodno2.svg" alt="Spectre.css" height="40" width="40"/>
-        </section>
+        <!-- <section class="navbar-center">
+            <img src="{{logo}}" alt="" height="40" width="40"/>
+        </section> -->
         <section class="navbar-section mx-2">
-            <UserBar/>
+                <ui:slot key="right"/>
         </section>
     </header>
     </script>

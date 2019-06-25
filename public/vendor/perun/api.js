@@ -9,13 +9,14 @@ const notFoundMethod = ({ type, target }) => {
 };
 class Observable {
     constructor() {
-        this.listeners = new Map();
-        this.notify = (key) => this.listeners.forEach(e => !key || key === e.key ? e.fn() : null);
+        const bundle = {};
+        this.listeners = (key) => bundle[key] || (bundle[key] = new Map());
+        this.notify = (key) => this.listeners(key).forEach(e => e());
     }
     addListener(key, fn) {
         const uuid = nextId();
-        this.listeners.set(uuid, { key, fn });
-        return () => this.listeners.delete(uuid);
+        this.listeners(key).set(uuid, fn);
+        return () => this.listeners(key).delete(uuid);
     }
 }
 class Api extends Observable {
@@ -36,10 +37,7 @@ class Api extends Observable {
         const method = ref && ref[capitalize(target, 'on')] || notFoundMethod;
         try {
             const r = method.call(ref, url);
-            if (r && r.then) {
-                return r.then(this.notify, err => this.error(err));
-            }
-            return Promise.resolve(r);
+            return ((r && r.then) ? r : Promise.resolve(r)).then((rr) => { this.notify(type); return rr; }, err => this.error(err));
         } catch (ex) {
             return Promise.reject(ex);
         }
@@ -62,7 +60,7 @@ class Api extends Observable {
             }
         };
         try {
-            return this.addListener(type + ':' + target, fn);
+            return this.addListener(type, fn);
         } finally {
             fn();
         }

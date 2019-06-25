@@ -2,7 +2,6 @@ let COUNTER = 1;
 
 const RE_SINGLE_PLACEHOLDER = /^\{\{([a-zA-Z0-9._$|]+)\}\}$/;
 const RE_PLACEHOLDER = /\{\{([a-zA-Z0-9._$|]+)\}\}/g;
-const FN_BOUND = new WeakMap();
 export const VALUES = {
     true: true,
     false: false,
@@ -37,6 +36,7 @@ export const boundFn = ($, fn) => {
     }
     return bound;
 };
+export const cleanUp = c => ['parent', 'children', 'owner', 'impl', 'app', 'ctx'].forEach(k => { delete c[k]; });
 
 export const dig = (obj, path) => {
     if (!obj || !path) { return; }
@@ -48,6 +48,11 @@ export const dig = (obj, path) => {
         return getter ? getter.call($, k) : $[k];
     }
     return dig($[k.slice(0, posE)], k.slice(posE + 1));
+};
+export const filterMapKey = (src, key) => {
+    const r = new Map();
+    src.forEach((v, k) => { if (k !== key) { r.set(k, v); } });
+    return r;
 };
 // Compilation
 export function expression(v) {

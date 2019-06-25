@@ -55,13 +55,13 @@ export const Tabs = /* html */`
 export const NavTree = /* html */`
   <ul class="nav">
     <li class="nav-item {{item.cl}}" ui:each="item of data">
-      <a href="#{{item.id}}"><span>{{item.name}}</span><span ui:if="item.weight" class="label label-error">{{item.weight}}</span></a>
+      <a href="#{{item.id}}">
+        <span>{{item.name}}</span>
+        <span ui:if="item.weight" class="label label-error">{{item.weight}}</span>
+      </a>
       <NavTree ui:if="item.subs" data="{{item.subs}}"/>
     </li>
   </ul>
-  `;
-export const Home = /* html */`
-  <p>Home</p>
   `;
 
 export const Navs = /* html */`

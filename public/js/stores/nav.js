@@ -2,9 +2,6 @@ import { urlParse } from '../utils/index.js';
 
 export class NavStore {
 
-  get TEMPLATE() {
-    return '<p></p>';
-  }
   constructor({ api, ref }) {
     this.top = api;
     this.ref = ref;

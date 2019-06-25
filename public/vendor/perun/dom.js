@@ -30,11 +30,8 @@ export class Element {
   render(p) {
     const e = this.elt;
     const $ = this.$;
-    p.cursor = e;
     if ($.content) {
-      e.cursor = null;
       render($, $.content, e);
-      e.cursor = null;
     }
     if (this.delta) {
       this.applyAttributes(this.delta);
@@ -46,6 +43,7 @@ export class Element {
     } else if (e !== before) {
       p.insertBefore(e, before);
     }
+    p.cursor = e;
   }
   applyAttributes(theirs) {
     const e = this.elt;

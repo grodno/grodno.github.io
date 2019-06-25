@@ -1,3 +1,4 @@
+import { firebaseConfig } from '../config.js';
 
 const unpackDocs = s => s.docs.reduce((r, e) => {
   const d = e.data();
@@ -6,8 +7,9 @@ const unpackDocs = s => s.docs.reduce((r, e) => {
   return r;
 }, []);
 
-export class Firestore {
-  constructor(config) {
+export class Firebase {
+  constructor() {
+    const config = firebaseConfig;
     const firebase = window.firebase;
     if (!window.firebaseInited) {
       firebase.initializeApp(config);

@@ -1,27 +1,21 @@
 import { render } from './render.js';
 import { Element } from './dom.js';
 import { ensureApi } from './api.js';
-import { dig, boundFn } from './utils.js';
+import { dig, boundFn, cleanUp } from './utils.js';
 
-const cleanUp = c => ['parent', 'children', 'owner', 'impl', 'app', 'ctx'].forEach(k => { delete c[k]; });
-
-const doSlot = (owner, partial, acc) => {
+const resolveSlot = (owner, partial, acc) => {
   owner.content.forEach((v, k) => { if (partial ? v.key === partial : !v.key) { acc.set(k, v); } });
   return acc;
 };
-
 const resolveTemplateArray = (owner, tmpl, acc = new Map()) => tmpl && tmpl.length ? tmpl.reduce((m, t) => resolveTemplate(owner, t, m), acc) : null;
 const resolveProps = (props, owner) => props && props.length ? props.reduce((acc, fnProp) => { fnProp(owner, acc); return acc; }, {}) : null;
-
 function resolveRegular(acc, owner, { type, updates, inits, nodes, uid, key, ref }, tag = type(owner)) {
-  if (tag === 'slot') { return doSlot(owner, key, acc); }
+  if (tag === 'slot') { return resolveSlot(owner, key, acc); }
   return acc.set(tag + uid, { tag, key, ref, owner, inits, props: resolveProps(updates, owner), content: resolveTemplateArray(owner, nodes) });
 }
-
-export function resolveTemplate(owner, tmpl, acc = new Map()) {
+function resolveTemplate(owner, tmpl, acc = new Map()) {
   if (!tmpl) { return acc; }
   if (tmpl.reduce) { return tmpl.length ? resolveTemplateArray(owner, tmpl, acc) : acc; }
-  if (tmpl.iff && !tmpl.iff(owner)) { return resolveTemplate(owner, tmpl.iff.else, acc); }
   return resolveRegular(acc, owner, tmpl);
 }
 
@@ -36,31 +30,41 @@ export class Component {
     }
     if (this.ref) { this.api.addRef(this.ref, this.impl); }
   }
+  renderFragment() {
+    const acc = new Map();
+    if (this.impl.$each) {
+      const { $data: data, $each } = this.impl;
+      const { itemId, itemNode, emptyNode } = $each;
+      const { type, updates, nodes, uid } = itemNode;
+      //  this.content = new Map();
+      if (data && data.length) {
+        data.forEach((d, index) => {
+          this.owner.impl[itemId] = d;
+          this.owner.impl[itemId + 'Index'] = index;
+          const id = `${uid}-$${d.id || index}`;
+          resolveTemplate(this.owner, { type, updates, nodes, uid: id }, acc);
+        });
+      } else if (emptyNode) {
+        resolveTemplate(this.owner, emptyNode, acc);
+      }
+    } else if (this.impl.$if) {
+      const { $data, $if } = this.impl;
+      const node = $data ? $if.then : $if.else;
+      // this.content = new Map();
+      resolveTemplate(this.owner, node, acc);
+    } else {
+      this.content.forEach((v, k) => acc.set(k, v));
+    }
+    render(this, acc, this.ctx);
+  }
   render() {
     this.ctx.cursor = this.prevElt;
     if (this.impl.render) {
       this.impl.render(this.ctx);
+    } else if (this.tag === 'fragment') {
+      this.renderFragment();
     } else {
-      const tmpl = this.impl.constructor.$TEMPLATE();
-      const acc = new Map();
-      if (this.impl.$each) {
-        const { $data: data, $each } = this.impl;
-        const { itemId, itemNode } = $each;
-        const { type, updates, nodes, uid } = itemNode;
-        this.content = new Map();
-        if (data && data.length) {
-          data.forEach((d, index) => {
-            this.owner.impl[itemId] = d;
-            this.owner.impl[itemId + 'Index'] = index;
-            const id = `${uid}-$${d.id || index}`;
-            resolveTemplate(this.owner, { type, updates, nodes, uid: id }, acc);
-          });
-        } else {
-        }
-      } else {
-        resolveTemplate(this, tmpl, acc);
-      }
-      render(this, acc, this.ctx);
+      render(this, resolveTemplate(this, this.impl.constructor.$TEMPLATE()), this.ctx);
     }
   }
   init() {
@@ -110,7 +114,7 @@ export class Component {
         }
       });
     }
-    if (--c.$assignDepth === 0) { this.render(); }
+    if (c.$assignDepth === 1) { this.render(); c.$assignDepth--; }
   }
   prop(propId) {
     const $ = this.impl;

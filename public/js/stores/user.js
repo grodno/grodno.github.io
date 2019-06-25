@@ -1,16 +1,13 @@
 export class UserStore {
 
-  get TEMPLATE() {
-    return '<p></p>';
+  constructor({ api, ref }, auth) {
+    Object.assign(this, { api, ref });
   }
-  constructor({ api }, auth) {
-    Object.assign(this, {
-      top: api,
-      auth
-    });
+  get fb() {
+    return this.api.refs.firebase;
   }
-  init2() {
-    this.auth.listenUser((user) => {
+  init() {
+    this.fb.listenUser((user) => {
       if (user) {
         // User is signed in.
         // var isAnonymous = user.isAnonymous
@@ -24,16 +21,16 @@ export class UserStore {
         //   food: ""
         // });
       } else {
-        this.auth.signInAnonymously();
+        this.fb.signInAnonymously();
         // User is signed out.
         // ...
       }
       // ...
-      this.top.notify();
+      this.api.notify(this.ref);
     });
   }
   getInfo() {
-    const user = this.auth.getCurrentUser();
+    const user = this.fb.getCurrentUser();
     if (user !== null) {
       user.providerData.forEach(function (profile) {
         // console.log('Sign-in provider: ' + profile.providerId)
@@ -46,9 +43,9 @@ export class UserStore {
     return user || {};
   }
   onLogin() {
-    this.auth.linkProvider(this.top.notify);
+    this.fb.linkProvider();
   }
   onLogout() {
-    this.auth.logout(this.top.notify);
+    this.fb.logout();
   }
 }
