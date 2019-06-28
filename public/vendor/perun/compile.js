@@ -1,10 +1,23 @@
-import { expression, filterMapKey } from './utils.js';
+import { expression, filterMapKey, VALUES } from './utils.js';
 
-const makeApplicator = (get, k = '_') => (c, acc) => { if (get) { acc[k] = get(c); } };
-const dType = dt => (dt === 'fragment' || dt === 'slot') ? (() => dt) : (c => c.prop(dt));
+const makeApplicator = (get, k = '_') => (c, acc) => {
+  if (get) {
+    const val = get(c);
+    if (k.slice(0, 5) === 'data-') {
+      acc['data'] = { ...acc['data'], [k.slice(5)]: val in VALUES ? VALUES[val] : val };
+    } else {
+      acc[k] = val;
+    }
+  }
+};
+const dType = dt => (dt === 'fragment' || dt === 'slot') ? (() => dt) : (c => '' + c.prop(dt));
 const compileType = tag => tag.slice(0, 3) === 'ui:' ? dType(tag.slice(3)) : () => tag;
 const emitter = (v, fctr = expression(v)) => c => (data, opts) => c.emit(fctr(c), data, opts);
-
+const hasSlot = (c, key) => {
+  let r = false;
+  c.content.forEach(e => { r = r || (e.tag === c.tag + ':' + key); });
+  return r;
+};
 export function compileEach([itemId, , expr], { tag, attrs, uid, nodes }) {
   const $each = { itemId, itemNode: compileNode({ tag, attrs, uid, nodes }) };
   const r = {
@@ -25,6 +38,11 @@ export function compileEach([itemId, , expr], { tag, attrs, uid, nodes }) {
       $each.emptyNode = emptyNode.nodes.map(compileNode);
       $nodes = nodes.filter(e => e !== emptyNode);
     }
+    const loadingNode = nodes.find(e => e.tag === 'ui:loading');
+    if (loadingNode) {
+      $each.loadingNode = loadingNode.nodes.map(compileNode);
+      $nodes = nodes.filter(e => e !== loadingNode);
+    }
   }
   $each.itemNode = compileNode({ tag, attrs, uid, nodes: $nodes });
   return r;
@@ -43,8 +61,12 @@ export function compileIf(aIf, { tag, attrs, uid, nodes }) {
 
   if ((expr.slice(0, 2) === '<-')) {
     (r.inits || (r.inits = [])).push(c => c.connect(expr.slice(2).trim(), neg ? (rr => ({ $data: !rr })) : (rr => ({ $data: (!!rr) }))));
+  } else if ((expr.slice(0, 5) === 'slot:')) {
+    const gttr = c => hasSlot(c, expr.slice(5));
+    (r.updates || (r.updates = [])).push((c, acc) => { acc['$data'] = neg ? !gttr(c) : gttr(c); });
   } else {
-    (r.updates || (r.updates = [])).push(makeApplicator(expression('{:'.includes(expr[0]) ? expr : '{{' + expr + '}}'), '$data'));
+    const gttr = expression('{:'.includes(expr[0]) ? expr : '{{' + expr + '}}');
+    (r.updates || (r.updates = [])).push((c, acc) => { acc['$data'] = neg ? !gttr(c) : gttr(c); });
   }
   let $nodes = null;
   if (nodes && nodes.length) {
@@ -52,9 +74,9 @@ export function compileIf(aIf, { tag, attrs, uid, nodes }) {
     const ifThen = nodes.find(e => e.tag === 'ui:then');
     if (ifElse) {
       iff.else = ifElse.nodes.map(compileNode);
-      $nodes = (ifThen ? ifThen.nodes : nodes.filter(e => e !== ifElse));
+      $nodes = ifThen ? ifThen.nodes : [{ tag, attrs, uid, nodes: nodes.filter(e => e !== ifElse) }];
     } else if (ifThen) {
-      $nodes = ifThen.nodes;
+      $nodes = [{ tag, attrs, uid, nodes: ifThen.nodes }];
     }
   }
   iff.then = ($nodes || [{ tag, attrs, uid, nodes }]).map(compileNode);

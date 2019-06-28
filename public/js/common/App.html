@@ -2,11 +2,10 @@
 
     <!-- <script type="text/x-template" id="UserBarTest">
         <ui:fragment>
-        <Firebase ui:ref="firebase"/>
-        <UserStore ui:ref="user"/>
-        <UserBar/>
-    </ui:fragment> -->
-    </script>
+            <NavigationService ui:ref="nav"/>
+            <PageRouter ui:props="<- nav://state" />
+        </ui:fragment>
+    </script> -->
     <!-- <script type="text/x-template" id="Test">
         <div>
         <li class="menu-item" ui:each="item of <-:tags">
@@ -16,24 +15,34 @@
     </script> -->
     <script type="text/template" id="Top">
     <ui:fragment>
-            <Firebase ui:ref="firebase"/>
-            <NavStore ui:ref="nav"/>
-            <UserStore ui:ref="user"/>
+        <Firebase ui:ref="firebase"/>
+        <NavigationService ui:ref="nav"/>
+        <LocalStorage ui:ref="local"/>
+        <DatabaseService ui:ref="db"/>
+        <UserService ui:ref="user"/>
         <Sidebar>
-            <Aside key="aside">
-                <h3 key="title">:olgard</h3>
-                <NavTree data="<- nav://items"/>
-                <div key="footer">Settings</div>
-            </Aside>
+            <Sidebar:aside>
+                <Panel style="height: 100vh;">
+                    <Panel:title><h3>:olgard</h3></Panel:title>
+                    <Panel:footer><div>:settings</div></Panel:footer>
+                    <NavTree data="<- nav://items"/>
+                </Panel>
+            </Sidebar:aside>
             <ui:fragment>
-                <Navbar logo="/assets/grodno2.svg">
-                    <Breadcrumbs key="left"/>
-                    <UserBar key="right"/>
+                <Navbar logo=":logoUrl">
+                    <Navbar:left><p/></Navbar:left>
+                    <Navbar:right><UserBar/></Navbar:right>
                 </Navbar>
-                <ui:module ui:props="<- nav://context" />
+                <Container>
+                   <PageRouter ui:props="<- nav://state" />
+                </Container>
             </ui:fragment >
         </Sidebar>
     </ui:fragment>
+    </script>
+
+    <script type="text/x-template" id="PageRouter">
+        <ui:page ui:props="{{params}}" />      
     </script>
 
 
@@ -51,20 +60,6 @@
             </div>
         </div>
     </script>
-    <script type="text/x-template" id="Breadcrumbs">
-        <ul class="breadcrumb">
-            <li class="breadcrumb-item">
-            <div class="dropdown">
-                <a class="btn btn-link dropdown-toggle" tabindex="0">Naviny<i class="icon icon-caret"></i></a>
-                <ul class="menu">
-                    <li class="menu-item" ui:each="item of <-nav://items">
-                        <a href="#{{item.id}}">{{item.name}}</a>
-                    </li>
-                </ul>
-                </div>
-            </li>
-        </ul>
-    </script>
     <script type="text/x-template" id="Navbar">
     <header class="navbar bg-secondary">
         <section class="navbar-section mx-2">
@@ -78,22 +73,16 @@
         </section>
     </header>
     </script>
-    <script type="text/x-template" id="Aside">
-        <div class="panel" style="height: 100%;">
-            <div class="panel-header">
-                <div class="panel-title">
-                    <ui:slot key="title"/>
-                </div>
-            </div>
-            <div class="panel-nav">
-                <ui:slot key="nav"/>
-            </div>
-            <div class="panel-body">
-                <ui:slot/>
-            </div>
-            <div class="panel-footer">
-                <ui:slot key="footer"/>
-            </div>
-        </div>
-    </script>
+
+    <script type="text/template" id="NavTree">
+        <ul class="nav">
+          <li class="nav-item {{item.cl}}" ui:each="item of data">
+            <a href="#{{item.id}}">
+              <span>{{item.name}}</span>
+              <span ui:if="item.weight" class="label label-error">{{item.weight}}</span>
+            </a>
+            <NavTree ui:if="item.subs" data="{{item.subs}}"/>
+          </li>
+        </ul>
+      </script>
 </body>

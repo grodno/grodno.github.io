@@ -1,6 +1,6 @@
 import { nope } from '../utils/index.js';
 
-export class LocalStore {
+export class LocalStorage {
   constructor() {
     const cache = {};
     const storage = window.localStorage;

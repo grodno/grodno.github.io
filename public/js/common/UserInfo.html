@@ -25,9 +25,14 @@
           <a class="tile-subtitle text-gray" href="mailto:{{email}}">{{email}}</a>
         </div>
         <div class="tile-action">
-          <button class="btn btn-link">
-            <i class="icon icon-more-vert"></i>
-          </button>
+          <div class="dropdown dropdown-right">
+              <a class="btn btn-link dropdown-toggle" tabindex="0"><i class="icon icon-more-vert"></i></a>
+              <ul class="menu">
+                  <li class="menu-item" ui:each="item of <-nav://items">
+                      <a href="#{{item.id}}">{{item.name}}</a>
+                  </li>
+              </ul>
+          </div>
         </div>
       </div>
   </script>

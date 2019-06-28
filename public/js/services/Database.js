@@ -1,27 +1,26 @@
 import { urlParse, nope, filterFn, dig } from '../utils/index.js';
+import { schema } from '../config.js';
 
-export class IDB {
-  constructor(top, version, schema, remote) {
-    const db = new window.Dexie(version);
+export class DatabaseService {
+  constructor({ api, ref }) {
+    const db = new window.Dexie(1);
     db.version(1).stores({ ...schema, _meta: 'id' });
-    // Open the database
-    db.open().catch(function (error) {
-      this.error('DB.open: ' + error);
-    });
     Object.assign(this, {
-      log: top.log,
-      top,
-      version,
+      api,
+      ref,
       db,
       cache: {},
       realtimes: {},
-      dbkeys: Object.keys(schema),
-      remote
+      dbkeys: Object.keys(schema)
     });
   }
   init() {
-    if (this.top.get('$version') !== this.version) {
-      this.top.assign({ $version: this.version });
+    // Open the database
+    this.db.open().catch(function (error) {
+      this.error('DB.open: ' + error);
+    });
+    if (this.api.local.get('$version') !== this.version) {
+      this.api.local.assign({ $version: this.version });
     } else {
       this.sync()
         .then(() => { this.log('DB sync OK'); this.top.notify(u => u.type === 'db'); })
@@ -47,7 +46,7 @@ export class IDB {
     return this.remote.readCollectionSince(coll, ts);
   }
   getCollection(coll) {
-    return this.db[coll];
+    return this.api.firebase.getCollection(coll);
   }
   retainCollection(url) {
     if (url.type === 'db') {
@@ -92,14 +91,14 @@ export class IDB {
       return null;
     }
     let coll = this.getCollection(kind);
-    if (index && indexKey) {
-      coll = coll.where(index).equals(indexKey);
-    }
-    const filter = url.params;
-    if (filter) {
-      coll = coll.filter(filterFn(filter));
-    }
-    return coll.toArray();
+    // if (index && indexKey) {
+    //   coll = coll.where(index).equals(indexKey);
+    // }
+    // const filter = url.params;
+    // if (filter) {
+    //   coll = coll.filter(filterFn(filter));
+    // }
+    return coll;
   }
   eachDelta(delta, fn = nope) {
     const bulks = {};

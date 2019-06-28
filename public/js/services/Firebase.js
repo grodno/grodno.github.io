@@ -11,13 +11,21 @@ export class Firebase {
   constructor() {
     const config = firebaseConfig;
     const firebase = window.firebase;
-    if (!window.firebaseInited) {
-      firebase.initializeApp(config);
-      window.firebaseInited = true;
-    }
+    firebase.initializeApp(config);
+    this.db = firebase.firestore();
+    // this.db.settings({ timestampsInSnapshots: true });
+    this.db.enablePersistence({ synchronizeTabs: true }).catch(function (err) {
+      if (err.code == 'failed-precondition') {
+        // Multiple tabs open, persistence can only be enabled
+        // in one tab at a a time.
+        // ...
+      } else if (err.code == 'unimplemented') {
+        // The current browser does not support all of the
+        // features required to enable persistence
+        // ...
+      }
+    });
 
-    this.db = window.firebase.firestore();
-    this.db.settings({ timestampsInSnapshots: true });
     this.auth = firebase.auth();
     this.auth.languageCode = 'by';
     this.providers = {
@@ -70,11 +78,14 @@ export class Firebase {
   logout(cb) {
     cb();
   }
-  // db
+  getCollection(coll) {
+    return this.db.collection(coll).get().then(unpackDocs);
+  }
   readCollectionSince(coll, ts = 0) {
     return ((c) => ts ? c.where('modified_at', '>', ts) : c)(this.db.collection(coll))
       .get().then(unpackDocs);
   }
+  // db
   listenCollection(coll, ts = 0, cb) {
     return ((c) => ts ? c.where('modified_at', '>', ts) : c)(this.db.collection(coll))
       .onSnapshot(function (querySnapshot) {

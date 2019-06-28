@@ -2,15 +2,11 @@ let COUNTER = 1;
 
 const RE_SINGLE_PLACEHOLDER = /^\{\{([a-zA-Z0-9._$|]+)\}\}$/;
 const RE_PLACEHOLDER = /\{\{([a-zA-Z0-9._$|]+)\}\}/g;
-export const VALUES = {
-    true: true,
-    false: false,
-    null: null
-};
+export const VALUES = { true: true, false: false, null: null };
+
 // functional
 export const nextId = (p = '') => p + (COUNTER++);
-
-export const fnName = ctor => (/^function\s+([\w$]+)\s*\(/.exec(ctor.toString()) || [])[1] || next('$C');
+export const fnName = ctor => (/^function\s+([\w$]+)\s*\(/.exec(ctor.toString()) || [])[1] || nextId('$C');
 
 export const runInBrowser = ((w) => fn => w.requestAnimationFrame(() => fn.call(w, w.document)))(window);
 // Strings
@@ -90,8 +86,7 @@ export const DOM_SETTERS = {
     selected: (e, k, v) => (e[k] = v ? true : null),
     value: (e, k, v) => (e[k] = v == null ? '' : v),
     checked: (e, k, v) => (e[k] = !!v),
-    data: (e, k, v) => { e.$dataset = Object.assign({}, v); },
-    'data*': (e, k, v) => { (e.$dataset || (e.$dataset = {}))[k.slice(5)] = v in VALUES ? VALUES[v] : v; },
+    data: (e, _, v) => { e.$dataset = Object.assign({}, v); },
     enter: function (e, key, v) {
         this.setListener('keyup', !v ? null : (ev) => {
             if (ev.keyCode === 13) {

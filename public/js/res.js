@@ -13,5 +13,10 @@ export default {
     { name: 'Padzei', id: 'events' },
     { name: 'Gistorya', id: 'history' },
     { name: 'Zabavki', id: 'amazing' }
-  ]
-};
+  ],
+  logoUrl: '/assets/grodno2.svg',
+  AddNewRecordData: {
+    error: { message: 'Add a new record' }
+  }
+}
+  ;

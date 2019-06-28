@@ -1,10 +1,9 @@
-export class UserStore {
-
-  constructor({ api, ref }, auth) {
+export class UserService {
+  constructor({ api, ref }) {
     Object.assign(this, { api, ref });
   }
   get fb() {
-    return this.api.refs.firebase;
+    return this.api.firebase;
   }
   init() {
     this.fb.listenUser((user) => {

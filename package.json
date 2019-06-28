@@ -28,6 +28,7 @@
     "npm": ">= 1.0.0"
   },
   "dependencies": {
+    "firebase": "^6.2.4",
     "moment": "^2.18.1"
   },
   "devDependencies": {

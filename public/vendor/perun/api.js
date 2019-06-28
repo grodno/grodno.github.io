@@ -24,29 +24,34 @@ class Api extends Observable {
         super();
         this.log = (...value) => this.emit('//log', value);
         this.error = (...value) => this.emit('//error', value);
-        this.refs = {};
     }
     addRef(key, ref) {
-        this.refs[key] = ref;
-        return () => { delete this.refs[key]; };
+        this[key] = ref;
+        return () => { delete this[key]; };
     }
-    emit(key, data) {
+    emit(key, data, _cb) {
         const url = urlParse(key, { data });
         const { type, target } = url;
-        const ref = type ? this.refs[type] : this;
+        const ref = type ? this[type] : this;
         const method = ref && ref[capitalize(target, 'on')] || notFoundMethod;
+        const cb = (err, r) => { if (_cb) { _cb(err, r); } this.notify(type); };
+        let result = null;
         try {
-            const r = method.call(ref, url);
-            return ((r && r.then) ? r : Promise.resolve(r)).then((rr) => { this.notify(type); return rr; }, err => this.error(err));
+            result = method.call(ref, url);
+            if (result && result.then) {
+                result.then(rr => cb(null, rr), cb);
+            } else {
+                cb(null, result);
+            }
         } catch (ex) {
-            return Promise.reject(ex);
+            cb(ex);
         }
     }
     connect(key, cb) {
         const url = urlParse(key);
         const { type, target } = url;
         const fn = () => {
-            const ref = type ? this.refs[type] : this;
+            const ref = type ? this[type] : this;
             const method = ref && ref[capitalize(target, 'get')] || notFoundMethod;
             try {
                 const val = method.call(ref, url);

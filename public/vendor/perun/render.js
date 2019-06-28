@@ -6,7 +6,7 @@ export const render = (c, $content, ctx) => {
     c.eachChild(cc => !$content.has(cc.uid) ? cc.done() : 0);
     if (!$content.size) { return; }
     const ch = c.children || (c.children = new Map());
-    ctx.cursor = null;
+    c.rendering = true;
     $content.forEach(({ tag, content, owner, props, inits, ref }, uid) => {
         let cc = ch.get(uid);
         if (!cc) {
@@ -18,7 +18,7 @@ export const render = (c, $content, ctx) => {
         // console.log(deep.join(''), 'render', tag, props);
         cc.up(props);
     });
-    ctx.cursor = null;
+    c.rendering = false;
     c.eachChild(cc => !cc.isInited ? cc.init() : 0);
     deep.shift();
 };

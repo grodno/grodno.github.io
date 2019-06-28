@@ -7,7 +7,7 @@
  */
 export function urlParse(s, r = {}) {
   if (!s) {
-    return r;
+    return { path: [], params: {}, target: '', ...r };
   }
   if (typeof s === 'object') {
     return { path: [], params: {}, target: '', ...r, ...s };

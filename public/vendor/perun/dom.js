@@ -31,7 +31,9 @@ export class Element {
     const e = this.elt;
     const $ = this.$;
     if ($.content) {
+      e.cursor = null;
       render($, $.content, e);
+      e.cursor = null;
     }
     if (this.delta) {
       this.applyAttributes(this.delta);
@@ -56,8 +58,7 @@ export class Element {
     for (let key in theirs) {
       if (theirs.hasOwnProperty(key) && !(DOM_VALUE_COMPARATORS[key] || DOM_VALUE_COMPARATORS._)(e, theirs[key], mines[key])) {
         const value = theirs[key];
-        const prefixP = key.indexOf('-');
-        const setter = DOM_SETTERS[prefixP === -1 ? key : key.slice(0, prefixP) + '*'];
+        const setter = DOM_SETTERS[key];
         if (setter) {
           setter.call(this, e, key, value);
         } else if (typeof value === 'function' || (this.listeners && this.listeners.has(key))) {

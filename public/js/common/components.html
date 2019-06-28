@@ -1,0 +1,27 @@
+<body id="app">
+
+    <script type="text/x-template" id="Container">
+        <div class="container">
+            <ui:slot/>  
+        </div>    
+    </script>
+
+    <script type="text/x-template" id="Panel">
+        <div class="panel" style="{{style}}">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <ui:slot key="title"/>
+                </div>
+            </div>
+            <div class="panel-nav" ui:if="slot:nav">
+                <ui:slot key="nav"/>
+            </div>
+            <div class="panel-body">
+                <ui:slot/>
+            </div>
+            <div class="panel-footer" ui:if="slot:footer">
+                <ui:slot key="footer"/>
+            </div>
+        </div>
+    </script>
+</body>

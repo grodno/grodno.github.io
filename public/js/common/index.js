@@ -1,6 +1,3 @@
-// import UserInfo from './UserInfo.html';
+import { fromTemplates } from '../utils/support.js';
 
-export default ['App', 'Modal', 'UserInfo', 'Elements']
-  .map(key => document.getElementById(key + 'Template'))
-  .map(top => [...top.import.body.children].map(e => ({ NAME: e.getAttribute('id'), TEMPLATE: e.innerHTML })))
-  .reduce((r, e) => r.concat(e), []);
+export default fromTemplates('App', 'Modal', 'UserInfo', 'elements', 'components');

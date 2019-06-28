@@ -63,6 +63,8 @@ export const pipes = {
   serializeParams: x => !x ? '' : Object.keys(x).map(k => `${k}=${x[k]}`).join('&'),
   initials: x => !x ? '' : x.split(' ').slice(0, 2).map(s => s.slice(0, 1).toUpperCase()).join(''),
   translit: x => x,
+  rest: x => x ? x.slice(1) : [],
+  limit: x => x ? x.slice(0, 50) : [],
   urlHost: x => urlParse(x).target,
   subject(_s) {
     const s = _s || '';

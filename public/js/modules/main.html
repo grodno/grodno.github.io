@@ -1,0 +1,33 @@
+<body id="app">
+  <script type="text/template" id="MainPage">
+  <div class="container grid-lg">
+      <div class="columns">
+          <div class="column col-12"><h2>Olgerd na dobu dnia</h2></div>
+          <MainList data="<-nav:/items"/>
+      </div>
+  </div>
+</script>
+
+  <script type="text/template" id="MainList">
+  <div class="column col-6" ui:each="item of data|rest">
+      <CardNews ui:props="{{item}}"/>
+  </div>
+  </script>
+
+  <script type="text/template" id="CardNews">
+  <div class="card">
+      <div class="card-image">
+          <img src="{{image}}" class="img-responsive"/>
+      </div>
+      <div class="card-header">
+          <a href="#{{id}}"><h5 class="card-title">{{name}}</h5></a>
+          <div class="card-subtitle text-gray">{{name}}</div>
+      </div>
+      <div class="card-body">
+          <li ui:each="e of links"><a href="{{e.link}}" class="item">{{e.name|subject|translit}}</a></li>
+      </div>
+      <!-- <div class="card-footer">
+      </div> -->
+  </div>
+  </script>
+</body>

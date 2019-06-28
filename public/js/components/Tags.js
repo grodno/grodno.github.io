@@ -35,7 +35,7 @@ export class Tags {
       const etags = ('' + e.tags).split(',');
       return sel.reduce((r, s) => r && etags.includes(s), true);
     });
-    const tags = items.reduce((r, e) => {
+    const tags = [].concat(items).reduce((r, e) => {
       const etags = ('' + e.tags).split(',');
       const match = !this.selection.size || etags.find(t => this.selection.has(t));
       if (match) {
