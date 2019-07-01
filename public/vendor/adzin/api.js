@@ -81,8 +81,7 @@ class Api extends Observable {
     onLog(x) { window.console.log(x.data); }
     onError(x) { window.console.error(x.data); }
 }
-const API_STUB = new Api();
 export const ensureApi = (api = {}) => {
-    api.__proto__ = API_STUB;
+    api.__proto__ = new Api();
     return api;
 };

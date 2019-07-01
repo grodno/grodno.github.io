@@ -32,6 +32,11 @@ export class Firebase {
       Google: firebase.auth.GoogleAuthProvider
     };
   }
+
+  done() {
+    const firebase = window.firebase;
+    firebase.app().delete();
+  }
   // auth
   signInAnonymously() {
     this.auth.signInAnonymously().catch(function (error) {

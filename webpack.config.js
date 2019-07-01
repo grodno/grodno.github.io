@@ -1,6 +1,6 @@
 /* global __dirname */
 
-var path = require('path')
+var path = require('path');
 
 module.exports = {
   rules: [
@@ -29,8 +29,7 @@ module.exports = {
     },
     {
       test: /\.html$/,
-      exclude: /(node_modules|vendor)/,
-      loader: 'html-loader'
+      loader: 'raw-loader'
     },
     {
       test: /\.js$/,
@@ -39,13 +38,7 @@ module.exports = {
         {
           loader: 'babel-loader',
           options: {
-            cacheDirectory: true,
-            presets: ['env'],
-            plugins: [
-              'transform-runtime',
-              'transform-class-properties',
-              'transform-object-rest-spread'
-            ]
+            cacheDirectory: true
           }
         }
       ]
@@ -57,4 +50,4 @@ module.exports = {
   vendor: [
     // 'core-js',
   ]
-}
+};

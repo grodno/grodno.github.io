@@ -1,33 +1,75 @@
 <body id="app">
   <script type="text/template" id="MainPage">
-  <div class="container grid-lg">
-      <div class="columns">
-          <div class="column col-12"><h2>Olgerd na dobu dnia</h2></div>
-          <MainList data="<-nav:/items"/>
-      </div>
-  </div>
-</script>
-
-  <script type="text/template" id="MainList">
-  <div class="column col-6" ui:each="item of data|rest">
-      <CardNews ui:props="{{item}}"/>
-  </div>
-  </script>
-
+    <div class="container grid-lg">
+        <div class="columns">
+            <div class="column col-12"><header>Olgerd na dobu dnia</header></div>
+            <div class="column col-6" ui:each="item of <-nav:/items|rest">
+                <CardNews ui:props="{{item}}"/>
+            </div>
+        </div>
+          <h4 class="ui header">
+            <a target="video" href="//www.youtube.com/embed/5NkGFURgisI">2013</a>
+            -
+            <a target="video" href="//www.youtube.com/embed/j4oJoRAb_Ag">2012</a>
+            -
+            <a target="video" href="//www.youtube.com/embed/U0G5dBA854g">2011</a>
+          </h4>
+          <div class="embed-responsive embed-responsive-4by3">
+            <iframe class="embed-responsive-item" src="//www.youtube.com/embed/j4oJoRAb_Ag" allowfullscreen="true"></iframe>
+          </div>
+          <small>
+            <p>
+              <strong>Olgard</strong> - asobae mesto Sily. Tut qas beghyt pa-svojmu i inshy masshtab padzej, zdarenni abumowleny
+              i wsio navokal prasiaknuta asobym sensam. Treba adno zawvaghati detali, sluxati cishynu, kab dotknuti sa da hetoj
+              inshaj realnosti.
+            </p>
+            <p>
+              <strong>
+                <a href="http://ru.wikipedia.org/wiki/%D0%98%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F_%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE"
+                  target="_blank">Gistorya mesta Olgard</a>
+              </strong> neadjemnea qastka susvetnaj gistoryi. Liosy, zvyqai, mova i kultura cesna perapleli sa tut w admyslovy uzor. Nashae
+              mesto josc prykladom tradycyj siabrowstva i wzaemnaj povagi migh liudzmi. My roznya, ale nas jednae vera w lepshae
+              majbytne, shto my razam buduemo dzenj za dniom. I tamu tut lubiat pawtorati:
+              <i>"Use my liudzi", "Nex zhye volnosc", "Xto krucit, toj mae"</i>.
+            </p>
+          </small>
+    </div>
+    
+    </script>
   <script type="text/template" id="CardNews">
-  <div class="card">
-      <div class="card-image">
-          <img src="{{image}}" class="img-responsive"/>
-      </div>
-      <div class="card-header">
-          <a href="#{{id}}"><h5 class="card-title">{{name}}</h5></a>
-          <div class="card-subtitle text-gray">{{name}}</div>
-      </div>
-      <div class="card-body">
-          <li ui:each="e of links"><a href="{{e.link}}" class="item">{{e.name|subject|translit}}</a></li>
-      </div>
-      <!-- <div class="card-footer">
-      </div> -->
-  </div>
-  </script>
+        <div class="my-1">
+            <Card title="{{name}}" subtitle="{{name}}" ui:props="<-">
+                <li ui:each="e of links"><a href="{{e.link}}" class="item">{{e.name|subject|translit}}</a></li>
+            </Card>
+        </div>
+    </script>
+  <script type="text/x-template" id="Footer">
+        <footer class="ui inverted vertical footer segment">
+          <div class="ui center aligned container">
+            <div class="ui stackable inverted divided grid">
+              <div class="three wide column">
+                <h4 class="ui inverted header">Ab'javy</h4>
+                <div class="ui inverted link list">
+                  <a href="http://realty.grodno.co/" class="item">Zhytlo</a>
+                  <a href="http://cars.grodno.co/" class="item">Samoxody</a>
+                  <a href="http://job.grodno.co/" class="item">Pratsa</a>
+                  <a href="http://service.grodno.co/" class="item">Paslugi</a>
+                </div>
+              </div>
+              <div class="seven wide column">
+                <h4 class="ui inverted header">Grodnae urbi est</h4>
+                <p>Sonca wsxodzic i zaxodzic, a pavazhnea plyn Niemana ne spyniaet sa ni na mig.</p>
+              </div>
+            </div>
+            <div class="ui inverted section divider"></div>
+            <img src="/logo.jpg" class="ui centered mini image" />
+            <div class="ui horizontal inverted small divided link list">
+              <a class="item" href="#">Site Map</a>
+              <a class="item" href="#">Contact Us</a>
+              <a class="item" href="#">Terms and Conditions</a>
+              <a class="item" href="#">Privacy Policy</a>
+            </div>
+          </div>
+        </footer>
+      </script>
 </body>

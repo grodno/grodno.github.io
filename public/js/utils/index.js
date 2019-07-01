@@ -1,6 +1,4 @@
-// import { translit } from './mova.js'
-import { urlParse } from '../../vendor/perun/url.js';
-export * from '../../vendor/perun/url.js';
+export * from './url.js';
 
 export const capitalize = (s) => s ? s.slice(0, 1).toUpperCase() + s.slice(1) : '';
 export const mirror = (x) => (x || '').split('').reduce((r, c) => (c + r), '');
@@ -11,22 +9,6 @@ export const nope = (x) => x;
 export const dig = (obj, key) => key.split('.').reduce((r, k) => !r ? null : r[k], obj);
 export const humanize = key => ('' + key).split('_').map(capitalize).join(' ');
 export const proper = (s) => capitalize(camelize(s));
-
-export function restoreHotReload($) {
-  const hot = module && module.hot;
-  if (hot) {
-    hot.addStatusHandler(function (d) { });
-    // hot.accept();
-    hot.dispose(d => {
-      d.data = $.data;
-    });
-    const data = hot.data;
-    if (data) {
-      return data.data || {};
-    }
-  }
-  return {};
-}
 
 export const filterByTags = (data, rtags = []) => data.filter(e => {
   const tags = e.tags || [];
@@ -65,7 +47,6 @@ export const pipes = {
   translit: x => x,
   rest: x => x ? x.slice(1) : [],
   limit: x => x ? x.slice(0, 50) : [],
-  urlHost: x => urlParse(x).target,
   subject(_s) {
     const s = _s || '';
     return s.slice(0, 50) + (s.length > 50 ? '...' : '');

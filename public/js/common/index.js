@@ -1,3 +1,3 @@
 import { fromTemplates } from '../utils/support.js';
 
-export default fromTemplates('App', 'Modal', 'UserInfo', 'elements', 'components');
+export default fromTemplates('Modal', 'UserInfo', 'elements', 'components');

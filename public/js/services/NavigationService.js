@@ -31,14 +31,11 @@ export class NavigationService {
   }
 
   getItems() {
-    return [
-      { name: 'Galownea', id: 'main' },
-      { name: 'Objavy', id: 'ads' },
-      { name: 'Naviny', id: 'news' },
-      { name: 'Calendar', id: 'calendar' },
-      { name: 'Karta', id: 'geomap' },
-      { name: 'Liudzi', id: 'people' }
-    ];
+    return this.api.res('sitemap');
+  }
+
+  getSitemap() {
+    return this.api.res('sitemap');
   }
 
   getEmpty() {

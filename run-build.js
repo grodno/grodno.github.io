@@ -3,8 +3,8 @@
 /* eslint no-console: "off" */
 /* eslint one-var: "off" */
 /* eslint vars-on-top: "off" */
-var webpack = require('webpack')
-var commons = require('./webpack.config.js')
+var webpack = require('webpack');
+var commons = require('./webpack.config.js');
 
 var config = {
   entry: {
@@ -28,10 +28,10 @@ var config = {
     // new webpack.optimize.CommonsChunkPlugin({ name: 'vendor' })
   ]
   // devtoolLineToLine: true
-}
+};
 
-var compiler = webpack(config)
+var compiler = webpack(config);
 
 compiler.run(() => {
-  console.log('Compiled successfully')
-})
+  console.log('Compiled successfully');
+});

@@ -27,7 +27,12 @@ export function compileEach([itemId, , expr], { tag, attrs, uid, nodes }) {
   };
   r.updates = [makeApplicator(() => $each, '$each')];
   if ((expr.slice(0, 2) === '<-')) {
-    (r.inits || (r.inits = [])).push(c => c.connect(expr.slice(2).trim(), rr => ({ $data: rr })));
+    const pipes = expr.slice(2).split('|').map(s => s.trim());
+    const key = pipes.shift();
+    const fn = !pipes.length ?
+      c => c.connect(key, rr => ({ $data: rr })) :
+      c => c.connect(key, rr => ({ $data: pipes.reduce((acc, pk) => c.pipe(pk, acc), rr) }));
+    (r.inits || (r.inits = [])).push(fn);
   } else {
     (r.updates || (r.updates = [])).push(makeApplicator(expression('{:'.includes(expr[0]) ? expr : '{{' + expr + '}}'), '$data'));
   }
@@ -97,10 +102,10 @@ export function compileNode({ tag, attrs, uid, nodes }) {
     return compileIf(aIf, { tag, attrs: filterMapKey(attrs, 'ui:if'), uid, nodes });
   }
 
-  const r = { tag, uid, type: compileType(tag), key: attrs.get('key'), ref: attrs.get('ui:ref') };
+  const r = { tag, uid, type: compileType(tag), id: attrs.get('id'), ref: attrs.get('ui:ref') };
   // attrs
   attrs.forEach((v, k) => {
-    if (k !== 'key' && k.slice(0, 3) !== 'ui:') {
+    if (k.slice(0, 3) !== 'ui:') {
       // console.log('compileAttrs', k, v);
       if ((v.slice(0, 2) === '<-')) {
         (r.inits || (r.inits = [])).push(c => c.connect(v.slice(2).trim(), rr => ({ [k]: rr })));

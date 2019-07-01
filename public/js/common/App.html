@@ -1,88 +1,34 @@
 <body id="app">
-
-    <!-- <script type="text/x-template" id="UserBarTest">
+    <template id="Top">
         <ui:fragment>
-            <NavigationService ui:ref="nav"/>
-            <PageRouter ui:props="<- nav://state" />
+            <Firebase ui:ref="firebase" />
+            <NavigationService ui:ref="nav" />
+            <LocalStorage ui:ref="local" />
+            <DatabaseService ui:ref="db" />
+            <UserService ui:ref="user" />
+            <Sidebar>
+                <Sidebar:aside>
+                    <Panel style="height: 100vh;">
+                        <Panel:title>
+                            <h3>:appName</h3>
+                        </Panel:title>
+                        <Panel:footer>
+                            <div>:settings</div>
+                        </Panel:footer>
+                        <NavTree data="<- nav://sitemap" />
+                    </Panel>
+                </Sidebar:aside>
+                <ui:fragment>
+                    <Navbar logo=":appLogo">
+                        <Navbar:right>
+                            <UserBar />
+                        </Navbar:right>
+                    </Navbar>
+                    <Container>
+                        <PageRouter ui:props="<- nav://state" />
+                    </Container>
+                </ui:fragment>
+            </Sidebar>
         </ui:fragment>
-    </script> -->
-    <!-- <script type="text/x-template" id="Test">
-        <div>
-        <li class="menu-item" ui:each="item of <-:tags">
-            <a href="#{{item.id}}">{{item.name}}</a>
-        </li>
-    </div>
-    </script> -->
-    <script type="text/template" id="Top">
-    <ui:fragment>
-        <Firebase ui:ref="firebase"/>
-        <NavigationService ui:ref="nav"/>
-        <LocalStorage ui:ref="local"/>
-        <DatabaseService ui:ref="db"/>
-        <UserService ui:ref="user"/>
-        <Sidebar>
-            <Sidebar:aside>
-                <Panel style="height: 100vh;">
-                    <Panel:title><h3>:olgard</h3></Panel:title>
-                    <Panel:footer><div>:settings</div></Panel:footer>
-                    <NavTree data="<- nav://items"/>
-                </Panel>
-            </Sidebar:aside>
-            <ui:fragment>
-                <Navbar logo=":logoUrl">
-                    <Navbar:left><p/></Navbar:left>
-                    <Navbar:right><UserBar/></Navbar:right>
-                </Navbar>
-                <Container>
-                   <PageRouter ui:props="<- nav://state" />
-                </Container>
-            </ui:fragment >
-        </Sidebar>
-    </ui:fragment>
-    </script>
-
-    <script type="text/x-template" id="PageRouter">
-        <ui:page ui:props="{{params}}" />      
-    </script>
-
-
-    <script type="text/x-template" id="Sidebar">
-        <div class="off-canvas off-canvas-sidebar-show">
-            <a class="off-canvas-toggle btn btn-primary btn-action show-lg" href="#sidebar">
-                <i class="icon icon-menu"/>
-            </a>
-            <div id="sidebar" class="off-canvas-sidebar">
-                <ui:slot key="aside"/>
-            </div>
-            <a class="off-canvas-overlay" href="#"></a>
-            <div class="off-canvas-content">
-                <ui:slot/>
-            </div>
-        </div>
-    </script>
-    <script type="text/x-template" id="Navbar">
-    <header class="navbar bg-secondary">
-        <section class="navbar-section mx-2">
-                <ui:slot key="left"/>
-        </section>
-        <!-- <section class="navbar-center">
-            <img src="{{logo}}" alt="" height="40" width="40"/>
-        </section> -->
-        <section class="navbar-section mx-2">
-                <ui:slot key="right"/>
-        </section>
-    </header>
-    </script>
-
-    <script type="text/template" id="NavTree">
-        <ul class="nav">
-          <li class="nav-item {{item.cl}}" ui:each="item of data">
-            <a href="#{{item.id}}">
-              <span>{{item.name}}</span>
-              <span ui:if="item.weight" class="label label-error">{{item.weight}}</span>
-            </a>
-            <NavTree ui:if="item.subs" data="{{item.subs}}"/>
-          </li>
-        </ul>
-      </script>
+    </template>
 </body>

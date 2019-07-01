@@ -1,5 +1,5 @@
 import { Component } from './component.js';
-import { registerTypes } from './register.js';
+import { registerTypes, reset } from './register.js';
 import { render } from './render.js';
 import { runInBrowser } from './utils.js';
 
@@ -9,7 +9,9 @@ export default function (...types) {
   return {
     run(Api, ctx) {
       const boot = new Component(Api || function () { }, {});
-      runInBrowser((doc) => render(boot, meta, ctx || doc.getElementById('app') || doc.body));
+      const renderBoot = (met = new Map()) => (doc) => render(boot, met, ctx || doc.getElementById('app') || doc.body);
+      runInBrowser(renderBoot(meta));
+      return () => { runInBrowser(renderBoot()); boot.done(); reset(); };
     }
   };
 }

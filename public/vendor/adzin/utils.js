@@ -67,9 +67,12 @@ export function stringInterpolation(v, fnx = []) {
 }
 
 export function placeholder(expr) {
+    return withPipes(expr, (key) => (key[0] === ':') ? (k => c => c.resource(k))(key.slice(1).trim()) : c => c.prop(key));
+}
+export function withPipes(expr, fn) {
     const pipes = expr.split('|').map(s => s.trim());
     const key = pipes.shift();
-    const initial = (key[0] === ':') ? (k => c => c.resource(k))(key.slice(1).trim()) : c => c.prop(key);
+    const initial = fn(key);
     return !pipes.length ? initial : c => pipes.reduce((r, pk) => c.pipe(pk, r), initial(c));
 }
 // DOM

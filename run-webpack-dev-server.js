@@ -31,32 +31,20 @@ var config = {
     alias: {}
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.LoaderOptionsPlugin({
-      // test: /\.xxx$/, // may apply this only for some modules
-      options: {
-        devtoolLineToLine: true
-      }
-    })
-  ]
+    new webpack.HotModuleReplacementPlugin()
+  ],
+  mode: 'development',
+  devtool: 'source-map'
 };
 
 var compiler = webpack(config);
 
 var server = new WebpackDevServer(compiler, {
   contentBase: __dirname + '/public',
-  // debug: true,
   hot: true,
-  // verbose: true,
-  stats: {
-    colors: true,
-    assets: false,
-    chunks: false,
-    chunkModules: false,
-    modules: true
-  }
+  inline: true
 });
 
 server.listen(8089, '0.0.0.0', function () {
-  console.log('Demo is available at', server.listeningApp._connectionKey);
+  console.log('Application is available at', server.listeningApp._connectionKey);
 });

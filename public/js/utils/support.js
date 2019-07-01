@@ -6,3 +6,4 @@ export const fromTemplates = (...list) => list
     .map(key => document.getElementById(capitalize(key) + 'Template'))
     .map(top => [...top.import.body.children].map(e => ({ NAME: e.getAttribute('id'), TEMPLATE: e.innerHTML })))
     .reduce((r, e) => r.concat(e), []);
+

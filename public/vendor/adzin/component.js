@@ -2,12 +2,11 @@ import { render } from './render.js';
 import { Element } from './dom.js';
 import { ensureApi } from './api.js';
 import { dig, boundFn, cleanUp } from './utils.js';
-import { urlParse } from './url.js';
 
-const resolveSlot = (owner, key, acc) => {
+const resolveSlot = (owner, id, acc) => {
   owner.content.forEach((v, k) => {
-    if (key) {
-      if (v.tag === owner.tag + ':' + key) {
+    if (id) {
+      if (v.tag === owner.tag + ':' + id) {
         v.content.forEach(vv => acc.set(k, vv));
       }
     } else if (v.tag.slice(0, owner.tag.length + 1) !== owner.tag + ':') {
@@ -18,9 +17,9 @@ const resolveSlot = (owner, key, acc) => {
 };
 const resolveTemplateArray = (owner, tmpl, acc = new Map()) => tmpl && tmpl.length ? tmpl.reduce((m, t) => resolveTemplate(owner, t, m), acc) : null;
 const resolveProps = (props, owner) => props && props.length ? props.reduce((acc, fnProp) => { fnProp(owner, acc); return acc; }, {}) : null;
-function resolveRegular(acc, owner, { type, updates, inits, nodes, uid, key, ref }, tag = type(owner)) {
-  if (tag === 'slot') { return resolveSlot(owner, key, acc); }
-  return acc.set(tag + uid, { tag, key, ref, owner, inits, props: resolveProps(updates, owner), content: resolveTemplateArray(owner, nodes) });
+function resolveRegular(acc, owner, { type, updates, inits, nodes, uid, id, ref }, tag = type(owner)) {
+  if (tag === 'slot') { return resolveSlot(owner, id, acc); }
+  return acc.set(tag + uid, { tag, id, ref, owner, inits, props: resolveProps(updates, owner), content: resolveTemplateArray(owner, nodes) });
 }
 function resolveTemplate(owner, tmpl, acc = new Map()) {
   if (!tmpl) { return acc; }

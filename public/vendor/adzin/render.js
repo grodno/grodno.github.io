@@ -1,5 +1,5 @@
 import { typeByTag } from './register.js';
-import { Component } from './Component.js';
+import { Component } from './component.js';
 const deep = [];
 export const render = (c, $content, ctx) => {
     deep.unshift('  ');
