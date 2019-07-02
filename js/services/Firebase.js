@@ -1,4 +1,7 @@
 import { firebaseConfig } from '../config.js';
+import '../../vendor/firebase/firebase-app.js';
+import '../../vendor/firebase/firebase-firestore.js';
+import '../../vendor/firebase/firebase-auth.js';
 
 const unpackDocs = s => s.docs.reduce((r, e) => {
   const d = e.data();

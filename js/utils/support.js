@@ -7,3 +7,9 @@ export const fromTemplates = (...list) => list
     .map(top => [...top.import.body.children].map(e => ({ NAME: e.getAttribute('id'), TEMPLATE: e.innerHTML })))
     .reduce((r, e) => r.concat(e), []);
 
+export const loadTemplates = (...args) => {
+    const R = [];
+    args.forEach(s => s.replace(/<template\sid="(.+)"\>([\s\S]*?)<\/template>/gm, (_, id, templ) => R.push({ NAME: id, TEMPLATE: templ })));
+    return R;
+}
+    ;

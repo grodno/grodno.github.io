@@ -1,0 +1,30 @@
+<body id="app">
+
+    <template id="Toast">
+        <div ui:if="!closed" class="toast toast-primary" style="position:fixed; right:5rem; bottom:1rem; width: 20rem;">
+            <button class="btn btn-clear float-right" click="->" data-closed="true"></button>
+            <p>{{message}}</p>
+        </div>
+    </template>
+
+    <template id="BigRedButton">
+        <button class="btn tooltip tooltip-left fixed bg-error circle" style="right:1rem; bottom:1rem; width: 2rem;"
+            data="{{data}}" data-tooltip="{{tooltip}}" click="{{action}}"><i class="icon icon-plus"></i>
+        </button>
+    </template>
+
+    <template type="text/x-template" id="Select">
+        <select class="form-select" change="{{change}}">
+            <option selected="{{selected}}" value="" ui:if="!required">...</option>
+            <option ui:each="option of options" selected="{{selected}}" value="{{option.id}}">{{optionName}}</option>
+        </select>
+    </template>
+
+    <template id="Tabs">
+        <ul class="tab tab-block">
+            <li class="tab-item" ui:each="item of data">
+                <a href="#tab?tab={{item.value}}">{{item.name}}</a>
+            </li>
+        </ul>
+    </template>
+</body>

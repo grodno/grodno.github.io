@@ -3,19 +3,20 @@
 /* eslint no-console: "off" */
 /* eslint one-var: "off" */
 /* eslint vars-on-top: "off" */
+const path = require('path');
 
 var WebpackDevServer = require('webpack-dev-server');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var webpack = require('webpack');
 // var connect = require('express');
 var commons = require('./webpack.config.js');
-// var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var config = {
   entry: {
     index: [
-      'webpack-dev-server/client?http://localhost:8080',
+      'webpack-dev-server/client?http://localhost:8089',
       'webpack/hot/only-dev-server',
-      './public/js/index.js'
+      './js/index.js'
     ]
   },
   output: {
@@ -31,10 +32,40 @@ var config = {
     alias: {}
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      template: path.resolve(path.join(__dirname, 'public'), 'index.html')
+    })
   ],
   mode: 'development',
-  devtool: 'source-map'
+  devtool: 'source-map',
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 30000,
+      maxSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: '~',
+      name: true,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/](web_modules|node_modules|modules)[\\/]/,
+          priority: -10,
+
+          name: 'vendors',
+          chunks: 'all'
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    },
+    runtimeChunk: true
+  }
 };
 
 var compiler = webpack(config);

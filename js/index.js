@@ -5,12 +5,10 @@ import modules from './modules/index.js';
 import common from './common/index.js';
 import App from './common/App.html';
 import * as services from './services/index.js';
+import { loadTemplates } from './utils/support.js';
 
 const ref = {};
-const C = [];
-App.replace(/<template\sid="(.+)"\>([\s\S]*)<\/template>/gm, (s, id, templ) => C.push({ NAME: id, TEMPLATE: templ }));
-
-const launch = () => { ref.done = framework(...C, ...common, ...components, ...modules, ...Object.values(services)).run(MyApi); };
+const launch = () => { ref.done = framework(...loadTemplates(App), ...common, ...components, ...modules, ...Object.values(services)).run(MyApi); };
 
 ((hot) => {
   if (!hot) {

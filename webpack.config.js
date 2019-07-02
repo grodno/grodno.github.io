@@ -45,7 +45,7 @@ module.exports = {
     }
   ],
   // resolve modules
-  modules: ['node_modules'],
+  modules: ['node_modules', 'vendor'],
   // entry with vendors modules
   vendor: [
     // 'core-js',

@@ -1,9 +1,10 @@
 import { urlParse, nope, filterFn, dig } from '../utils/index.js';
 import { schema } from '../config.js';
+import Dexie from '../../vendor/dexie.js';
 
 export class DatabaseService {
   constructor({ api, ref }) {
-    const db = new window.Dexie(1);
+    const db = new Dexie(1);
     db.version(1).stores({ ...schema, _meta: 'id' });
     Object.assign(this, {
       api,
