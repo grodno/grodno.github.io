@@ -3,9 +3,7 @@
   "version": "3.0.1",
   "description": "grodno.co",
   "keywords": [
-    "web",
-    "framework",
-    "es2015"
+    "grodno"
   ],
   "author": {
     "name": "Aliaksandr Litskevich",
@@ -14,9 +12,9 @@
   "private": true,
   "license": "APACHE20",
   "scripts": {
-    "start": "node run-webpack-dev-server",
+    "start": "node webpack-dev-server",
     "build": "node run-build",
-    "mocha": "mocha -w --compilers js:babel-register src/**/*.test.js",
+    "test": "mocha -w --compilers js:babel-register src/**/*.test.js",
     "deploy": "firebase deploy --only hosting"
   },
   "repository": {
