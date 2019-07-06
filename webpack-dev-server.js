@@ -8,7 +8,6 @@ const path = require('path');
 var WebpackDevServer = require('webpack-dev-server');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var webpack = require('webpack');
-// var connect = require('express');
 var commons = require('./devops/webpack.config.js');
 
 var config = {
@@ -32,7 +31,6 @@ var config = {
     alias: {}
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: __dirname + '/public/index.html'
     })

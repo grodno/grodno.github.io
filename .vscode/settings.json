@@ -1,0 +1,5 @@
+{
+    "html.format.wrapAttributes": "preserve-aligned",
+    "html.validate.styles": false,
+    "eslint.run": "onSave"
+}

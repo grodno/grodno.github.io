@@ -1,16 +1,10 @@
 <body>
 
-    <template id="Container">
-        <div class="container">
-            <ui:slot />
-        </div>
-    </template>
-
     <template id="PageRouter">
         <ui:page ui:props="{{params}}" />
     </template>
 
-    <template type="text/template" id="NavTree">
+    <template id="NavTree">
         <ul class="nav">
             <li class="nav-item {{item.class}}" ui:each="item of data">
                 <a href="#{{item.id}}">
@@ -41,7 +35,7 @@
         </div>
     </template>
 
-    <template type="text/template" id="Card">
+    <template id="Card">
         <div class="card">
             <div class="card-image" ui:if="image">
                 <img src="{{image}}" class="img-responsive" />
@@ -63,7 +57,8 @@
 
     <template id="Sidebar">
         <div class="off-canvas off-canvas-sidebar-show">
-            <a class="off-canvas-toggle btn btn-primary btn-action show-lg" href="#sidebar">
+            <a class="off-canvas-toggle btn btn-primary btn-action show-lg"
+               href="#sidebar">
                 <i class="icon icon-menu" />
             </a>
             <div id="sidebar" class="off-canvas-sidebar">
@@ -88,5 +83,13 @@
                 <ui:slot id="right" />
             </section>
         </header>
+    </template>
+
+    <template id="Tabs">
+        <ul class="tab tab-block">
+            <li class="tab-item" ui:each="item of data">
+                <a href="#tab?tab={{item.value}}">{{item.name}}</a>
+            </li>
+        </ul>
     </template>
 </body>

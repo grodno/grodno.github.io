@@ -9,7 +9,7 @@ export class Tags {
                 </span>
             </ui:then>
             <ui:else>
-                <span class="chip" data-id="{{tag.id}}" click="{{onItemClick}}">
+                <span class="chip" data-selection="{{tag.id}}" click="->">
                     <span>{{tag.id}} <small>{{tag.count}}</small></span>
                 </span>
             </ui:else>
@@ -29,7 +29,7 @@ export class Tags {
   get selection() {
     return this._selection || (this._selection = new Set());
   }
-  get tags() {
+  getTags() {
     const sel = [...this.selection];
     const items = !this.selection.size ? this.getData() : this.getData().filter((e) => {
       const etags = ('' + e.tags).split(',');
@@ -52,15 +52,12 @@ export class Tags {
     return this.selection.has(id);
   }
 
-  onItemClick({ id }) {
+  setSelection(id) {
     if (this.selection.has(id)) {
       this.selection.delete(id);
     } else {
       this.selection.add(id);
     }
-
-    this.assign({});
-
-    if (this.selectionChanged) { this.selectionChanged({ tags: [...this.selection] }); }
+    if (this.onSelection) { this.onSelection({ tags: [...this.selection] }); }
   }
 }

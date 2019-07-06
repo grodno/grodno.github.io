@@ -1,30 +1,49 @@
 <body id="app">
-
     <template id="Toast">
-        <div ui:if="!closed" class="toast toast-primary" style="position:fixed; right:5rem; bottom:1rem; width: 20rem;">
-            <button class="btn btn-clear float-right" click="->" data-closed="true"></button>
+        <div ui:if="!closed"
+             class="toast toast-primary"
+             style="position:fixed; right:5rem; bottom:1rem; width: 20rem;">
+            <button class="btn btn-clear float-right"
+                    click="->"
+                    data-closed="true"></button>
             <p>{{message}}</p>
         </div>
     </template>
 
     <template id="BigRedButton">
-        <button class="btn tooltip tooltip-left fixed bg-error circle" style="right:1rem; bottom:1rem; width: 2rem;"
-            data="{{data}}" data-tooltip="{{tooltip}}" click="{{action}}"><i class="icon icon-plus"></i>
+        <button class="btn tooltip tooltip-left fixed bg-error circle"
+                style="right:1rem; bottom:1rem; width: 2rem;"
+                data="{{data}}"
+                data-tooltip="{{tooltip}}"
+                click="{{action}}">
+            <i class="icon icon-plus"></i>
         </button>
     </template>
 
-    <template type="text/x-template" id="Select">
-        <select class="form-select" change="{{change}}">
-            <option selected="{{selected}}" value="" ui:if="!required">...</option>
-            <option ui:each="option of options" selected="{{selected}}" value="{{option.id}}">{{optionName}}</option>
-        </select>
+    <template id="Hero">
+        <div class="hero bg-dark p-0">
+            <div class="hero-body px-2">
+                <h1>{{title}}</h1>
+            </div>
+        </div>
     </template>
 
-    <template id="Tabs">
-        <ul class="tab tab-block">
-            <li class="tab-item" ui:each="item of data">
-                <a href="#tab?tab={{item.value}}">{{item.name}}</a>
-            </li>
-        </ul>
+    <template id="GMapFrame">
+        <iframe width="100%" height="450" frameborder="0"
+                style="border:0"
+                src="{{src}}"
+                allowfullscreen="1"></iframe>`
+    </template>
+
+    <template id="Select">
+        <select class="form-select"
+                change="{{change}}">
+            <option selected="{{selected}}"
+                    value=""
+                    ui:if="!required">...</option>
+            <option ui:each="option of options"
+                    selected="{{selected}}"
+                    value="{{option.id}}">{{optionName}}</option>
+        </select>
     </template>
 </body>

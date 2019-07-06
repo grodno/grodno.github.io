@@ -1,42 +1,45 @@
 <body id="user">
-  <script type="text/x-template" id="UserBar">
+
+  <template id="UserBar">
     <div class="float-right">
       <ui:fragment ui:if="isAnonymous">
         <ui:then>
           <a click="-> user:login" class="anchor" aria-hidden="true">:login</a>
         </ui:then>
         <ui:else>
-          <UserPanel ui:props="<- user:info"/>
+          <UserPanel ui:props="<- user:info" />
         </ui:else>
       </ui:fragment>
     </div>
-  </script>
-  <script type="text/x-template" id="UserPanel">
+  </template>
+
+  <template id="UserPanel">
     <div class="tile tile-centered">
-        <div class="tile-icon">
-          <div class="example-tile-icon" ui:if="photoURL">
-            <figure class="avatar avatar">
-              <img src="{{photoURL}}" alt=":avatar" />
-            </figure>
-          </div>
-        </div>
-        <div class="tile-content">
-          <div class="tile-title" ui:if="displayName">{{displayName}}</div>
-          <a class="tile-subtitle text-gray" href="mailto:{{email}}">{{email}}</a>
-        </div>
-        <div class="tile-action">
-          <div class="dropdown dropdown-right">
-              <a class="btn btn-link dropdown-toggle" tabindex="0"><i class="icon icon-more-vert"></i></a>
-              <ul class="menu">
-                  <li class="menu-item" ui:each="item of <-nav://items">
-                      <a href="#{{item.id}}">{{item.name}}</a>
-                  </li>
-              </ul>
-          </div>
+      <div class="tile-icon">
+        <div class="example-tile-icon" ui:if="photoURL">
+          <figure class="avatar avatar">
+            <img src="{{photoURL}}" alt=":avatar" />
+          </figure>
         </div>
       </div>
-  </script>
-  <script type="text/x-template" id="UserInfo">
+      <div class="tile-content">
+        <div class="tile-title" ui:if="displayName">{{displayName}}</div>
+        <a class="tile-subtitle text-gray" href="mailto:{{email}}">{{email}}</a>
+      </div>
+      <div class="tile-action">
+        <div class="dropdown dropdown-right">
+          <a class="btn btn-link dropdown-toggle" tabindex="0"><i class="icon icon-more-vert"></i></a>
+          <ul class="menu">
+            <li class="menu-item" ui:each="item of <-nav://items">
+              <a href="#{{item.id}}">{{item.name}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="UserInfo">
     <div class="ui raised segment">
       <a class="ui yellow image label">
         <i class="jp flag"></i>
@@ -50,5 +53,5 @@
         </div>
       </div>
     </div>
-  </script>
+  </template>
 </body>

@@ -1,84 +1,61 @@
-import { urlParse, nope, filterFn, dig } from 'fx';
-import Dexie from '../../vendor/dexie.js';
+import { urlParse, fnId, arrayToHash, dig } from 'fx';
+import Dexie from 'dexie';
+import { AService } from './AService.js';
 
-export class DatabaseService {
-  constructor({ api, ref, props: { schema } }) {
-    const db = new Dexie(1);
-    db.version(1).stores({ ...schema, _meta: 'id' });
+export class DatabaseService extends AService {
+  constructor(options) {
+    super(options);
+    const { schema, name = 'dexie' } = this.props;
+    const dexie = new Dexie(name, 1);
+    dexie.version(1).stores({ ...schema, _meta: 'id' });
     Object.assign(this, {
-      api,
-      ref,
-      db,
+      dexie,
+      remote: this.api.firebase,
       cache: {},
-      realtimes: {},
       dbkeys: Object.keys(schema)
     });
   }
-  init() {
+  openDb() {
     // Open the database
-    this.db.open().catch(function (error) {
-      this.error('DB.open: ' + error);
-    });
+    this.dexie.open().catch(this.error);
+  }
+  checkVersion() {
     if (this.api.local.get('$version') !== this.version) {
       this.api.local.assign({ $version: this.version });
-    } else {
-      this.sync()
-        .then(() => { this.log('DB sync OK'); this.top.notify(u => u.type === 'db'); })
-        .catch((err) => this.log('DB sync error: ' + err));
     }
   }
+  init() {
+    this.openDb();
+    this.checkVersion()
+    this.sync()
+  }
   sync() {
-    return this.getCollection('_meta').toArray()
+    return this.getTable('_meta').toArray()
       .then(m => {
-        const meta = m.reduce((r, e) => { r[e.id] = e; return r; }, {});
-        const ops = this.dbkeys.map(coll => this.syncCollection(coll, dig(meta, `${coll}_table.last_sync`)).then(docs => [coll, docs]));
+        const meta = arrayToHash(m);
+        const ops = this.dbkeys
+          .map(coll => this.remote.readCollectionSince(coll, dig(meta, `${coll}_table.last_sync`))
+            .then(docs => [coll, docs]));
         return Promise.all(ops);
       })
       .then((r) => this.localUpdate(r.reduce((d, e) => {
-        const docs = e[1];
+        const [coll, docs] = e;
         const lastTs = docs.reduce((last, e) => e.modified_at > last ? e.modified_at : last, 0);
-        d[`_meta`].push({ id: `${e[0]}_table`, last_sync: lastTs });
-        d[e[0]] = docs;
+        d[`_meta`].push({ id: `${coll}_table`, last_sync: lastTs });
+        d[coll] = docs;
         return d;
-      }, { _meta: [] })));
+      }, { _meta: [] })))
+      .then(this.notify)
+      .then(() => { this.log('DB sync OK'); })
+      .catch((err) => this.log('DB sync error: ' + err));;
   }
-  syncCollection(coll, ts = 0) {
-    return this.remote.readCollectionSince(coll, ts);
-  }
-  getCollection(coll) {
-    return this.api.firebase.getCollection(coll);
-  }
-  retainCollection(url) {
-    if (url.type === 'db') {
-      const [coll] = url.path;
-      if (this.realtimes[coll]) {
-        this.realtimes[coll].counter++;
-      } else {
-        this.realtimes[coll] = { counter: 1 };
-        const fn = ts => {
-          const flt = u => u.type === 'db' && u.path[0] === coll;
-          const cb = (_, delta) => this.localUpdate(delta).then(() => this.top.notify(flt));
-          this.realtimes[coll].unsubscribe = this.remote.listenCollection(coll, ts, cb);
-        };
-        this.getCollection('_meta').get(`${coll}_table`).then(m => fn(m.last_sync), () => fn(0));
-      }
-    }
-  }
-  releaseCollection(url) {
-    if (url.type === 'db') {
-      const [coll] = url.path;
-      if (this.realtimes[coll]) {
-        this.realtimes[coll].counter--;
-        if (this.realtimes[coll].counter === 0) {
-          this.realtimes[coll].unsubscribe();
-        }
-      }
-    }
+  getTable(coll) {
+    return this.dexie.table(coll);
   }
   getOne(url) {
     const [kind, id] = url.path;
     let coll = this.getCollection(kind);
-    return coll.get(id).then(d => ({ ...d, kind }));
+    return coll.get(id).then(d => (d ? { ...d, kind } : null));
   }
   getDict(url) {
     const [type] = url.path;
@@ -86,21 +63,22 @@ export class DatabaseService {
   }
   getIndex(url) {
     url = urlParse(url);
-    const [kind, index, indexKey] = url.path;
+    const [kind, index, indexKey, desc] = url.path;
     if (!this.dbkeys.includes(kind)) {
       return null;
     }
-    let coll = this.getCollection(kind);
+    let coll = this.getTable(kind);
     // if (index && indexKey) {
     //   coll = coll.where(index).equals(indexKey);
+    //   coll = desc === 'desc' ? coll.desc() : coll;
     // }
     // const filter = url.params;
     // if (filter) {
     //   coll = coll.filter(filterFn(filter));
     // }
-    return coll;
+    return coll.orderBy('modified_at').reverse().toArray();
   }
-  eachDelta(delta, fn = nope) {
+  eachDelta(delta, fn = fnId) {
     const bulks = {};
     for (let coll in delta) {
       if (this.dbkeys.includes(coll)) {
@@ -114,30 +92,24 @@ export class DatabaseService {
     if (delta._meta) {
       bulks._meta = delta._meta;
     }
-    const ops = Object.keys(bulks).map(key => this.db[key].bulkPut(bulks[key]));
+    const ops = Object.keys(bulks).map(key => this.dexie[key].bulkPut(bulks[key]));
     return Promise.all(ops);
   }
-  update(delta) {
-    return this.localUpdate(delta).then(() => {
-      return this.remote.update(delta);
-    });
+  async update(delta) {
+    await this.localUpdate(delta);
+    return this.remote.update(delta);
   }
-  onCreate({ path: [kind], data }) {
+  async onCreate({ path: [kind], data }) {
     data.id = this.remote.nextId(kind);
-    return this.update({ [kind]: [data] }).then(() => {
-      this.log('Created', data);
-    });
+    await this.update({ [kind]: [data] });
+    this.log('Created', data);
   }
-  onUpdate({ path: [kind], data }) {
-    return this.update({ [kind]: [data] }).then(() => {
-      this.log('Updated', data);
-    });
+  async onUpdate({ path: [kind], data }) {
+    await this.update({ [kind]: [data] });
+    this.log('Updated', data);
   }
-  onDelete({ path: [kind, id] }) {
-    return this.update({ [kind]: [{ id, status: 'deleted' }] })
-      .then(() => {
-        this.top.emit('nav:close');
-        this.log('Deleted', id);
-      });
+  async onDelete({ path: [kind, id] }) {
+    await this.update({ [kind]: [{ id, status: 'deleted' }] });
+    this.log('Deleted', id);
   }
 }

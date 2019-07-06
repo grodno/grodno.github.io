@@ -1,13 +1,22 @@
-import framework from '../core/adzin';
-import { MyApi } from './api.js';
+import framework from 'adzin';
 import components from '../common/components';
-import modules from './modules';
 import App from './App.html';
 import * as services from '../common/services';
-import { loadTemplates } from '../common/support.js';
+import { loadTemplates } from 'adzin/support.js';
+import main from './modules/main.html';
+import calendar from './modules/calendar.html';
+import geomap from './modules/geomap.html';
+import news from './modules/news.html';
+import { MyApi } from './api';
 
 const ref = {};
-const launch = () => { ref.done = framework(...loadTemplates(App), ...components, ...modules, ...Object.values(services)).run(MyApi); };
+const launch = () => {
+  ref.done = framework(
+    ...loadTemplates(App, main, news, calendar, geomap),
+    ...components,
+    ...Object.values(services)
+  ).run(MyApi);
+};
 
 ((hot) => {
   if (!hot) {

@@ -1,6 +1,7 @@
 export default {
   appName: 'Olgard',
   appLogo: '/logo.jpg',
+  appVersion: '4.0.0',
   sitemap: [
     { name: 'Galownea', id: 'main' },
     { name: 'Objavy', id: 'ads' },
@@ -36,8 +37,8 @@ export default {
     messagingSenderId: '1045179719966'
   },
   dbSchema: {
-    news: 'id, created_at',
-    users: 'id, created_at',
-    comments: 'id, target, created_at'
+    news: 'id, modified_at',
+    users: 'id, modified_at',
+    comments: 'id, target, modified_at'
   }
 };

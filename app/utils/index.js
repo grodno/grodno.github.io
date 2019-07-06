@@ -1,5 +1,7 @@
 export * from 'fx';
 
+export const grodnify = s => s + ',Гродно,Беларусь'
+
 export const capitalize = (s) => s ? s.slice(0, 1).toUpperCase() + s.slice(1) : '';
 export const mirror = (x) => (x || '').split('').reduce((r, c) => (c + r), '');
 export const camelize = (s, sep = '_') => ((s && s.length && s.split(sep).map((t, i) => (i ? capitalize(t) : t)).join('')) || ``);
