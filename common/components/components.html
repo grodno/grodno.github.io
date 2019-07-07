@@ -87,11 +87,12 @@
 
     <template id="Chips">
         <div class="ui mini labels">
-            <span class="chip bg-success:{{tag.selected}}"
+            <span class="chip bg-success:{{tag.selected}} badge:{{tag.selected|not}}"
+                  data-badge="{{tag.count}}"
                   data-id="{{tag.id}}"
                   click="{{click}}"
                   ui:each="tag of data">
-                <span>{{tag.name}}<small>{{tag.count}}</small></span>
+                <span>{{tag.name}}<small ui:if="!tag.selected">{{tag.count}}</small></span>
             </span>
         </div>
     </template>

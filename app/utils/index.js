@@ -32,9 +32,11 @@ export const pipes = {
   capitalize,
   serializeParams: x => !x ? '' : Object.keys(x).map(k => `${k}=${x[k]}`).join('&'),
   initials: x => !x ? '' : x.split(' ').slice(0, 2).map(s => s.slice(0, 1).toUpperCase()).join(''),
+  not: x => !x,
   translit: x => x,
   rest: x => x ? x.slice(1) : [],
   limit: x => x ? x.slice(0, 50) : [],
+  counts: ({ total, actual } = {}, postfix = '') => "" + actual + ' / ' + total + postfix,
   subject(_s) {
     const s = _s || '';
     return s.slice(0, 50) + (s.length > 50 ? '...' : '');

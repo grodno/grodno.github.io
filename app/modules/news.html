@@ -13,6 +13,7 @@
 
   <template id="NewsList">
     <div>
+      <div>Shown {{counts|counts:news}}</div>
       <Chips data="{{tags}}" click="-> news://tag" />
       <div class="columns">
         <NewsListItem ui:props="{{item}}" ui:each="item of data">
