@@ -1,9 +1,6 @@
 import { AService } from "./AService";
 
 export class UserService extends AService {
-    constructor(options) {
-        super(options);
-    }
     get fb() {
         return this.api.firebase;
     }

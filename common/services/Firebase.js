@@ -1,6 +1,7 @@
 import '../../vendor/firebase/firebase-app.js';
 import '../../vendor/firebase/firebase-firestore.js';
 import '../../vendor/firebase/firebase-auth.js';
+import { AService } from './AService.js';
 
 const unpackDocs = s => s.docs.reduce((r, e) => {
   const d = e.data();
@@ -9,11 +10,11 @@ const unpackDocs = s => s.docs.reduce((r, e) => {
   return r;
 }, []);
 
-export class Firebase {
-  constructor({ api, ref, props: { config } }) {
-    Object.assign(this, { api, ref });
+export class Firebase extends AService {
+  constructor(options) {
+    super(options)
     const firebase = window.firebase;
-    firebase.initializeApp(config);
+    firebase.initializeApp(this.config);
     this.firestore = firebase.firestore();
     this.firestore.enablePersistence({ synchronizeTabs: true }).catch(function (err) {
       if (err.code === 'failed-precondition') {
@@ -83,11 +84,8 @@ export class Firebase {
   logout(cb) {
     cb();
   }
-  getCollection(coll) {
-    return this.firestore.collection(coll).get().then(unpackDocs);
-  }
-  readCollectionSince(coll, ts = 0) {
-    return ((c) => ts ? c.where('modified_at', '>', ts) : c)(this.firestore.collection(coll))
+  getCollection(coll, since) {
+    return ((c) => since ? c.where('modified_at', '>', since) : c)(this.firestore.collection(coll))
       .get().then(unpackDocs);
   }
   // db

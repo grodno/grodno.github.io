@@ -2,12 +2,30 @@
   <template id="NewsPage">
     <ui:fragment>
       <h3 class="s-title">Kroniki Olgarda</h3>
-      <NewsList data="<- db://index/news/modified_at/desc" />
+      <Collection ui:ref="news" table="news" />
+      <NewsList ui:props="<- news://tagged" />
       <BigRedButton data=":AddNewRecordData" tooltip="tooool" action="->" />
       <NewsUpdateModal ui:if="id" id="{{id}}" open="{{open}}" data2="db:one/news/{{id}}" />
       <NewsCreateModal ui:if="newEntry" open="{{open}}" data2="{{newEntry}}" />
       <Toast ui:if="error" message="{{error.message}}" />
     </ui:fragment>
+  </template>
+
+  <template id="NewsList">
+    <div>
+      <Chips data="{{tags}}" click="-> news://tag" />
+      <div class="columns">
+        <NewsListItem ui:props="{{item}}" ui:each="item of data">
+          <ui:loading>
+            <div class="column col-9 col-sm-12 loading"></div>
+          </ui:loading>
+          <ui:empty>
+            <h6 class="column col-9 col-sm-12">Empty list</h6>
+          </ui:empty>
+        </NewsListItem>
+        <Toast ui:if="error" message="{{error.message}}" />
+      </div>
+    </div>
   </template>
 
   <template id="NewsCreateModal">
@@ -71,21 +89,5 @@
     </div>
   </template>
 
-  <template id="NewsList">
-    <div>
-      <Tags data="{{data}}" onSelection="->" />
-      <div class="columns">
-        <NewsListItem ui:props="{{item}}" ui:each="item of {{data|limit|transformNews}}">
-          <ui:loading>
-            <div class="column col-9 col-sm-12 loading"></div>
-          </ui:loading>
-          <ui:empty>
-            <h6 class="column col-9 col-sm-12">Empty list</h6>
-          </ui:empty>
-        </NewsListItem>
-        <Toast ui:if="error" message="{{error.message}}" />
-      </div>
-    </div>
-  </template>
 
 </body>

@@ -1,9 +1,9 @@
-import { humanize, pipes, capitalize, grodnify } from './utils/index.js'
+import { grodnify } from './utils/index.js'
 import meta from './meta.js'
 import { urlStringify } from 'fx';
 import { pipes as PIPES } from './utils';
 import R from './res.js';
-import { Api } from 'adzin/api.js';
+import { Api } from 'protum/api.js';
 
 /**
  * The API class.

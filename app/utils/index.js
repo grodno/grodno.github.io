@@ -1,8 +1,8 @@
 export * from 'fx';
+import { capitalize } from 'fx';
 
 export const grodnify = s => s + ',Гродно,Беларусь'
 
-export const capitalize = (s) => s ? s.slice(0, 1).toUpperCase() + s.slice(1) : '';
 export const mirror = (x) => (x || '').split('').reduce((r, c) => (c + r), '');
 export const camelize = (s, sep = '_') => ((s && s.length && s.split(sep).map((t, i) => (i ? capitalize(t) : t)).join('')) || ``);
 export const format = (s, ...args) => ((s && s.length && s.replace(/\{(\d+)\}/g, (_, d) => (args[+d] || ''))) || '');
@@ -26,20 +26,6 @@ export const filterFn = (filter) => (item) => (item.status !== 'deleted') && Obj
   const value = filter[k];
   return r && (!value || (op === 'eq' ? item[field] === value : item[field].includes(value)));
 }, true);
-
-export function transformNews(data, state) {
-  const filter = state.filter;
-  const sortBy = state.sortBy;
-  const tags = state.tags;
-  let items = data ? data.filter(filterFn(filter)) : data;
-  if (items && tags) {
-    items = items.filter(e => tags.reduce((r, tag) => r && e.tags && e.tags.includes(tag), true));
-  }
-  if (items && sortBy) {
-    items = items.sort((e1, e2) => e1[sortBy] < e2[sortBy] ? 1 : -1);
-  }
-  return items;
-}
 
 export const pipes = {
   upper: s => ('' + s).toUpperCase(),
@@ -68,5 +54,4 @@ export const pipes = {
       .replace(/<.*?>/g, ' ')
       .trim()).split('~');
   },
-  transformNews
 };

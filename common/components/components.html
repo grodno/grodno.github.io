@@ -1,7 +1,7 @@
 <body>
 
     <template id="PageRouter">
-        <ui:page ui:props="{{params}}" />
+        <ui:tag tag="{{page}}" ui:props="{{params}}" />
     </template>
 
     <template id="NavTree">
@@ -83,6 +83,17 @@
                 <ui:slot id="right" />
             </section>
         </header>
+    </template>
+
+    <template id="Chips">
+        <div class="ui mini labels">
+            <span class="chip bg-success:{{tag.selected}}"
+                  data-id="{{tag.id}}"
+                  click="{{click}}"
+                  ui:each="tag of data">
+                <span>{{tag.name}}<small>{{tag.count}}</small></span>
+            </span>
+        </div>
     </template>
 
     <template id="Tabs">

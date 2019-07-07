@@ -1,8 +1,8 @@
-import framework from 'adzin';
+import framework from 'protum';
 import components from '../common/components';
 import App from './App.html';
 import * as services from '../common/services';
-import { loadTemplates } from 'adzin/support.js';
+import { loadTemplates } from 'protum/support.js';
 import main from './modules/main.html';
 import calendar from './modules/calendar.html';
 import geomap from './modules/geomap.html';
