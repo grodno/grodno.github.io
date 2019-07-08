@@ -1,0 +1,14 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
+  config.vm.box = "alpine/alpine64"
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo apk update && sudo apk add openrc openssh docker curl
+    sudo rc-update add docker boot
+    sudo service docker start
+    sudo echo "192.168.99.1 local.nom.xyz" >> /etc/hosts
+    #sleep(10)
+    sudo docker run --rm --pid=host --net=host --name cplo --privileged \
+          -v /var/run/docker.sock:/var/run/docker.sock  nodejs
+  SHELL
+end

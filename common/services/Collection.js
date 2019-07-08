@@ -36,8 +36,11 @@ export class Collection extends AService {
   }
 
   getTagged() {
+    const data = this.data;
+    if (!data) {
+      return {}
+    }
     const sel = [...this.selection];
-    const data = this.data || [];
     const dataPrepared = data.map(e => ({ ...e, $tags: new Set((e.tags || '').split(',').filter(Boolean)) }));
     const actualData = !sel.length ? dataPrepared : dataPrepared.filter(e => sel.reduce((r, s) => r && e.$tags.has(s), true));
     const tagsHash = actualData.reduce((r, e) => {
@@ -60,7 +63,7 @@ export class Collection extends AService {
     // if (items && sortBy) {
     //   items = items.sort((e1, e2) => e1[sortBy] < e2[sortBy] ? 1 : -1);
     // }
-    return { tags, data: actualData.slice(0, 50), counts: { total: data.length, actual: actualData.length } }
+    return { tags, data: actualData.slice(this.offset || 0, this.pageSize || 50), counts: { total: data.length, actual: actualData.length } }
   }
 
   onTag({ data: { id } }) {

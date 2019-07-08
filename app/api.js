@@ -3,7 +3,7 @@ import meta from './meta.js'
 import { urlStringify } from 'fx';
 import { pipes as PIPES } from './utils';
 import R from './res.js';
-import { Api } from 'protum/api.js';
+import { Api } from 'armatura/api.js';
 
 /**
  * The API class.

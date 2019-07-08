@@ -16,7 +16,7 @@
       <div>Shown {{counts|counts:news}}</div>
       <Chips data="{{tags}}" click="-> news://tag" />
       <div class="columns">
-        <NewsListItem ui:props="{{item}}" ui:each="item of data">
+        <NewsListItem ui:props="{{item}}" itemClick="-> nav:openItem" ui:each="item of data">
           <ui:loading>
             <div class="column col-9 col-sm-12 loading"></div>
           </ui:loading>
@@ -72,17 +72,18 @@
       <div class="tile">
         <div class="tile-icon">
           <figure class="avatar avatar- bg-primary" data-initial="{{subject|initials}}"><img src="{{image}}"
-                 class="img-responsive" data-value="{{id}}" click="-> nav:openItem" /></figure>
+                 class="img-responsive" data-value="{{id}}" click="itemClick" /></figure>
         </div>
         <div class="tile-content">
           <p class="tile-title">
-            <h5><a class="header" data-value="{{id}}" click="-> nav:openItem">{{subject|subject|translit}}</a></h5>
+            <h5><a class="header" data-value="{{id}}" click="itemClick">{{subject}}</a></h5>
             <small>{{created_at}}</small>
-            <small class="mx-2"><a href="{{link}}" target="_blank">{{link|urlHost}}</a></small>
+            <small class="mx-2"><a href="{{link}}" target="_blank">{{link}}</a></small>
             <small class="mx-2">{{tags}}</small>
           </p>
           <p class="tile-subtitle">
-            <span><img src="/assets/grodno2.svg" height="10" width="10" />{{preview}}</span>
+            <span>{{preview}}</span>
+            <!-- <img src="/assets/grodno2.svg" height="10" width="10" /> -->
             <!--span ui:each="tag of tags" class="chip">{{tag}}</span-->
           </p>
         </div>

@@ -1,0 +1,2547 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<packet>
+  <zglv>
+    <type>MedSpec</type>
+    <version>3.0</version>
+    <date>26.12.2013</date>
+  </zglv>
+  <zap>
+    <RECID>0</RECID>
+    <CODE>0</CODE>
+    <NAME>Врачебные специальности</NAME>
+    <HIGH />
+    <OKSO>1</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>1</RECID>
+    <CODE>1</CODE>
+    <NAME>Лечебное дело. Педиатрия</NAME>
+    <HIGH>0</HIGH>
+    <OKSO>2</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>2</RECID>
+    <CODE>2</CODE>
+    <NAME>Медико-профилактическое дело</NAME>
+    <HIGH>0</HIGH>
+    <OKSO>138</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>3</RECID>
+    <CODE>3</CODE>
+    <NAME>Стоматология</NAME>
+    <HIGH>0</HIGH>
+    <OKSO>154</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>4</RECID>
+    <CODE>4</CODE>
+    <NAME>Фармация</NAME>
+    <HIGH>0</HIGH>
+    <OKSO>161</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>5</RECID>
+    <CODE>5</CODE>
+    <NAME>Сестринское дело</NAME>
+    <HIGH>0</HIGH>
+    <OKSO>165</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>6</RECID>
+    <CODE>6</CODE>
+    <NAME>Медицинская биохимия</NAME>
+    <HIGH>0</HIGH>
+    <OKSO>167</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>7</RECID>
+    <CODE>7</CODE>
+    <NAME>Медицинская биофизика</NAME>
+    <HIGH>0</HIGH>
+    <OKSO>168</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>8</RECID>
+    <CODE>8</CODE>
+    <NAME>Акушерство и гинекология</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>3</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>9</RECID>
+    <CODE>9</CODE>
+    <NAME>Анестезиология и реаниматология</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>8</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>10</RECID>
+    <CODE>10</CODE>
+    <NAME>Дерматовенерология</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>12</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>11</RECID>
+    <CODE>11</CODE>
+    <NAME>Детская хирургия</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>125</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>12</RECID>
+    <CODE>12</CODE>
+    <NAME>Генетика</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>14</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>13</RECID>
+    <CODE>13</CODE>
+    <NAME>Клиническая лабораторная диагностика</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>18</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>14</RECID>
+    <CODE>14</CODE>
+    <NAME>Неврология</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>23</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>15</RECID>
+    <CODE>15</CODE>
+    <NAME>Неонатология</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>137</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>16</RECID>
+    <CODE>16</CODE>
+    <NAME>Общая врачебная практика (семейная медицина)</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>30</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>17</RECID>
+    <CODE>17</CODE>
+    <NAME>Онкология</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>102</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>18</RECID>
+    <CODE>18</CODE>
+    <NAME>Организация здравоохранения и общественное здоровье</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>56</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>19</RECID>
+    <CODE>19</CODE>
+    <NAME>Оториноларингология</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>38</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>20</RECID>
+    <CODE>20</CODE>
+    <NAME>Офтальмология</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>40</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>21</RECID>
+    <CODE>21</CODE>
+    <NAME>Патологическая анатомия</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>41</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>22</RECID>
+    <CODE>22</CODE>
+    <NAME>Педиатрия</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>105</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>23</RECID>
+    <CODE>23</CODE>
+    <NAME>Психиатрия</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>42</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>24</RECID>
+    <CODE>24</CODE>
+    <NAME>Рентгенология</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>47</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>25</RECID>
+    <CODE>25</CODE>
+    <NAME>Скорая медицинская помощь</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>50</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>26</RECID>
+    <CODE>26</CODE>
+    <NAME>Судебно-медицинская экспертиза</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>57</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>27</RECID>
+    <CODE>27</CODE>
+    <NAME>Терапия</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>58</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>28</RECID>
+    <CODE>28</CODE>
+    <NAME>Травматология и ортопедия</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>80</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>29</RECID>
+    <CODE>29</CODE>
+    <NAME>Фтизиатрия</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>86</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>30</RECID>
+    <CODE>30</CODE>
+    <NAME>Хирургия</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>88</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>31</RECID>
+    <CODE>31</CODE>
+    <NAME>Эндокринология</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>99</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>32</RECID>
+    <CODE>32</CODE>
+    <NAME>Инфекционные болезни</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>16</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>33</RECID>
+    <CODE>33</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>8</HIGH>
+    <OKSO>4</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>34</RECID>
+    <CODE>34</CODE>
+    <NAME>Физиотерапия</NAME>
+    <HIGH>8</HIGH>
+    <OKSO>5</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>35</RECID>
+    <CODE>35</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>8</HIGH>
+    <OKSO>6</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>36</RECID>
+    <CODE>36</CODE>
+    <NAME>Эндоскопия</NAME>
+    <HIGH>8</HIGH>
+    <OKSO>7</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>37</RECID>
+    <CODE>37</CODE>
+    <NAME>Токсикология</NAME>
+    <HIGH>9</HIGH>
+    <OKSO>9</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>38</RECID>
+    <CODE>38</CODE>
+    <NAME>Трансфузиология</NAME>
+    <HIGH>9</HIGH>
+    <OKSO>10</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>39</RECID>
+    <CODE>39</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>9</HIGH>
+    <OKSO>11</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>40</RECID>
+    <CODE>40</CODE>
+    <NAME>Клиническая микология</NAME>
+    <HIGH>10</HIGH>
+    <OKSO>13</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>41</RECID>
+    <CODE>41</CODE>
+    <NAME>Детская онкология</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>126</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>42</RECID>
+    <CODE>42</CODE>
+    <NAME>Детская урология - андрология</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>127</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>43</RECID>
+    <CODE>43</CODE>
+    <NAME>Колопроктология</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>128</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>44</RECID>
+    <CODE>44</CODE>
+    <NAME>Нейрохирургия</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>129</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>45</RECID>
+    <CODE>45</CODE>
+    <NAME>Сердечно-сосудистая хирургия</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>130</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>46</RECID>
+    <CODE>46</CODE>
+    <NAME>Торакальная хирургия</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>131</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>47</RECID>
+    <CODE>47</CODE>
+    <NAME>Трансфузиология</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>132</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>48</RECID>
+    <CODE>48</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>133</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>49</RECID>
+    <CODE>49</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>134</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>50</RECID>
+    <CODE>50</CODE>
+    <NAME>Челюстно-лицевая хирургия</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>135</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>51</RECID>
+    <CODE>51</CODE>
+    <NAME>Эндоскопия</NAME>
+    <HIGH>11</HIGH>
+    <OKSO>136</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>52</RECID>
+    <CODE>52</CODE>
+    <NAME>Лабораторная генетика</NAME>
+    <HIGH>12</HIGH>
+    <OKSO>15</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>53</RECID>
+    <CODE>53</CODE>
+    <NAME>Клиническая микология</NAME>
+    <HIGH>32</HIGH>
+    <OKSO>17</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>54</RECID>
+    <CODE>54</CODE>
+    <NAME>Бактериология</NAME>
+    <HIGH>13</HIGH>
+    <OKSO>19</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>55</RECID>
+    <CODE>55</CODE>
+    <NAME>Вирусология</NAME>
+    <HIGH>13</HIGH>
+    <OKSO>20</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>56</RECID>
+    <CODE>56</CODE>
+    <NAME>Лабораторная генетика</NAME>
+    <HIGH>13</HIGH>
+    <OKSO>21</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>57</RECID>
+    <CODE>57</CODE>
+    <NAME>Лабораторная микология</NAME>
+    <HIGH>13</HIGH>
+    <OKSO>22</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>58</RECID>
+    <CODE>58</CODE>
+    <NAME>Восстановительная медицина</NAME>
+    <HIGH>14</HIGH>
+    <OKSO>26</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>59</RECID>
+    <CODE>59</CODE>
+    <NAME>Лечебная физкультура и спортивная медицина</NAME>
+    <HIGH>14</HIGH>
+    <OKSO>27</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>61</RECID>
+    <CODE>61</CODE>
+    <NAME>Мануальная терапия</NAME>
+    <HIGH>14</HIGH>
+    <OKSO>24</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>62</RECID>
+    <CODE>62</CODE>
+    <NAME>Рефлексотерапия</NAME>
+    <HIGH>14</HIGH>
+    <OKSO>25</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>63</RECID>
+    <CODE>63</CODE>
+    <NAME>Физиотерапия</NAME>
+    <HIGH>14</HIGH>
+    <OKSO>28</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>64</RECID>
+    <CODE>64</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>14</HIGH>
+    <OKSO>29</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>65</RECID>
+    <CODE>65</CODE>
+    <NAME>Восстановительная медицина</NAME>
+    <HIGH>16</HIGH>
+    <OKSO>31</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>66</RECID>
+    <CODE>66</CODE>
+    <NAME>Гериатрия</NAME>
+    <HIGH>16</HIGH>
+    <OKSO>32</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>67</RECID>
+    <CODE>67</CODE>
+    <NAME>Лечебная физкультура и спортивная медицина</NAME>
+    <HIGH>16</HIGH>
+    <OKSO>33</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>69</RECID>
+    <CODE>69</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>16</HIGH>
+    <OKSO>34</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>70</RECID>
+    <CODE>70</CODE>
+    <NAME>Физиотерапия</NAME>
+    <HIGH>16</HIGH>
+    <OKSO>35</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>71</RECID>
+    <CODE>71</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>16</HIGH>
+    <OKSO>36</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>72</RECID>
+    <CODE>72</CODE>
+    <NAME>Эндоскопия</NAME>
+    <HIGH>16</HIGH>
+    <OKSO>37</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>73</RECID>
+    <CODE>73</CODE>
+    <NAME>Детская онкология</NAME>
+    <HIGH>17</HIGH>
+    <OKSO>103</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>74</RECID>
+    <CODE>74</CODE>
+    <NAME>Радиология</NAME>
+    <HIGH>17</HIGH>
+    <OKSO>104</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>75</RECID>
+    <CODE>75</CODE>
+    <NAME>Сурдология - оториноларингология</NAME>
+    <HIGH>19</HIGH>
+    <OKSO>39</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>77</RECID>
+    <CODE>77</CODE>
+    <NAME>Аллергология и иммунология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>110</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>78</RECID>
+    <CODE>78</CODE>
+    <NAME>Восстановительная медицина</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>111</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>79</RECID>
+    <CODE>79</CODE>
+    <NAME>Гастроэнтерология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>112</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>80</RECID>
+    <CODE>80</CODE>
+    <NAME>Гематология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>113</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>81</RECID>
+    <CODE>81</CODE>
+    <NAME>Детская кардиология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>108</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>82</RECID>
+    <CODE>82</CODE>
+    <NAME>Детская онкология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>106</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>83</RECID>
+    <CODE>83</CODE>
+    <NAME>Детская эндокринология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>107</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>84</RECID>
+    <CODE>84</CODE>
+    <NAME>Диетология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>114</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>85</RECID>
+    <CODE>85</CODE>
+    <NAME>Клиническая фармакология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>115</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>86</RECID>
+    <CODE>86</CODE>
+    <NAME>Лечебная физкультура и спортивная медицина</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>109</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>88</RECID>
+    <CODE>88</CODE>
+    <NAME>Мануальная терапия</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>116</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>89</RECID>
+    <CODE>89</CODE>
+    <NAME>Нефрология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>117</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>90</RECID>
+    <CODE>90</CODE>
+    <NAME>Пульмонология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>118</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>91</RECID>
+    <CODE>91</CODE>
+    <NAME>Ревматология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>119</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>92</RECID>
+    <CODE>92</CODE>
+    <NAME>Трансфузиология</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>120</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>93</RECID>
+    <CODE>93</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>121</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>94</RECID>
+    <CODE>94</CODE>
+    <NAME>Физиотерапия</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>122</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>95</RECID>
+    <CODE>95</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>123</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>96</RECID>
+    <CODE>96</CODE>
+    <NAME>Эндоскопия</NAME>
+    <HIGH>22</HIGH>
+    <OKSO>124</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>97</RECID>
+    <CODE>97</CODE>
+    <NAME>Психиатрия-наркология</NAME>
+    <HIGH>23</HIGH>
+    <OKSO>46</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>98</RECID>
+    <CODE>98</CODE>
+    <NAME>Психотерапия</NAME>
+    <HIGH>23</HIGH>
+    <OKSO>43</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>99</RECID>
+    <CODE>99</CODE>
+    <NAME>Сексология</NAME>
+    <HIGH>23</HIGH>
+    <OKSO>44</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>100</RECID>
+    <CODE>100</CODE>
+    <NAME>Судебно-психиатрическая экспертиза</NAME>
+    <HIGH>23</HIGH>
+    <OKSO>45</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>102</RECID>
+    <CODE>102</CODE>
+    <NAME>Радиология</NAME>
+    <HIGH>24</HIGH>
+    <OKSO>48</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>103</RECID>
+    <CODE>103</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>24</HIGH>
+    <OKSO>49</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>104</RECID>
+    <CODE>104</CODE>
+    <NAME>Восстановительная медицина</NAME>
+    <HIGH>25</HIGH>
+    <OKSO>51</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>105</RECID>
+    <CODE>105</CODE>
+    <NAME>Лечебная физкультура и спортивная медицина</NAME>
+    <HIGH>25</HIGH>
+    <OKSO>52</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>107</RECID>
+    <CODE>107</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>25</HIGH>
+    <OKSO>53</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>108</RECID>
+    <CODE>108</CODE>
+    <NAME>Физиотерапия</NAME>
+    <HIGH>25</HIGH>
+    <OKSO>54</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>109</RECID>
+    <CODE>109</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>25</HIGH>
+    <OKSO>55</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>110</RECID>
+    <CODE>110</CODE>
+    <NAME>Авиационная и космическая медицина</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>71</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>112</RECID>
+    <CODE>112</CODE>
+    <NAME>Аллергология и иммунология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>72</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>113</RECID>
+    <CODE>113</CODE>
+    <NAME>Восстановительная медицина</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>73</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>114</RECID>
+    <CODE>114</CODE>
+    <NAME>Гастроэнтерология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>59</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>115</RECID>
+    <CODE>115</CODE>
+    <NAME>Гематология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>60</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>116</RECID>
+    <CODE>116</CODE>
+    <NAME>Гериатрия</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>61</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>117</RECID>
+    <CODE>117</CODE>
+    <NAME>Диетология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>62</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>118</RECID>
+    <CODE>118</CODE>
+    <NAME>Кардиология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>63</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>119</RECID>
+    <CODE>119</CODE>
+    <NAME>Клиническая фармакология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>64</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>120</RECID>
+    <CODE>120</CODE>
+    <NAME>Лечебная физкультура и спортивная медицина</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>74</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>122</RECID>
+    <CODE>122</CODE>
+    <NAME>Мануальная терапия</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>75</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>123</RECID>
+    <CODE>123</CODE>
+    <NAME>Нефрология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>65</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>124</RECID>
+    <CODE>124</CODE>
+    <NAME>Профпатология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>76</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>125</RECID>
+    <CODE>125</CODE>
+    <NAME>Пульмонология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>66</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>126</RECID>
+    <CODE>126</CODE>
+    <NAME>Ревматология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>67</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>127</RECID>
+    <CODE>127</CODE>
+    <NAME>Рефлексотерапия</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>77</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>128</RECID>
+    <CODE>128</CODE>
+    <NAME>Трансфузиология</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>68</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>129</RECID>
+    <CODE>129</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>69</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>130</RECID>
+    <CODE>130</CODE>
+    <NAME>Физиотерапия</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>78</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>131</RECID>
+    <CODE>131</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>70</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>132</RECID>
+    <CODE>132</CODE>
+    <NAME>Эндоскопия</NAME>
+    <HIGH>27</HIGH>
+    <OKSO>79</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>133</RECID>
+    <CODE>133</CODE>
+    <NAME>Восстановительная медицина</NAME>
+    <HIGH>28</HIGH>
+    <OKSO>82</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>134</RECID>
+    <CODE>134</CODE>
+    <NAME>Лечебная физкультура и спортивная медицина</NAME>
+    <HIGH>28</HIGH>
+    <OKSO>83</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>136</RECID>
+    <CODE>136</CODE>
+    <NAME>Мануальная терапия</NAME>
+    <HIGH>28</HIGH>
+    <OKSO>81</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>137</RECID>
+    <CODE>137</CODE>
+    <NAME>Физиотерапия</NAME>
+    <HIGH>28</HIGH>
+    <OKSO />
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>138</RECID>
+    <CODE>138</CODE>
+    <NAME>Пульмонология</NAME>
+    <HIGH>29</HIGH>
+    <OKSO>87</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>139</RECID>
+    <CODE>139</CODE>
+    <NAME>Колопроктология</NAME>
+    <HIGH>30</HIGH>
+    <OKSO>89</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>140</RECID>
+    <CODE>140</CODE>
+    <NAME>Нейрохирургия</NAME>
+    <HIGH>30</HIGH>
+    <OKSO>90</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>141</RECID>
+    <CODE>141</CODE>
+    <NAME>Сердечно-сосудистая хирургия</NAME>
+    <HIGH>30</HIGH>
+    <OKSO>92</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>142</RECID>
+    <CODE>142</CODE>
+    <NAME>Торакальная хирургия</NAME>
+    <HIGH>30</HIGH>
+    <OKSO>93</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>143</RECID>
+    <CODE>143</CODE>
+    <NAME>Трансфузиология</NAME>
+    <HIGH>30</HIGH>
+    <OKSO>94</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>144</RECID>
+    <CODE>144</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>30</HIGH>
+    <OKSO>97</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>145</RECID>
+    <CODE>145</CODE>
+    <NAME>Урология</NAME>
+    <HIGH>30</HIGH>
+    <OKSO>91</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>146</RECID>
+    <CODE>146</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>30</HIGH>
+    <OKSO>98</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>147</RECID>
+    <CODE>147</CODE>
+    <NAME>Челюстно-лицевая хирургия</NAME>
+    <HIGH>30</HIGH>
+    <OKSO>95</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>148</RECID>
+    <CODE>148</CODE>
+    <NAME>Эндоскопия</NAME>
+    <HIGH>30</HIGH>
+    <OKSO>96</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>149</RECID>
+    <CODE>149</CODE>
+    <NAME>Детская эндокринология</NAME>
+    <HIGH>31</HIGH>
+    <OKSO>101</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>150</RECID>
+    <CODE>150</CODE>
+    <NAME>Диабетология</NAME>
+    <HIGH>31</HIGH>
+    <OKSO>100</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>151</RECID>
+    <CODE>151</CODE>
+    <NAME>Клиническая лабораторная диагностика</NAME>
+    <HIGH>2</HIGH>
+    <OKSO>139</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>152</RECID>
+    <CODE>152</CODE>
+    <NAME>Общая гигиена</NAME>
+    <HIGH>2</HIGH>
+    <OKSO>145</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>153</RECID>
+    <CODE>153</CODE>
+    <NAME>Социальная гигиена и организация госсанэпидслужбы</NAME>
+    <HIGH>2</HIGH>
+    <OKSO>153</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>154</RECID>
+    <CODE>154</CODE>
+    <NAME>Эпидемиология</NAME>
+    <HIGH>2</HIGH>
+    <OKSO>142</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>155</RECID>
+    <CODE>155</CODE>
+    <NAME>Бактериология</NAME>
+    <HIGH>151</HIGH>
+    <OKSO>140</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>156</RECID>
+    <CODE>156</CODE>
+    <NAME>Вирусология</NAME>
+    <HIGH>151</HIGH>
+    <OKSO>141</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>157</RECID>
+    <CODE>157</CODE>
+    <NAME>Лабораторная генетика</NAME>
+    <HIGH>151</HIGH>
+    <OKSO>202</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>158</RECID>
+    <CODE>158</CODE>
+    <NAME>Лабораторная микология</NAME>
+    <HIGH>151</HIGH>
+    <OKSO>203</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>159</RECID>
+    <CODE>159</CODE>
+    <NAME>Гигиена детей и подростков</NAME>
+    <HIGH>152</HIGH>
+    <OKSO>146</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>160</RECID>
+    <CODE>160</CODE>
+    <NAME>Гигиена питания</NAME>
+    <HIGH>152</HIGH>
+    <OKSO>148</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>161</RECID>
+    <CODE>161</CODE>
+    <NAME>Гигиена труда</NAME>
+    <HIGH>152</HIGH>
+    <OKSO>149</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>162</RECID>
+    <CODE>162</CODE>
+    <NAME>Гигиеническое воспитание</NAME>
+    <HIGH>152</HIGH>
+    <OKSO>147</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>163</RECID>
+    <CODE>163</CODE>
+    <NAME>Коммунальная гигиена</NAME>
+    <HIGH>152</HIGH>
+    <OKSO>150</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>164</RECID>
+    <CODE>164</CODE>
+    <NAME>Радиационная гигиена</NAME>
+    <HIGH>152</HIGH>
+    <OKSO>151</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>165</RECID>
+    <CODE>165</CODE>
+    <NAME>Санитарно-гигиенические лабораторные исследования</NAME>
+    <HIGH>152</HIGH>
+    <OKSO>152</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>167</RECID>
+    <CODE>167</CODE>
+    <NAME>Бактериология</NAME>
+    <HIGH>154</HIGH>
+    <OKSO>204</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>168</RECID>
+    <CODE>168</CODE>
+    <NAME>Вирусология</NAME>
+    <HIGH>154</HIGH>
+    <OKSO>205</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>169</RECID>
+    <CODE>169</CODE>
+    <NAME>Дезинфектология</NAME>
+    <HIGH>154</HIGH>
+    <OKSO>143</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>170</RECID>
+    <CODE>170</CODE>
+    <NAME>Паразитология</NAME>
+    <HIGH>154</HIGH>
+    <OKSO>144</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>171</RECID>
+    <CODE>171</CODE>
+    <NAME>Стоматология общей практики</NAME>
+    <HIGH>3</HIGH>
+    <OKSO>155</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>172</RECID>
+    <CODE>172</CODE>
+    <NAME>Клиническая лабораторная диагностика</NAME>
+    <HIGH>3</HIGH>
+    <OKSO>206</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>173</RECID>
+    <CODE>173</CODE>
+    <NAME>Ортодонтия</NAME>
+    <HIGH>171</HIGH>
+    <OKSO>156</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>174</RECID>
+    <CODE>174</CODE>
+    <NAME>Стоматология детская</NAME>
+    <HIGH>171</HIGH>
+    <OKSO>157</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>175</RECID>
+    <CODE>175</CODE>
+    <NAME>Стоматология ортопедическая</NAME>
+    <HIGH>171</HIGH>
+    <OKSO>159</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>176</RECID>
+    <CODE>176</CODE>
+    <NAME>Стоматология терапевтическая</NAME>
+    <HIGH>171</HIGH>
+    <OKSO>158</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>177</RECID>
+    <CODE>177</CODE>
+    <NAME>Стоматология хирургическая</NAME>
+    <HIGH>171</HIGH>
+    <OKSO>160</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>178</RECID>
+    <CODE>178</CODE>
+    <NAME>Челюстно-лицевая хирургия</NAME>
+    <HIGH>171</HIGH>
+    <OKSO>207</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>179</RECID>
+    <CODE>179</CODE>
+    <NAME>Физиотерапия</NAME>
+    <HIGH>171</HIGH>
+    <OKSO>208</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>180</RECID>
+    <CODE>180</CODE>
+    <NAME>Бактериология</NAME>
+    <HIGH>172</HIGH>
+    <OKSO>209</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>181</RECID>
+    <CODE>181</CODE>
+    <NAME>Вирусология</NAME>
+    <HIGH>172</HIGH>
+    <OKSO>210</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>182</RECID>
+    <CODE>182</CODE>
+    <NAME>Лабораторная генетика</NAME>
+    <HIGH>172</HIGH>
+    <OKSO>211</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>183</RECID>
+    <CODE>183</CODE>
+    <NAME>Лабораторная микология</NAME>
+    <HIGH>172</HIGH>
+    <OKSO>212</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>184</RECID>
+    <CODE>184</CODE>
+    <NAME>Управление и экономика фармации</NAME>
+    <HIGH>4</HIGH>
+    <OKSO>162</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>185</RECID>
+    <CODE>185</CODE>
+    <NAME>Фармацевтическая химия и фармакогнозия</NAME>
+    <HIGH>4</HIGH>
+    <OKSO>164</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>186</RECID>
+    <CODE>186</CODE>
+    <NAME>Управление сестринской деятельностью</NAME>
+    <HIGH>5</HIGH>
+    <OKSO>166</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>187</RECID>
+    <CODE>187</CODE>
+    <NAME>Генетика</NAME>
+    <HIGH>6</HIGH>
+    <OKSO>213</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>188</RECID>
+    <CODE>188</CODE>
+    <NAME>Лабораторная генетика</NAME>
+    <HIGH>187</HIGH>
+    <OKSO>216</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>189</RECID>
+    <CODE>189</CODE>
+    <NAME>Клиническая лабораторная диагностика</NAME>
+    <HIGH>6</HIGH>
+    <OKSO>214</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>190</RECID>
+    <CODE>190</CODE>
+    <NAME>Бактериология</NAME>
+    <HIGH>189</HIGH>
+    <OKSO>217</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>191</RECID>
+    <CODE>191</CODE>
+    <NAME>Вирусология</NAME>
+    <HIGH>189</HIGH>
+    <OKSO>218</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>192</RECID>
+    <CODE>192</CODE>
+    <NAME>Лабораторная микология</NAME>
+    <HIGH>189</HIGH>
+    <OKSO>220</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>193</RECID>
+    <CODE>193</CODE>
+    <NAME>Лабораторная генетика</NAME>
+    <HIGH>189</HIGH>
+    <OKSO>219</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>194</RECID>
+    <CODE>194</CODE>
+    <NAME>Судебно-медицинская экспертиза</NAME>
+    <HIGH>6</HIGH>
+    <OKSO>215</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>195</RECID>
+    <CODE>195</CODE>
+    <NAME>Клиническая лабораторная диагностика</NAME>
+    <HIGH>7</HIGH>
+    <OKSO>221</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>196</RECID>
+    <CODE>196</CODE>
+    <NAME>Рентгенология</NAME>
+    <HIGH>7</HIGH>
+    <OKSO>222</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>197</RECID>
+    <CODE>197</CODE>
+    <NAME>Бактериология</NAME>
+    <HIGH>195</HIGH>
+    <OKSO>223</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>198</RECID>
+    <CODE>198</CODE>
+    <NAME>Вирусология</NAME>
+    <HIGH>195</HIGH>
+    <OKSO>224</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>199</RECID>
+    <CODE>199</CODE>
+    <NAME>Лабораторная генетика</NAME>
+    <HIGH>195</HIGH>
+    <OKSO>225</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>200</RECID>
+    <CODE>200</CODE>
+    <NAME>Лабораторная микология</NAME>
+    <HIGH>195</HIGH>
+    <OKSO>226</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>201</RECID>
+    <CODE>201</CODE>
+    <NAME>Радиология</NAME>
+    <HIGH>196</HIGH>
+    <OKSO>227</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>202</RECID>
+    <CODE>202</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>196</HIGH>
+    <OKSO>228</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>203</RECID>
+    <CODE>203</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>196</HIGH>
+    <OKSO>229</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>204</RECID>
+    <CODE>204</CODE>
+    <NAME>Средний медицинский персонал</NAME>
+    <HIGH />
+    <OKSO>169</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>205</RECID>
+    <CODE>205</CODE>
+    <NAME>Организация сестринского дела</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>170</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>206</RECID>
+    <CODE>206</CODE>
+    <NAME>Лечебное дело</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>171</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>207</RECID>
+    <CODE>207</CODE>
+    <NAME>Акушерское дело</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>172</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>208</RECID>
+    <CODE>208</CODE>
+    <NAME>Стоматология</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>173</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>209</RECID>
+    <CODE>209</CODE>
+    <NAME>Стоматология ортопедическая</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>174</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>210</RECID>
+    <CODE>210</CODE>
+    <NAME>Эпидемиология (паразитология)</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>175</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>211</RECID>
+    <CODE>211</CODE>
+    <NAME>Гигиена и санитария</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>176</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>212</RECID>
+    <CODE>212</CODE>
+    <NAME>Дезинфекционное дело</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>177</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>213</RECID>
+    <CODE>213</CODE>
+    <NAME>Гигиеническое воспитание</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>178</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>214</RECID>
+    <CODE>214</CODE>
+    <NAME>Энтомология</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>179</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>215</RECID>
+    <CODE>215</CODE>
+    <NAME>Лабораторная диагностика</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>180</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>216</RECID>
+    <CODE>216</CODE>
+    <NAME>Гистология</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>181</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>217</RECID>
+    <CODE>217</CODE>
+    <NAME>Лабораторное дело</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>182</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>218</RECID>
+    <CODE>218</CODE>
+    <NAME>Фармация</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>183</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>219</RECID>
+    <CODE>219</CODE>
+    <NAME>Сестринское дело</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>184</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>221</RECID>
+    <CODE>221</CODE>
+    <NAME>Сестринское дело в педиатрии</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>185</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>222</RECID>
+    <CODE>222</CODE>
+    <NAME>Операционное дело</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>186</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>223</RECID>
+    <CODE>223</CODE>
+    <NAME>Анестезиология и реаниматология</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>187</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>224</RECID>
+    <CODE>224</CODE>
+    <NAME>Общая практика</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>188</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>225</RECID>
+    <CODE>225</CODE>
+    <NAME>Рентгенология</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>189</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>226</RECID>
+    <CODE>226</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>190</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>227</RECID>
+    <CODE>227</CODE>
+    <NAME>Физиотерапия</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>191</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>228</RECID>
+    <CODE>228</CODE>
+    <NAME>Медицинский массаж</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>192</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>229</RECID>
+    <CODE>229</CODE>
+    <NAME>Фармацевтическая технология</NAME>
+    <HIGH>4</HIGH>
+    <OKSO>163</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>230</RECID>
+    <CODE>230</CODE>
+    <NAME>Лечебная физкультура</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>193</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>231</RECID>
+    <CODE>231</CODE>
+    <NAME>Диетология</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>194</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>232</RECID>
+    <CODE>232</CODE>
+    <NAME>Медицинская статистика</NAME>
+    <HIGH>204</HIGH>
+    <OKSO>195</OKSO>
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>233</RECID>
+    <CODE>233</CODE>
+    <NAME>Стоматология профилактическая</NAME>
+    <HIGH>204</HIGH>
+    <OKSO />
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>234</RECID>
+    <CODE>234</CODE>
+    <NAME>Судебно-медицинская экспертиза</NAME>
+    <HIGH>204</HIGH>
+    <OKSO />
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>235</RECID>
+    <CODE>235</CODE>
+    <NAME>Медицинская оптика</NAME>
+    <HIGH>204</HIGH>
+    <OKSO />
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>236</RECID>
+    <CODE>236</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>27</HIGH>
+    <OKSO />
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>237</RECID>
+    <CODE>237</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>28</HIGH>
+    <OKSO />
+    <DATEBEG>26.12.2013</DATEBEG>
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>238</RECID>
+    <CODE>238</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>29</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>239</RECID>
+    <CODE>239</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>30</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>240</RECID>
+    <CODE>240</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>31</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>241</RECID>
+    <CODE>241</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>11</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>242</RECID>
+    <CODE>242</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>14</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>243</RECID>
+    <CODE>243</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>17</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>244</RECID>
+    <CODE>244</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>19</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>245</RECID>
+    <CODE>245</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>20</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>246</RECID>
+    <CODE>246</CODE>
+    <NAME>Медико-социальная экспертиза</NAME>
+    <HIGH>22</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>247</RECID>
+    <CODE>247</CODE>
+    <NAME>Пластическая хирургия</NAME>
+    <HIGH>30</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>248</RECID>
+    <CODE>248</CODE>
+    <NAME>Рентгенэндоваскулярные диагностика и лечение</NAME>
+    <HIGH>30</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>249</RECID>
+    <CODE>249</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>31</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>250</RECID>
+    <CODE>250</CODE>
+    <NAME>Рентгенэндоваскулярные диагностика и лечение</NAME>
+    <HIGH>8</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>251</RECID>
+    <CODE>251</CODE>
+    <NAME>Трансфузиология</NAME>
+    <HIGH>8</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>252</RECID>
+    <CODE>252</CODE>
+    <NAME>Косметология</NAME>
+    <HIGH>10</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>253</RECID>
+    <CODE>253</CODE>
+    <NAME>Рентгенэндоваскулярные диагностика и лечение</NAME>
+    <HIGH>11</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>254</RECID>
+    <CODE>254</CODE>
+    <NAME>Рентгенэндоваскулярные диагностика и лечение</NAME>
+    <HIGH>14</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>255</RECID>
+    <CODE>255</CODE>
+    <NAME>Аллергология и иммунология</NAME>
+    <HIGH>16</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>256</RECID>
+    <CODE>256</CODE>
+    <NAME>Водолазная медицина</NAME>
+    <HIGH>16</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>257</RECID>
+    <CODE>257</CODE>
+    <NAME>Гастроэнтерология</NAME>
+    <HIGH>16</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>258</RECID>
+    <CODE>258</CODE>
+    <NAME>Гематология</NAME>
+    <HIGH>16</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>259</RECID>
+    <CODE>259</CODE>
+    <NAME>Диетология</NAME>
+    <HIGH>16</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>260</RECID>
+    <CODE>260</CODE>
+    <NAME>Кардиология</NAME>
+    <HIGH>16</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>261</RECID>
+    <CODE>261</CODE>
+    <NAME>Нефрология</NAME>
+    <HIGH>16</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>262</RECID>
+    <CODE>262</CODE>
+    <NAME>Пульмонология</NAME>
+    <HIGH>16</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>263</RECID>
+    <CODE>263</CODE>
+    <NAME>Ревматология</NAME>
+    <HIGH>16</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>264</RECID>
+    <CODE>264</CODE>
+    <NAME>Трансфузиология</NAME>
+    <HIGH>16</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>265</RECID>
+    <CODE>265</CODE>
+    <NAME>Рентгенэндоваскулярные диагностика и лечение</NAME>
+    <HIGH>17</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>266</RECID>
+    <CODE>266</CODE>
+    <NAME>Рентгенэндоваскулярные диагностика и лечение</NAME>
+    <HIGH>24</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>267</RECID>
+    <CODE>267</CODE>
+    <NAME>Организация здравоохранения и общественное здоровье</NAME>
+    <HIGH>2</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>268</RECID>
+    <CODE>268</CODE>
+    <NAME>Организация здравоохранения и общественное здоровье</NAME>
+    <HIGH>3</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>269</RECID>
+    <CODE>269</CODE>
+    <NAME>Медицинская кибернетика</NAME>
+    <HIGH>0</HIGH>
+    <OKSO>168</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>270</RECID>
+    <CODE>270</CODE>
+    <NAME>Клиническая лабораторная диагностика</NAME>
+    <HIGH>269</HIGH>
+    <OKSO>221</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>271</RECID>
+    <CODE>271</CODE>
+    <NAME>Рентгенология</NAME>
+    <HIGH>269</HIGH>
+    <OKSO>222</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>272</RECID>
+    <CODE>272</CODE>
+    <NAME>Бактериология</NAME>
+    <HIGH>270</HIGH>
+    <OKSO>223</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>273</RECID>
+    <CODE>273</CODE>
+    <NAME>Вирусология</NAME>
+    <HIGH>270</HIGH>
+    <OKSO>224</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>274</RECID>
+    <CODE>274</CODE>
+    <NAME>Лабораторная генетика</NAME>
+    <HIGH>270</HIGH>
+    <OKSO>225</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>275</RECID>
+    <CODE>275</CODE>
+    <NAME>Лабораторная микология</NAME>
+    <HIGH>270</HIGH>
+    <OKSO>226</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>276</RECID>
+    <CODE>276</CODE>
+    <NAME>Радиология</NAME>
+    <HIGH>271</HIGH>
+    <OKSO>227</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>277</RECID>
+    <CODE>277</CODE>
+    <NAME>Функциональная диагностика</NAME>
+    <HIGH>271</HIGH>
+    <OKSO>228</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>278</RECID>
+    <CODE>278</CODE>
+    <NAME>Ультразвуковая диагностика</NAME>
+    <HIGH>271</HIGH>
+    <OKSO>229</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>279</RECID>
+    <CODE>279</CODE>
+    <NAME>Медико-социальная помощь</NAME>
+    <HIGH>204</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>280</RECID>
+    <CODE>280</CODE>
+    <NAME>Наркология</NAME>
+    <HIGH>204</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>281</RECID>
+    <CODE>281</CODE>
+    <NAME>Реабилитационное сестринское дело</NAME>
+    <HIGH>204</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>282</RECID>
+    <CODE>282</CODE>
+    <NAME>Сестринское дело в косметологии</NAME>
+    <HIGH>204</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>283</RECID>
+    <CODE>283</CODE>
+    <NAME>Скорая и неотложная помощь</NAME>
+    <HIGH>204</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>284</RECID>
+    <CODE>284</CODE>
+    <NAME>Бактериология</NAME>
+    <HIGH>204</HIGH>
+    <OKSO />
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>285</RECID>
+    <CODE>285</CODE>
+    <NAME>Физиология</NAME>
+    <HIGH>28</HIGH>
+    <OKSO>84</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>286</RECID>
+    <CODE>286</CODE>
+    <NAME>Физиотерапия</NAME>
+    <HIGH>1</HIGH>
+    <OKSO>85</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>287</RECID>
+    <CODE>287</CODE>
+    <NAME>Естественные науки</NAME>
+    <HIGH>0</HIGH>
+    <OKSO>196</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>288</RECID>
+    <CODE>288</CODE>
+    <NAME>Биофизика</NAME>
+    <HIGH>287</HIGH>
+    <OKSO>197</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>289</RECID>
+    <CODE>289</CODE>
+    <NAME>Медицинская биофизика</NAME>
+    <HIGH>287</HIGH>
+    <OKSO>198</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>290</RECID>
+    <CODE>290</CODE>
+    <NAME>Медицинская кибернетика</NAME>
+    <HIGH>287</HIGH>
+    <OKSO>199</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>291</RECID>
+    <CODE>3200</CODE>
+    <NAME>Биохимия</NAME>
+    <HIGH>287</HIGH>
+    <OKSO>200</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+  <zap>
+    <RECID>292</RECID>
+    <CODE>3201</CODE>
+    <NAME>Медицинская биохимия</NAME>
+    <HIGH>287</HIGH>
+    <OKSO>201</OKSO>
+    <DATEBEG />
+    <DATEEND />
+  </zap>
+ </packet>

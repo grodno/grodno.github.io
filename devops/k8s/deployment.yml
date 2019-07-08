@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: h-agent
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: ha
+        tier: agent
+        track: dev
+    spec:
+      containers:
+      - name: h-agent
+        image: "local.nom.xyz:5000/clo"
+        env:
+        - name: HOST
+          value: "192.168.99.1"

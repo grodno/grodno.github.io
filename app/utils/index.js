@@ -26,7 +26,13 @@ export const filterFn = (filter) => (item) => (item.status !== 'deleted') && Obj
   const value = filter[k];
   return r && (!value || (op === 'eq' ? item[field] === value : item[field].includes(value)));
 }, true);
-
+export const showCounts = (counts, postfix = '', prefix = '') => {
+  if (!counts) { return 'loading...' }
+  const { total, actual } = counts;
+  if (!total) { return 'Nothing' }
+  if (actual === total) { return total + ' ' + postfix }
+  return prefix + " " + actual + ' / ' + total + ' ' + postfix;
+}
 export const pipes = {
   upper: s => ('' + s).toUpperCase(),
   capitalize,
@@ -36,7 +42,8 @@ export const pipes = {
   translit: x => x,
   rest: x => x ? x.slice(1) : [],
   limit: x => x ? x.slice(0, 50) : [],
-  counts: ({ total, actual } = {}, postfix = '') => "" + actual + ' / ' + total + postfix,
+  ifAbove: (x, limit = 0) => +x > +limit ? x : '',
+  counts: showCounts,
   subject(_s) {
     const s = _s || '';
     return s.slice(0, 50) + (s.length > 50 ? '...' : '');
@@ -50,6 +57,10 @@ export const pipes = {
       .replace('day', 'dzen');
   },
   preview(s) {
+    return s;
+  },
+  preview2(s) {
+
     const val = '' + (s || '');
     return (val
       .replace(/<br\s?\/?>/g, '~')
