@@ -1,4 +1,4 @@
-import { urlParse, capitalize } from 'fx';
+import { urlParse, capitalize } from 'furnitura';
 
 export class NavigationService {
 

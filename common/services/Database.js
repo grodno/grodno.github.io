@@ -1,4 +1,4 @@
-import { urlParse, fnId, arrayToHash, dig } from 'fx';
+import { urlParse, fnId, arrayToHash, dig } from 'furnitura';
 import Dexie from 'dexie';
 import { AService } from './AService.js';
 

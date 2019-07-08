@@ -1,5 +1,5 @@
-export * from 'fx';
-import { capitalize } from 'fx';
+export * from 'furnitura';
+import { capitalize } from 'furnitura';
 
 export const grodnify = s => s + ',Гродно,Беларусь'
 
