@@ -31,11 +31,11 @@ export class NavigationService {
   }
 
   getItems() {
-    return this.api.res('sitemap');
+    return Object.R('sitemap');
   }
 
   getSitemap() {
-    return this.api.res('sitemap');
+    return Object.R('sitemap');
   }
 
   getEmpty() {

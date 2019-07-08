@@ -1,18 +1,10 @@
-import { grodnify } from './utils/index.js'
-import meta from './meta.js'
+import { grodnify } from '../utils/index.js'
 import { urlStringify } from 'furnitura';
-import { pipes as PIPES } from './utils';
-import R from './res.js';
-import { Api } from 'armatura/api.js';
 
 /**
  * The API class.
  */
-export class MyApi extends Api {
-  constructor() {
-    super()
-    Object.assign(this, { PIPES, R: { ...R, ...meta.result } });
-  }
+export class GeoService {
 
   getRoutes() {
     return this._routes || (this._routes = this.res('routes').map(e => ({

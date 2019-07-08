@@ -1,4 +1,3 @@
-import { urlParse, fnId } from 'furnitura';
 import { AService } from './AService.js';
 
 export class Collection extends AService {

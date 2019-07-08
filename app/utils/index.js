@@ -33,7 +33,7 @@ export const showCounts = (counts, postfix = '', prefix = '') => {
   if (actual === total) { return total + ' ' + postfix }
   return prefix + " " + actual + ' / ' + total + ' ' + postfix;
 }
-export const pipes = {
+export const reducers = {
   upper: s => ('' + s).toUpperCase(),
   capitalize,
   serializeParams: x => !x ? '' : Object.keys(x).map(k => `${k}=${x[k]}`).join('&'),
