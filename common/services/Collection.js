@@ -34,6 +34,10 @@ export class Collection extends AService {
     return this._selection || (this._selection = new Set());
   }
 
+  getNewEntry() {
+    return this.newEntry || {};
+  }
+
   getTagged() {
     const data = this.data;
     if (!data) {
@@ -74,10 +78,12 @@ export class Collection extends AService {
     this.log('Tag', id);
   }
 
-  async onCreate({ path: [kind], data }) {
-    data.id = this.remote.nextId(kind);
-    await this.update({ [kind]: [data] });
-    this.log('Created', data);
+  onOpenAddNew({ data }) {
+    this.newEntry = { ...data, open: true };
+  }
+
+  onCancelAddNew() {
+    this.newEntry.open = false;
   }
   async onUpdate({ path: [kind], data }) {
     await this.update({ [kind]: [data] });

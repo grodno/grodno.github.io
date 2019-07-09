@@ -6,46 +6,51 @@ const FIELD_TYPES = {
   dict: 'DictField',
   bool: 'SwitchField'
 };
-function onChange({ value }) {
-  this.value = value;
-  this.delegate.updateData({ [this.id]: this.value });
-}
-export class Form {
-  TEMPLATE() {
+
+export class FormField {
+  get TEMPLATE() {
     return /* html */ `
-    <div class="docs-demo columns">
-      <div class="column col-9 col-sm-12">
-        <div class="form-horizontal">
-          <ui:fieldType ui:each="field of fields" ui:props="{{fieldProps}}" ui:if="fieldShown"/>
-        </div>
-      </div>
-    </div>`;
+    <ui:fragment ui:if="fieldShown">
+      <ui:tag tag="{{fieldType}}" ui:props="{{fieldProps}}" onChange="{{fieldChange}}"/>
+    </ui:fragment>`;
   }
-  getData() {
-    return this.data || (this.data = {});
+  getFieldChange() {
+    return ({ value }) => this.onChange({ [this.id]: value });
   }
   getFieldType() {
-    return FIELD_TYPES[this.field.type] || 'TextField';
+    return FIELD_TYPES[this.type] || 'TextField';
   }
   getFieldShown() {
-    return this.field.shown ? this.field.shown.replace(/\{\{(\w+)\}\}/g, (_, p) => (this.getData()[p] || '')) : true;
+    const field = this
+    return true;
   }
   getFieldProps() {
-    const field = this.field;
-    const data = this.getData();
+    const field = this
+    const data = this.data || {};
     const value = data[field.id];
     return {
       ...field,
       typeSpec: field.typeSpec ? field.typeSpec.replace(/\{\{(\w+)\}\}/g, (_, p) => this.getData()[p]) : null,
       caption: field.id,
       value: value === undefined ? null : value,
-      delegate: this,
-      onChange
     };
   }
-  updateData(delta) {
-    const data = Object.assign(this.getData(), delta);
-    this.assign({ data });
-    this.changed && this.changed({ [this.into || 'data']: this.data });
+}
+export class Form {
+  get TEMPLATE() {
+    return /* html */ `
+    <div class="docs-demo columns">
+      <div class="column col-9 col-sm-12">
+        <div class="form-horizontal">
+          <FormField ui:each="field of fields" ui:props="{{field}}" data="{{data}}" onChange="{{up}}"/>
+        </div>
+      </div>
+    </div>`;
+  }
+  getUp() {
+    return (delta) => {
+      this.data = { ...this.data, ...delta }
+      this.onChange && this.onChange({ data: this.data });
+    }
   }
 }

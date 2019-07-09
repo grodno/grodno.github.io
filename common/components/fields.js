@@ -1,5 +1,5 @@
 export class TextField {
-  TEMPLATE() {
+  get TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
@@ -14,7 +14,7 @@ export class TextField {
 }
 
 export class SwitchField {
-  TEMPLATE() {
+  get TEMPLATE() {
     return /* html */`
       <div class="form-group">
         <div class="col-9 col-sm-12 col-ml-auto">
@@ -29,7 +29,7 @@ export class SwitchField {
 }
 
 export class TextareaField {
-  TEMPLATE() {
+  get TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
@@ -43,7 +43,7 @@ export class TextareaField {
 }
 
 export class RadioField {
-  TEMPLATE() {
+  get TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
@@ -62,35 +62,35 @@ export class RadioField {
 }
 
 export class EnumField {
-  TEMPLATE() {
+  get TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
           <label class="form-label">{{caption}}</label>
         </div>
         <div class="col-9 col-sm-12">
-          <Select change="{{onChange}}" options="<- res:{{typeSpec}}"/>
+          <Select change="{{onChange}}" options="<-res://resource/{{typeSpec}}"/>
         </div>
       </div>`;
   }
 }
 
 export class DictField {
-  TEMPLATE() {
+  get TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">
           <label class="form-label">{{caption}}</label>
         </div>
         <div class="col-9 col-sm-12">
-        <Select change="{{onChange}}" options="<- db:dict/{{typeSpec}}"/>
+        <Select change="{{onChange}}" options="<- db://dict/{{typeSpec}}"/>
         </div>
       </div>`;
   }
 }
 
 export class RefField {
-  TEMPLATE() {
+  get TEMPLATE() {
     return /* html */ `
       <div class="form-group">
         <div class="col-3 col-sm-12">

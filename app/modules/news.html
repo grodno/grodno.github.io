@@ -4,9 +4,9 @@
       <h3 class="s-title">Kroniki Olgarda</h3>
       <Collection ui:ref="news" table="news" />
       <NewsList ui:props="<- news://tagged" />
-      <BigRedButton data=":AddNewRecordData" tooltip="tooool" action="->" />
+      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> news://openAddNew" />
       <NewsUpdateModal ui:if="id" id="{{id}}" open="{{open}}" data2="db:one/news/{{id}}" />
-      <NewsCreateModal ui:if="newEntry" open="{{open}}" data2="{{newEntry}}" />
+      <NewsCreateModal ui:props="<- news://newEntry" submit="-> news://saveNew" cancel="-> news://cancelAddNew" />
       <Toast ui:if="error" message="{{error.message}}" />
     </ui:fragment>
   </template>
@@ -30,11 +30,11 @@
   </template>
 
   <template id="NewsCreateModal">
-    <Modal ui:if="" open="{{open}}" title="Add a new record" close="-> nav:close">
-      <Form fields=":news_form" data="{{data}}" changed="{{assign}}" />
-      <ui:fragment key="footer">
-        <button class="btn btn-primary" data="{{data}}" click="-> db:create/news">:create_new</button>
-      </ui:fragment>
+    <Modal ui:if="open" open="{{open}}" title="Add a new record" close="{{cancel}}">
+      <Form fields=":news_form" data="{{data}}" changed="->" />
+      <Modal:footer>
+        <button class="btn btn-primary" data="{{data}}" click="{{submit}}">:create_new</button>
+      </Modal:footer>
     </Modal>
   </template>
 

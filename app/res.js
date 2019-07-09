@@ -26,7 +26,10 @@ export default {
     { name: 'Zabavki', id: 'amazing' }
   ],
   AddNewRecordData: {
-    error: { message: 'Add a new record' }
+    title: 'Add a new record',
+    body: {
+      subject: 'new record'
+    }
   },
   firebaseConfig: {
     apiKey: 'AIzaSyBZ4bR8ArGmHxo-ExfKrlhkMMAj86lSIpw',

@@ -1,12 +1,12 @@
 <body id="app">
-    <component id="Modal">
+    <template id="Modal">
         <div class="modal modal active:{{open}}">
             <a class="modal-overlay" aria-label="Close" click="{{close}}"></a>
             <div class="modal-container">
                 <div class="modal-header">
                     <a class="btn btn-clear float-right" aria-label=":close" click="{{close}}"></a>
                     <div class="modal-title h5" ui:if="title">{{title}}</div>
-                    <ui:slot key="header" />
+                    <ui:slot id="header" />
                 </div>
                 <div class="modal-body" style="max-height: 70vh;">
                     <div class="content">
@@ -14,9 +14,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <ui:slot key="footer" />
+                    <ui:slot id="footer" />
                 </div>
             </div>
         </div>
-    </component>
+    </template>
 </body>
