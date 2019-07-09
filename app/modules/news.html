@@ -1,37 +1,67 @@
 <body id="app">
   <template id="NewsPage">
     <ui:fragment>
-      <h3 class="s-title">Kroniki Olgarda</h3>
       <Collection ui:ref="news" table="news" />
       <NewsList ui:props="<- news://tagged" />
       <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> news://openAddNew" />
-      <NewsUpdateModal ui:if="id" id="{{id}}" open="{{open}}" data2="db:one/news/{{id}}" />
+      <!-- <NewsUpdateModal ui:if="id" id="{{id}}" open="{{open}}" data2="db:one/news/{{id}}" /> -->
       <NewsCreateModal ui:props="<- news://newEntry" submit="-> news://saveNew" cancel="-> news://cancelAddNew" />
       <Toast ui:if="error" message="{{error.message}}" />
     </ui:fragment>
   </template>
 
   <template id="NewsList">
-    <div>
-      <div>Shown {{counts|counts:news}}</div>
+    <div class="bg-gray">
+      <h3 class="s-title badge text-gray" data-badge="{{counts|counts}}">Naviny z Olgarda</h3>
       <Chips data="{{tags}}" click="-> news://tag" />
       <div class="columns">
-        <NewsListItemFeatured ui:props="{{item}}" itemClick="-> nav:openItem" ui:each="item of data">
+        <NewsListItem ui:props="{{item}}" itemClick="-> nav:openItem" ui:each="item of data">
           <ui:loading>
             <div class="column col-9 col-sm-12 loading"></div>
           </ui:loading>
           <ui:empty>
-            <h6 class="column col-9 col-sm-12">Empty list</h6>
+            <h6 class="column col-9 col-sm-12">Nic nema</h6>
           </ui:empty>
-        </NewsListItemFeatured>
+        </NewsListItem>
         <Toast ui:if="error" message="{{error.message}}" />
+      </div>
+    </div>
+  </template>
+
+  <template id="NewsListItem">
+    <div class="column col-12 col-sm-12 my-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="tile">
+            <div class="tile-icon">
+              <!-- <figure class="avatar avatar- bg-primary" data-initial="{{subject|initials}}"> -->
+              <img src="{{image}}"
+                   class="img-responsive" width="196" data-value="{{id}}" click="itemClick" />
+              <!-- </figure> -->
+            </div>
+            <div class="tile-content">
+              <h5 class="tile-title">{{subject|translit}}</h5>
+              <p>
+                <small class="text-gray">{{created_at|date}}</small>
+                <small class="text-gray mx-1"><a href="{{link}}" target="_blank">{{link|hostOf}}</a></small>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <img src="/assets/grodno2.svg" height="10" width="10" />
+          <small class="mx-2">{{preview|translit}}<sub class="text-gray" ui:if="tags"> ({{tags}})</sub></small>
+        </div>
+        <!-- <div class="card-footer">
+          <button class="btn btn-primary btn-sm">Do</button>
+        </div> -->
       </div>
     </div>
   </template>
 
   <template id="NewsCreateModal">
     <Modal ui:if="open" open="{{open}}" title="Add a new record" close="{{cancel}}">
-      <Form fields=":news_form" data="{{data}}" changed="->" />
+      <Form fields=":news_form" data="{{data}}" change="->" />
       <Modal:footer>
         <button class="btn btn-primary" data="{{data}}" click="{{submit}}">:create_new</button>
       </Modal:footer>
@@ -47,47 +77,5 @@
       </ui:fragment>
     </Modal>
   </template>
-
-  <template id="NewsListItemFeatured">
-    <div class="card column col-12 col-sm-12 my-1">
-      <div class="card-image">
-        <img src="{{image}}" class="img-responsive" />
-      </div>
-      <div class="card-header">
-        <div class="card-title h5">{{subject|subject|translit}}</div>
-        <div class="card-subtitle text-gray">Software and hardware</div>
-      </div>
-      <div class="card-body">
-        {{preview|translit}}
-      </div>
-      <div class="card-footer">
-        <button class="btn btn-primary btn-sm">Do</button>
-      </div>
-    </div>
-  </template>
-
-  // NewsListItem
-  <template id="NewsListItem">
-    <div class="column col-9 col-sm-12">
-      <div class="tile">
-        <div class="tile-icon">
-          <figure class="avatar avatar- bg-primary" data-initial="{{subject|initials}}"><img src="{{image}}"
-                 class="img-responsive" data-value="{{id}}" click="itemClick" /></figure>
-        </div>
-        <div class="tile-content">
-          <header>{{subject}}</header>
-          <small>{{created_at}}</small>
-          <small class="mx-2"><a href="{{link}}" target="_blank">{{link}}</a></small>
-          <sup>{{tags}}</sup>
-          <details>
-            <dt>{{preview}}</dt>
-          </details>
-          <!-- <img src="/assets/grodno2.svg" height="10" width="10" /> -->
-          <!--span ui:each="tag of tags" class="chip">{{tag}}</span-->
-        </div>
-      </div>
-    </div>
-  </template>
-
 
 </body>

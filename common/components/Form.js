@@ -50,7 +50,7 @@ export class Form {
   getUp() {
     return (delta) => {
       this.data = { ...this.data, ...delta }
-      this.onChange && this.onChange({ data: this.data });
+      this.change && this.change({ data: this.data });
     }
   }
 }

@@ -1,5 +1,6 @@
 export * from 'furnitura';
-import { capitalize } from 'furnitura';
+import { capitalize, urlParse, representDate } from 'furnitura';
+import { translit } from 'pramova/mova';
 
 export const grodnify = s => s + ',Гродно,Беларусь'
 
@@ -35,11 +36,13 @@ export const showCounts = (counts, postfix = '', prefix = '') => {
 }
 export const reducers = {
   upper: s => ('' + s).toUpperCase(),
+  hostOf: s => urlParse(s).target || s,
+  date: s => representDate(s),
   capitalize,
   serializeParams: x => !x ? '' : Object.keys(x).map(k => `${k}=${x[k]}`).join('&'),
   initials: x => !x ? '' : x.split(' ').slice(0, 2).map(s => s.slice(0, 1).toUpperCase()).join(''),
   not: x => !x,
-  translit: x => x,
+  translit,
   rest: x => x ? x.slice(1) : [],
   limit: x => x ? x.slice(0, 50) : [],
   ifAbove: (x, limit = 0) => +x > +limit ? x : '',
@@ -60,7 +63,6 @@ export const reducers = {
     return s;
   },
   preview2(s) {
-
     const val = '' + (s || '');
     return (val
       .replace(/<br\s?\/?>/g, '~')

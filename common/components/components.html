@@ -87,7 +87,7 @@
 
     <template id="Chips">
         <div class="ui mini labels">
-            <span class="chip bg-success:{{tag.selected}} badge:{{tag.selected|not}}"
+            <span class="chip bg-success:{{tag.selected}} bg-secondary:{{tag.selected|not}} badge:{{tag.selected|not}}"
                   data-badge="{{tag.count|ifAbove:3}}"
                   data-id="{{tag.id}}"
                   click="{{click}}"
@@ -103,5 +103,26 @@
                 <a href="#tab?tab={{item.value}}">{{item.name}}</a>
             </li>
         </ul>
+    </template>
+
+    <template id="Modal">
+        <div class="modal modal active:{{open}}">
+            <a class="modal-overlay" aria-label="Close" click="{{close}}"></a>
+            <div class="modal-container">
+                <div class="modal-header">
+                    <a class="btn btn-clear float-right" aria-label=":close" click="{{close}}"></a>
+                    <div class="modal-title h5" ui:if="title">{{title}}</div>
+                    <ui:slot id="header" />
+                </div>
+                <div class="modal-body" style="max-height: 70vh;">
+                    <div class="content">
+                        <ui:slot />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <ui:slot id="footer" />
+                </div>
+            </div>
+        </div>
     </template>
 </body>

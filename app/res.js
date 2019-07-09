@@ -27,7 +27,7 @@ export default {
   ],
   AddNewRecordData: {
     title: 'Add a new record',
-    body: {
+    data: {
       subject: 'new record'
     }
   },

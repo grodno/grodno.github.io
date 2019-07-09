@@ -110,10 +110,12 @@ export class DatabaseService extends AService {
     await this.localUpdate(delta);
     return this.remote.update(delta);
   }
-  async onCreate({ path: [kind], data }) {
-    data.id = this.remote.nextId(kind);
+  async onUpsert({ path: [kind], data }) {
+    if (!data.id) {
+      data.id = this.remote.nextId(kind);
+    }
     await this.update({ [kind]: [data] });
-    this.log('Created', data);
+    this.log('onUpsert', data);
   }
   async onUpdate({ path: [kind], data }) {
     await this.update({ [kind]: [data] });

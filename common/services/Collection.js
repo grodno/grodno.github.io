@@ -1,41 +1,15 @@
+import { sortBy } from 'furnitura';
 import { AService } from './AService.js';
 
 export class Collection extends AService {
 
   init() {
-    this.api.addListener('db', () =>
-      this.api.db.getTable(this.table).toArray().then(data => { this.data = data; this.notify() })
-      , true)
-  }
-  getOne(url) {
-    const [kind, id] = url.path;
-    let coll = this.getCollection(kind);
-    return coll.get(id).then(d => (d ? { ...d, kind } : null));
-  }
-  getIndex(url) {
-    // url = urlParse(url);
-    // const [kind, index, indexKey, desc] = url.path;
-    // if (!this.dbkeys.includes(kind)) {
-    //   return null;
-    // }
-    // let coll = this.getTable(kind);
-    // if (index && indexKey) {
-    //   coll = coll.where(index).equals(indexKey);
-    //   coll = desc === 'desc' ? coll.desc() : coll;
-    // }
-    // const filter = url.params;
-    // if (filter) {
-    //   coll = coll.filter(filterFn(filter));
-    // }
-    return this.data.slice(0, 50);
+    this.api.subscribe('db', () =>
+      this.api.db.getTable(this.table).toArray().then(data => { this.data = data; this.notify() }))
   }
 
   get selection() {
     return this._selection || (this._selection = new Set());
-  }
-
-  getNewEntry() {
-    return this.newEntry || {};
   }
 
   getTagged() {
@@ -56,7 +30,7 @@ export class Collection extends AService {
 
     const tags = Object.values(tagsHash)
       .sort((a, b) => a.selected === b.selected ? (a.count < b.count ? 1 : -1) : (!a.selected ? 1 : -1))
-      .slice(0, sel.length + 5)
+      .slice(0, sel.length + 7)
       .sort((a, b) => a.selected === b.selected ? (a.id > b.id ? 1 : -1) : (!a.selected ? 1 : -1));
     // const filter = state.filter;
     // const sortBy = state.sortBy;
@@ -66,25 +40,36 @@ export class Collection extends AService {
     // if (items && sortBy) {
     //   items = items.sort((e1, e2) => e1[sortBy] < e2[sortBy] ? 1 : -1);
     // }
-    return { tags, data: actualData.slice(this.offset || 0, this.pageSize || 50), counts: { total: data.length, actual: actualData.length } }
+    const sortedData = sortBy(actualData, '-modified_at')
+    return { tags, data: sortedData.slice(this.offset || 0, this.pageSize || 50), counts: { total: data.length, actual: actualData.length } }
   }
 
   onTag({ data: { id } }) {
-    if (this.selection.has(id)) {
-      this.selection.delete(id);
-    } else {
-      this.selection.add(id);
-    }
+    if (this.selection.has(id)) { this.selection.delete(id); } else { this.selection.add(id); }
     this.log('Tag', id);
   }
 
+  /**
+   * New Entry
+   */
+  getNewEntry() {
+    return this.newEntry || {};
+  }
+
   onOpenAddNew({ data }) {
-    this.newEntry = { ...data, open: true };
+    this.newEntry = { ...data, ...this.newEntry, open: true };
   }
 
   onCancelAddNew() {
-    this.newEntry.open = false;
+    this.newEntry = { ...this.newEntry, open: false };
   }
+
+  async onSaveNew({ data }) {
+    delete data.id;
+    await this.upsert(data)
+    this.newEntry = { ...this.newEntry, data, open: false };
+  }
+
   async onUpdate({ path: [kind], data }) {
     await this.update({ [kind]: [data] });
     this.log('Updated', data);
@@ -92,5 +77,9 @@ export class Collection extends AService {
   async onDelete({ path: [kind, id] }) {
     await this.update({ [kind]: [{ id, status: 'deleted' }] });
     this.log('Deleted', id);
+  }
+  upsert(data, cb) {
+    this.log('upsert', data)
+    return this.emit('db://upsert/' + this.table + '', data)
   }
 }
