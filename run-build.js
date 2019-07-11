@@ -19,6 +19,10 @@ var config = {
   },
   module: commons.module,
   resolve: commons.resolve,
+  optimization: {
+    // We no not want to minimize our code.
+    minimize: false
+  },
 };
 
 var compiler = webpack(config);
