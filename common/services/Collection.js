@@ -44,7 +44,7 @@ const analyzeDataByTags = (data, selection, initials = '') => {
 const getSuggestions = (data, kluq) => {
   const words = {}
   data.forEach(e => e.$searchData.replace(/\w{3,}/g, (w) => { words[w] = 1; return '' }));
-  return Object.keys(words).filter(e => e.includes(kluq)).map(s => ({ name: s, id: s }))
+  return sortBy(Object.keys(words).filter(e => e.includes(kluq)).map(s => ({ name: s, id: s })), 'name')
 }
 class Item {
   constructor(opts, opts2) {
