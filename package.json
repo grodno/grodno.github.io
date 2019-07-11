@@ -14,8 +14,7 @@
   "scripts": {
     "start": "node webpack-dev-server",
     "build": "node run-build",
-    "test": "mocha -w --compilers js:babel-register src/**/*.test.js",
-    "deploy": "firebase deploy --only hosting"
+    "test": "mocha -w --compilers js:babel-register src/**/*.test.js"
   },
   "repository": {
     "type": "git",

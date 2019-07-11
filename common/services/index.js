@@ -5,4 +5,5 @@ export * from './Database.js';
 export * from './UserService.js';
 export * from './Collection.js';
 export * from './ResService.js';
+export * from './GWA.js';
 

@@ -18,7 +18,7 @@ var config = {
     ]
   },
   output: {
-    path: __dirname + '/public',
+    path: __dirname + '/docs',
     filename: '[name].js',
     devtoolModuleFilenameTemplate: '[resource-path]'
   },
@@ -32,7 +32,7 @@ var config = {
 var compiler = webpack(config);
 
 var server = new WebpackDevServer(compiler, {
-  contentBase: __dirname + '/public',
+  contentBase: __dirname + '/docs',
   hot: true,
   inline: true
 });
