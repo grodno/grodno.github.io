@@ -30,7 +30,8 @@ export const filterFn = (filter) => (item) => (item.status !== 'deleted') && Obj
 export const showCounts = (counts, postfix = '', prefix = '') => {
   if (!counts) { return 'loading...' }
   const { total, actual } = counts;
-  if (!total) { return 'Nothing' }
+  if (!total) { return 'Nic nema' }
+  if (!actual) { return 'Ne znojdzena' }
   if (actual === total) { return total + ' ' + postfix }
   return prefix + " " + actual + ' / ' + total + ' ' + postfix;
 }

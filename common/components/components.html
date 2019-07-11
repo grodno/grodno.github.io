@@ -1,5 +1,11 @@
 <body>
 
+    <template id="Container">
+        <div class="container bg-gray">
+            <ui:slot />
+        </div>
+    </template>
+
     <template id="PageRouter">
         <ui:tag tag="{{page}}" ui:props="{{params}}" />
     </template>
@@ -62,7 +68,9 @@
                 <i class="icon icon-menu" />
             </a>
             <div id="sidebar" class="off-canvas-sidebar">
-                <ui:slot id="aside" />
+                <div class="fixed">
+                    <ui:slot id="aside" />
+                </div>
             </div>
             <a class="off-canvas-overlay" href="#"></a>
             <div class="off-canvas-content">

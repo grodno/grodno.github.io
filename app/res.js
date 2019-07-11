@@ -25,6 +25,7 @@ export default {
     { name: 'Gistorya', id: 'history' },
     { name: 'Zabavki', id: 'amazing' }
   ],
+  newsInitialTags: 'asoba,gramadstva,dabrabyt,axtung,adukacya,biznes',
   AddNewRecordData: {
     title: 'Add a new record',
     data: {

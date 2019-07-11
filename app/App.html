@@ -1,4 +1,14 @@
 <body id="app">
+    <template id="TopNews">
+        <ui:fragment>
+            <ResService ui:ref="res" />
+            <Firebase ui:ref="firebase" config=":firebaseConfig" />
+            <LocalStorage ui:ref="local" />
+            <DatabaseService ui:ref="db" schema=":dbSchema" />
+            <NewsPage />
+        </ui:fragment>
+
+    </template>
     <template id="Top">
         <ui:fragment>
             <ResService ui:ref="res" />

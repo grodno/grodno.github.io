@@ -17,7 +17,7 @@ export class DatabaseService extends AService {
   }
   openDb() {
     // Open the database
-    this.dexie.open().catch(this.error);
+    this.dexie.open().then(() => this.log('opened')).catch(this.error);
   }
   checkVersion() {
     if (this.api.local.get('$version') !== this.version) {
@@ -87,7 +87,7 @@ export class DatabaseService extends AService {
     // if (filter) {
     //   coll = coll.filter(filterFn(filter));
     // }
-    return coll.orderBy('modified_at').reverse().toArray();
+    return coll.toArray();
   }
   eachDelta(delta, fn = fnId) {
     const bulks = {};

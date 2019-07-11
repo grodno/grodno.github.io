@@ -26,3 +26,9 @@ li span input:checked ~ span {
 .dashboard .column {
   padding: .4rem;
 }
+
+.sticky {
+  top: 0px;
+  position: -webkit-sticky;
+  position: sticky;
+}

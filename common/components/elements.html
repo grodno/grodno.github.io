@@ -10,6 +10,37 @@
         </div>
     </template>
 
+    <template id="SearchBar">
+        <div class="form-autocomplete">
+            <!-- autocomplete input container -->
+            <div class="form-autocomplete-input form-input input-sm has-icon-right">
+                <div class="input-group input-inline">
+                    <input class="form-input" type="search"
+                           placeholder=":kluq_poshuku"
+                           keypress="{{input}}"
+                           value="{{value}}" />
+                </div>
+                <i class="form-icon icon icon-cross" data-value=""
+                   click="{{enter}}"
+                   ui:if="value"></i>
+            </div>
+            <ul class="menu" ui:if="suggestions">
+                <li class="menu-item" ui:each="item of suggestions" data-value="{{item.id}}" click="{{enter}}">
+                    <a>
+                        <div class="tile tile-centered">
+                            <div class="tile-icon">
+                            </div>
+                            <div class="tile-content">
+                                {{item.name}}
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </template>
+
     <template id="BigRedButton">
         <button class="btn tooltip tooltip-left fixed bg-error circle"
                 style="right:1rem; bottom:1rem; width: 2rem;"
