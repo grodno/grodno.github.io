@@ -1,13 +1,14 @@
 import { urlParse, capitalize } from 'furnitura';
+import { AService } from './AService';
 
-export class NavigationService {
+export class NavigationService extends AService {
 
   constructor({ api, ref }) {
-    Object.assign(this, { api, ref, state: {} });
+    super(this, { api, ref, state: {} });
   }
 
   init() {
-    const hashchange = () => this.api.emit(this.ref + ':hash', { value: window.location.hash.slice(1) });
+    const hashchange = () => this.emit(this.ref + ':hash', { value: window.location.hash.slice(1) });
     window.addEventListener('hashchange', hashchange);
     hashchange();
   }
