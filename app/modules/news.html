@@ -3,11 +3,12 @@
     <ui:fragment>
       <Collection ui:ref="news"
                   data="<- db://index/news"
-                  initials=":newsInitialTags" />
+                  upsert="-> db://upsert/news"
+                  initials=":news.initialTags" />
       <NewsList ui:props="<- news://info" />
-      <!-- <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> news://openAddNew" /> -->
-      <!-- <NewsUpdateModal ui:if="id" id="{{id}}" open="{{open}}" data2="db:one/news/{{id}}" /> -->
-      <NewsCreateModal ui:props="<- news://newEntry" submit="-> news://saveNew" cancel="-> news://cancelAddNew" />
+      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> news://openAddNew" />
+      <NewsUpdateModal ui:props="<- news://entry" />
+      <NewsCreateModal ui:props="<- news://newEntry" />
       <Toast ui:if="error" message="{{error.message}}" />
     </ui:fragment>
   </template>
@@ -17,21 +18,17 @@
       <a name="top"></a>
       <Box>
         <Box:1>
-          <h3 class="s-title badge text-gray my-2" data-badge="{{counts|counts}}">Naviny z Olgarda</h3>
+          <h3 class="s-title badge text-gray my-2" data-badge="{{counts|counts}}">:news.caption</h3>
         </Box:1>
         <Box:2>
-          <SearchBar
-                     input="-> news:inputKluq"
-                     enter="-> news:znajdzPoKluqu"
-                     value="{{kluqInput}}"
-                     suggestions="{{suggestions}}" />
+          <SearchBar ui:props="{{search}}" />
         </Box:2>
       </Box>
       <div class="sticky bg-gray py-2">
         <Chips data="{{tags}}" click="-> news://tag" />
       </div>
       <div class="columns">
-        <NewsListItem ui:props="{{item}}" itemClick="-> nav:openItem" ui:each="item of data">
+        <NewsListItem ui:props="{{item}}" itemClick="{{openEntry}}" ui:each="item of data">
           <ui:loading>
             <div class="column col-9 col-sm-12 loading"></div>
           </ui:loading>
@@ -56,16 +53,19 @@
             <div class="tile-icon">
               <!-- <figure class="avatar avatar- bg-primary" data-initial="{{subject|initials}}"> -->
               <img src="{{image}}"
-                   class="img-responsive" width="196" data-value="{{id}}" click="itemClick" />
+                   class="img-responsive"
+                   width="196"
+                   data-id="{{id}}"
+                   click="itemClick" />
               <!-- </figure> -->
             </div>
             <div class="tile-content">
-              <h5 class="tile-title">{{subject|translit}}</h5>
-              <p>
+              <h5 class="tile-title" data-id="{{id}}" click="{{itemClick}}">{{subject|translit}}</h5>
+              <div>
                 <small class="text-gray">{{created_at|date}}</small>
                 <small class="text-gray mx-1"><a href="{{link}}" target="_blank">{{link|hostOf}}</a></small>
                 <small class="text-gray" ui:if="tags">({{tags}})</small>
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -90,11 +90,11 @@
   </template>
 
   <template id="NewsUpdateModal">
-    <Modal ui:if="id" open="{{open}}" title="Edit record ({{id}})" close="-> nav:close">
-      <Form fields=":news_form" data="{{data}}" changed="{{assign}}" />
+    <Modal ui:if="open" open="{{open}}" title="Edit record (#{{id}})" close="{{cancel}}">
+      <Form fields=":news_form" data="{{data}}" change="->" />
       <ui:fragment key="footer">
-        <button class="btn btn-primary" data="{{data}}" click="-> db:update/news">:update</button>
-        <button class="btn btn-danger" click="-> db:delete/news/{{id}}">:delete</button>
+        <button class="btn btn-primary" data="{{data}}" click="{{submit}}">:update</button>
+        <button class="btn btn-danger" click="{{delete}}">:delete</button>
       </ui:fragment>
     </Modal>
   </template>

@@ -1,14 +1,14 @@
 export default {
-  appName: 'Olgard',
-  appLogo: '/logo.jpg',
+  appName: 'Algerd',
+  appLogo: '/assets/icon.png',
   appVersion: '4.0.0',
   sitemap: [
-    { name: 'Galownea', id: 'main' },
-    { name: 'Objavy', id: 'ads' },
     { name: 'Naviny', id: 'news' },
+    { name: 'Objavy', id: 'ads' },
     { name: 'Calendar', id: 'calendar' },
     { name: 'Karta', id: 'geomap' },
-    { name: 'Leudzi', id: 'people' }
+    { name: 'Leudzi', id: 'people' },
+    { name: 'Info', id: 'info' },
   ],
   media_links: [
     { name: 'S13.ru', id: '//s13.ru' },
@@ -25,7 +25,10 @@ export default {
     { name: 'Gistorya', id: 'history' },
     { name: 'Zabavki', id: 'amazing' }
   ],
-  newsInitialTags: 'asoba,gramadstva,dabrabyt,axtung,adukacya,biznes',
+  news: {
+    caption: 'Naviny Algerda',
+    initialTags: 'asoba,gramadstva,dabrabyt,axtung,adukacya,biznes',
+  },
   AddNewRecordData: {
     title: 'Add a new record',
     data: {

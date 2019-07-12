@@ -1,6 +1,7 @@
 import { sortBy } from 'furnitura';
 import { translit } from 'pramova/mova';
-import { AService } from './AService.js';
+import { ApiService } from 'armatura';
+import { timingSafeEqual } from 'crypto';
 
 const analyzeDataByTags = (data, selection, initials = '') => {
   const sel = [...selection]
@@ -56,7 +57,7 @@ class Item {
   get $searchData() { return this.$$searchData || (this.$$searchData = (this.title + ' ' + translit(this.title) + ' ' + this.preview + ' ' + translit(this.preview)).toLowerCase()) }
 }
 
-export class Collection extends AService {
+export class Collection extends ApiService {
 
   constructor(options) {
     super(options)
@@ -86,13 +87,18 @@ export class Collection extends AService {
     return {
       tags,
       data: sortedData.slice(0, this.shownLimit),
-      kluq: this.kluqPoshuku,
-      kluqInput: this.inputKluqPoshuku,
-      suggestions: this.kluqPoshuku === this.inputKluqPoshuku ? null : suggestions,
+      openEntry: ({ id }) => this.emitToMe("openEntry", this.data.find(e => e.id === id)),
       counts: {
         total: this.data.length,
         actual: actualData.length,
         hasMore: this.shownLimit < actualData.length
+      },
+      search: {
+        kluq: this.kluqPoshuku,
+        value: this.inputKluqPoshuku,
+        suggestions: this.kluqPoshuku === this.inputKluqPoshuku ? null : suggestions,
+        input: (data) => this.emitToMe("inputKluq", data),
+        enter: (data) => this.emitToMe("znajdzPoKluqu", data),
       }
     }
   }
@@ -123,7 +129,13 @@ export class Collection extends AService {
   }
 
   onOpenAddNew({ data }) {
-    this.newEntry = { ...data, ...this.newEntry, open: true };
+    this.newEntry = {
+      ...data,
+      ...this.newEntry,
+      cancel: () => this.emitToMe("cancelAddNew"),
+      submit: (data) => this.emitToMe("saveNew", data),
+      open: true
+    };
   }
 
   onCancelAddNew() {
@@ -135,15 +147,37 @@ export class Collection extends AService {
     await this.upsert(data)
     this.newEntry = { ...this.newEntry, data, open: false };
   }
+  /**
+   * Entry
+   */
+  getEntry() {
+    return this.entry || {
 
-  async onUpdate({ path: [kind], data }) {
-    await this.update({ [kind]: [data] });
+    };
   }
-  async onDelete({ path: [kind, id] }) {
-    await this.update({ [kind]: [{ id, status: 'deleted' }] });
+
+  onOpenEntry({ data, data: { id } }) {
+    this.entry = {
+      id,
+      data: Object.entries(data).reduce((r, [k, v]) => { if (k[0] !== '$') { r[k] = v }; return r }, {}),
+      ...this.entry,
+      cancel: () => this.emitToMe("cancelEntry"),
+      submit: (data) => this.emitToMe("saveEntry", data),
+      delete: () => this.emitToMe("deleteEntry", { id }),
+      open: true
+    };
   }
-  upsert(data, cb) {
-    this.log('upsert', data)
-    return this.emit('db://upsert/' + this.table + '', data)
+
+  onCancelEntry() {
+    this.entry = { open: false };
   }
+
+  async onSaveEntry({ data }) {
+    await this.upsert(data)
+    this.entry = { open: false };
+  }
+  async onDeleteEntry({ data }) {
+    await this.upsert({ ...data, status: 'deleted' });
+  }
+
 }

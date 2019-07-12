@@ -1,8 +1,8 @@
 import { urlParse, fnId, arrayToHash, dig } from 'furnitura';
 import Dexie from 'dexie';
-import { AService } from './AService.js';
+import { ApiService } from 'armatura';
 
-export class DatabaseService extends AService {
+export class DatabaseService extends ApiService {
   constructor(options) {
     super(options);
     const { schema, name = 'dexie' } = this;
@@ -68,9 +68,8 @@ export class DatabaseService extends AService {
     let coll = this.getCollection(kind);
     return coll.get(id).then(d => (d ? { ...d, kind } : null));
   }
-  getDict(url) {
-    const [type] = url.path;
-    return this.getCollection('dict').where('type').equals(type).toArray();
+  getDict({ data: { dict } }) {
+    return this.getCollection('dict').where('type').equals(dict).toArray();
   }
   getIndex(url) {
     url = urlParse(url);

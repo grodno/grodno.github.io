@@ -1,6 +1,6 @@
-import { AService } from "./AService";
+import { ApiService } from 'armatura';
 
-export class UserService extends AService {
+export class UserService extends ApiService {
     get fb() {
         return this.api.firebase;
     }
@@ -24,7 +24,7 @@ export class UserService extends AService {
                 // ...
             }
             // ...
-            this.api.notify(this.ref);
+            this.notify();
         });
     }
     getInfo() {

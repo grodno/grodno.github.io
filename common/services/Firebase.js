@@ -1,7 +1,7 @@
 import '../../vendor/firebase/firebase-app.js';
 import '../../vendor/firebase/firebase-firestore.js';
 import '../../vendor/firebase/firebase-auth.js';
-import { AService } from './AService.js';
+import { ApiService } from 'armatura';
 
 const unpackDocs = s => s.docs.reduce((r, e) => {
   const d = e.data();
@@ -10,7 +10,7 @@ const unpackDocs = s => s.docs.reduce((r, e) => {
   return r;
 }, []);
 
-export class Firebase extends AService {
+export class Firebase extends ApiService {
   constructor(options) {
     super(options)
     const firebase = window.firebase;

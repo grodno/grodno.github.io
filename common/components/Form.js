@@ -41,7 +41,7 @@ export class Form {
     return /* html */ `
     <div class="docs-demo columns">
       <div class="column col-9 col-sm-12">
-        <div class="form-horizontal">
+        <div class="form-horizontal2">
           <FormField ui:each="field of fields" ui:props="{{field}}" data="{{data}}" onChange="{{up}}"/>
         </div>
       </div>

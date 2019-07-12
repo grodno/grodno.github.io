@@ -1,21 +1,26 @@
 import { urlParse, capitalize } from 'furnitura';
-import { AService } from './AService';
+import { ApiService } from 'armatura';
 
-export class NavigationService extends AService {
+export class NavigationService extends ApiService {
 
-  constructor({ api, ref }) {
-    super(this, { api, ref, state: {} });
+  constructor(options) {
+    super({ ...options, state: { page: 'NewsPage' } });
   }
 
   init() {
-    const hashchange = () => this.emit(this.ref + ':hash', { value: window.location.hash.slice(1) });
+    const hashchange = () => {
+      const hash = window.location.hash.slice(1);
+      if (hash[0] === '/') {
+        this.emitToMe('hash', { value: hash.slice(1) });
+        // window.location.hash = ""
+      }
+    }
     window.addEventListener('hashchange', hashchange);
     hashchange();
   }
   update(d) {
     const { target, path, params } = d;
     const module = (target === '*' ? this.state.module : target) || 'main';
-
     this.state = {
       module,
       page: capitalize(module) + capitalize(path[0] === '*' ? this.state.page : path[0] || '') + 'Page',
@@ -23,39 +28,9 @@ export class NavigationService extends AService {
       ...params
     };
   }
-  getParam(k) { return this.state.params[k]; }
-  getState() { return this.state; }
+  getRoute() { return this.state; }
   getModuleName() { return this.getItems().find(e => e.id === this.state.module).name; }
+  getSitemap() { return Object.R('sitemap').map(e => ({ ...e, id: '/' + e.id })); }
 
-  onHash({ data: { value } }) {
-    this.update(urlParse(value));
-  }
-
-  getItems() {
-    return Object.R('sitemap');
-  }
-
-  getSitemap() {
-    return Object.R('sitemap');
-  }
-
-  getEmpty() {
-    return [];
-  }
-
-  onUpdate({ path: [ns], data }) {
-    this.update(ns ? { [ns]: data } : data);
-  }
-  onClose(_) {
-    return this.update({ open: false, newEntry: null, id: null });
-  }
-  onAddNew(_) {
-    return this.update({ open: true, newEntry: {}, id: null });
-  }
-  onOpenItem({ data: { value } }) {
-    return this.update({ open: true, id: value, newEntry: null });
-  }
-  onSort({ data: { value } }) {
-    return this.update({ sortBy: value });
-  }
+  onHash({ data: { value } }) { this.update(urlParse(value)); }
 }

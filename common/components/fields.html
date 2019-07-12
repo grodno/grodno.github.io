@@ -55,7 +55,7 @@
                 <label class="form-label">{{caption}}</label>
             </div>
             <div class="col-9 col-sm-12">
-                <Select change="{{onChange}}" options="<- res://enum/{{typeSpec}}" />
+                <Select change="{{onChange}}" data-enum="{{typeSpec}}" options="<- res://enum" />
             </div>
         </div>
     </template>
@@ -65,7 +65,7 @@
                 <label class="form-label">{{caption}}</label>
             </div>
             <div class="col-9 col-sm-12">
-                <Select change="{{onChange}}" options="<- db://dict/{{typeSpec}}" />
+                <Select change="{{onChange}}" data-dict="{{typeSpec}}" options="<- db://dict" />
             </div>
         </div>
     </template>

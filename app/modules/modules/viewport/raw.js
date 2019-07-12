@@ -1,11 +1,11 @@
 
-export const Toast= /* html */`
+export const Toast = /* html */`
   <div class="toast toast-primary" style="position:fixed; right:5rem; bottom:1rem; width: 20rem;">
     <button class="btn btn-clear float-right" click="->" data-touch="{{text}}"></button>
     <p>{{top.ts}}</p>
   </div>
   `
-export const Header= /* html */`
+export const Header = /* html */`
   <header class="navbar bg-secondary">
     <section class="navbar-section mx-2">
       <Breadcrumbs ui:props="<- nav://item"/>
@@ -30,7 +30,7 @@ export const UserIcon = /* html */`
         </ul>
       </div>
 `
-export const CurrentCity= /* html */` 
+export const CurrentCity = /* html */` 
 <div class="dropdown">
         <a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
           {{city.name}}<i class="icon icon-caret"></i>
@@ -44,7 +44,7 @@ export const CurrentCity= /* html */`
       </div>
 `
 
-export const Sidebar= /* html */`
+export const Sidebar = /* html */`
   <div class="off-canvas off-canvas-sidebar-show">
     <a class="off-canvas-toggle btn btn-primary btn-action show-lg" href="#sidebar">
       <i class="icon icon-menu"/>
@@ -58,14 +58,14 @@ export const Sidebar= /* html */`
     </div>
   </div>
   `
-export const Tabs= /* html */`
+export const Tabs = /* html */`
   <ul class="tab tab-block">
     <li class="tab-item" ui:each="item of data">
       <a href="#tab?tab={{item.value}}">{{item.name}}</a>
     </li>
   </ul>
   `
-export const UserBar= /* html */`
+export const UserBar = /* html */`
   <ui:fragment>
     <div class="tile tile-centered">
       <div class="tile-icon">
@@ -87,7 +87,7 @@ export const UserBar= /* html */`
     </div>
   </ui:fragment>
   `
-export const Aside= /* html */`
+export const Aside = /* html */`
   <div class="panel" style="height: 100%;">
   <div class="panel-header">
     <div class="panel-title">
@@ -98,14 +98,14 @@ export const Aside= /* html */`
     <!-- navigation components: tabs, breadcrumbs or pagination -->
   </div>
   <div class="panel-body">
-    <NavTree data="<- nav://items"/>
+    <NavTree data="<- nav://sitemap"/>
   </div>
   <div class="panel-footer">
     Settings
   </div>
   </div>
   `
-export const NavTree= /* html */`
+export const NavTree = /* html */`
   <ul class="nav">
     <li class="nav-item {{item.cl}}" ui:each="item of data">
       <a href="#{{item.id}}"><span>{{item.name}}</span><span ui:if="item.weight" class="label label-error">{{item.weight}}</span></a>

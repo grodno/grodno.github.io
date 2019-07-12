@@ -1,11 +1,11 @@
-import { AService } from './AService.js';
+import { ApiService } from 'armatura';
 
-export class ResService extends AService {
+export class ResService extends ApiService {
     getResource({ path }) {
         return Object.R(path[0])
     }
 
-    getEnum({ path }) {
-        return Object.R(path[0]).map(e => ({ ...e, name: e.name || Object.R(e.id) }))
+    getEnum({ data: { enum: id } }) {
+        return Object.R(id).map(e => ({ ...e, name: e.name || Object.R('enum.' + e.id) || e.id }))
     }
 }
