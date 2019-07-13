@@ -6,10 +6,8 @@ export const grodnify = s => s + ',Гродно,Беларусь'
 
 export const mirror = (x) => (x || '').split('').reduce((r, c) => (c + r), '');
 export const camelize = (s, sep = '_') => ((s && s.length && s.split(sep).map((t, i) => (i ? capitalize(t) : t)).join('')) || ``);
-export const format = (s, ...args) => ((s && s.length && s.replace(/\{(\d+)\}/g, (_, d) => (args[+d] || ''))) || '');
 export const snakeCase = (x) => (x || '').replace(/([a-z])([A-Z])/g, '$1_$2');
 export const nope = (x) => x;
-export const dig = (obj, key) => key.split('.').reduce((r, k) => !r ? null : r[k], obj);
 export const humanize = key => ('' + key).split('_').map(capitalize).join(' ');
 export const proper = (s) => capitalize(camelize(s));
 
@@ -51,14 +49,6 @@ export const reducers = {
   subject(_s) {
     const s = _s || '';
     return s.slice(0, 50) + (s.length > 50 ? '...' : '');
-  },
-  ago(s) {
-    const val = s || '';
-    return (val).fromNow().replace('ago', 'tamu')
-      .replace('hours', 'qasow')
-      .replace('hour', 'qas')
-      .replace('days', 'dzon')
-      .replace('day', 'dzen');
   },
   preview(s) {
     return s;

@@ -1,39 +1,6 @@
-<template id="GeomapPage">
-  <div>
-    <Hero title="{{route.title|subject}}" />
-    <div class="container pt-1 bg-gray" style="max-width:940px;">
-      <div class="columns">
-        <div class="column col-12 col-sm-12">
-          <span class="tile-subtitle p-2">{{route.description}}</span>
-          <a href="{{route.link}}" target="_blank">More...</a>
-        </div>
-        <div class="column col-12 col-sm-12">
-          <IFrame src="<- routeMapUrl" />
-        </div>
-      </div>
-    </div>
-    <div class="container my-0 pt-0" style="max-width:940px;">
-      <h5 class="tile-subtitle p-2">Places</h5>
-      <PlacesList data="<- selectedPlaces" sortBy="created_at" />
-    </div>
-  </div>
-</template>
-
-<template id="AsideClient">
-  <div class="panel" style="height: 100%;">
-    <div class="panel-header">
-      <a class="btn btn-clear show-lg" style="float: right!important" href="#"></a>
-      <div class="panel-title">
-        <h1>Routes</h1>
-      </div>
-    </div>
-    <div class="panel-nav">
-    </div>
-    <div class="panel-body">
-      <RoutesList data="<- routes" />
-    </div>
-    <div class="panel-footer">
-    </div>
+<template id="MapPage">
+  <div style="position: relative;">
+    <Map />
   </div>
 </template>
 

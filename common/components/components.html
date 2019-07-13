@@ -95,7 +95,7 @@
 
     <template id="Chips">
         <div class="ui mini labels">
-            <span class="chip bg-success:{{tag.selected}} bg-secondary:{{tag.selected|not}} badge:{{tag.selected|not}}"
+            <span class="chip c-hand bg-success:{{tag.selected}} bg-secondary:{{tag.selected|not}} badge:{{tag.selected|not}}"
                   data-badge="{{tag.count|ifAbove:3}}"
                   data-id="{{tag.id}}"
                   click="{{click}}"
@@ -107,7 +107,7 @@
 
     <template id="Tabs">
         <ul class="tab tab-block">
-            <li class="tab-item" ui:each="item of data">
+            <li class="tab-item  c-hand" ui:each="item of data">
                 <a href="#tab?tab={{item.value}}">{{item.name}}</a>
             </li>
         </ul>

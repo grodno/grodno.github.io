@@ -1,13 +1,15 @@
 export default {
-  appName: 'Algerd',
-  appLogo: '/assets/icon.png',
-  appVersion: '4.0.0',
+  app: {
+    name: 'Algerd',
+    logo: '/assets/icon.png',
+    version: '4.0.0',
+  },
   sitemap: [
     { name: 'Naviny', id: 'news' },
     { name: 'Objavy', id: 'ads' },
+    { name: 'Karta', id: 'map' },
     { name: 'Calendar', id: 'calendar' },
-    { name: 'Karta', id: 'geomap' },
-    { name: 'Leudzi', id: 'people' },
+    { name: 'Lüëdzi', id: 'people' },
     { name: 'Info', id: 'info' },
   ],
   media_links: [
@@ -19,11 +21,6 @@ export default {
     { id: 'preview', type: 'text', typeSpec: 'unit' },
     { id: 'body', type: 'text', typeSpec: 'country' },
     { id: 'tags', type: 'enum', typeSpec: 'tags' }
-  ],
-  tags: [
-    { name: 'Padzei', id: 'events' },
-    { name: 'Gistorya', id: 'history' },
-    { name: 'Zabavki', id: 'amazing' }
   ],
   news: {
     caption: 'Naviny Algerda',

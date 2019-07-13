@@ -24,9 +24,8 @@ export class DatabaseService extends ApiService {
       this.api.local.assign({ $version: this.version });
     }
   }
-  init() {
-    this.openDb();
-    this.checkVersion()
+  async init() {
+    await this.openDb();
     this.syncAll()
   }
   getMeta() {
