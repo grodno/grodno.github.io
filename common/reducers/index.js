@@ -1,6 +1,6 @@
 export * from 'furnitura';
 import { capitalize, urlParse, representDate } from 'furnitura';
-import { translit } from 'pramova/mova';
+import { translit } from 'mova';
 
 export const grodnify = s => s + ',Гродно,Беларусь'
 

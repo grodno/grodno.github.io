@@ -3,15 +3,6 @@
   z-index: 400!important;
 }
 
-@media (max-width: 960px) {
-
-  .off-canvas .off-canvas-content {
-    /* padding: .4rem .4rem .4rem .4rem!important; */
-  }
-  .navbar {
-    padding-left: 3em;
-  }
-}
 
 li span input:checked ~ span {
   color: white;
@@ -31,4 +22,24 @@ li span input:checked ~ span {
   top: 0px;
   position: -webkit-sticky;
   position: sticky;
+}
+.map-container {
+  position:fixed;
+  top:0;
+  bottom:0;
+  left:200px;
+  right:0;
+  height:100%;
+}
+@media (max-width: 960px) {
+
+  .off-canvas .off-canvas-content {
+    /* padding: .4rem .4rem .4rem .4rem!important; */
+  }
+  .navbar {
+    padding-left: 3em;
+  }
+  .map-container {
+    left:0;
+  }
 }

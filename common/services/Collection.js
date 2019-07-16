@@ -1,7 +1,6 @@
 import { sortBy } from 'furnitura';
-import { translit } from 'pramova/mova';
+import { translit } from 'mova';
 import { ApiService } from 'armatura';
-import { timingSafeEqual } from 'crypto';
 
 const analyzeDataByTags = (data, selection, initials = '') => {
   const sel = [...selection]

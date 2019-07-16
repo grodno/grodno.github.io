@@ -1,7 +1,7 @@
 export default {
   app: {
     name: 'Algerd',
-    logo: '/assets/icon.png',
+    logo: '/assets/flag.png',
     version: '4.0.0',
   },
   sitemap: [
@@ -9,7 +9,7 @@ export default {
     { name: 'Objavy', id: 'ads' },
     { name: 'Karta', id: 'map' },
     { name: 'Calendar', id: 'calendar' },
-    { name: 'Lüëdzi', id: 'people' },
+    { name: 'Liudzi', id: 'people' },
     { name: 'Info', id: 'info' },
   ],
   media_links: [

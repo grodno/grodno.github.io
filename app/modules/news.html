@@ -55,7 +55,7 @@
               <!-- <figure class="avatar avatar- bg-primary" data-initial="{{subject|initials}}"> -->
               <img src="{{image}}"
                    class="img-responsive"
-                   width="196"
+                   width="90"
                    data-id="{{id}}"
                    click="itemClick" />
               <!-- </figure> -->
@@ -85,7 +85,7 @@
     <Modal ui:if="open" open="{{open}}" title="Add a new record" close="{{cancel}}">
       <Form fields=":news_form" data="{{data}}" change="->" />
       <Modal:footer>
-        <button class="btn btn-primary" data="{{data}}" click="{{submit}}">:create_new</button>
+        <Button title=":create_new" mode="primary" data="{{data}}" action="{{submit}}" />
       </Modal:footer>
     </Modal>
   </template>
@@ -93,10 +93,10 @@
   <template id="NewsUpdateModal">
     <Modal ui:if="open" open="{{open}}" title="Edit record (#{{id}})" close="{{cancel}}">
       <Form fields=":news_form" data="{{data}}" change="->" />
-      <ui:fragment key="footer">
-        <button class="btn btn-primary" data="{{data}}" click="{{submit}}">:update</button>
-        <button class="btn btn-danger" click="{{delete}}">:delete</button>
-      </ui:fragment>
+      <Modal:footer>
+        <Button title=":update" mode="primary" data="{{data}}" action="{{submit}}" />
+        <Button title=":delete" mode="danger" action="{{delete}}" />
+      </Modal:footer>
     </Modal>
   </template>
 
