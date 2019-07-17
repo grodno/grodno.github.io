@@ -14,6 +14,7 @@
   "scripts": {
     "start": "node webpack-dev-server",
     "build": "node run-build",
+    "build:lib": "node run-build-lib",
     "test": "mocha -w --compilers js:babel-register src/**/*.test.js"
   },
   "repository": {

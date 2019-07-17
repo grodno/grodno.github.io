@@ -47,10 +47,11 @@
                 <img src="{{image}}" class="img-responsive" />
             </div>
             <div class="card-header">
-                <a href="#{{id}}">
+                <a ui:if="title" href="#{{link}}">
                     <h5 class="card-title">{{title}}</h5>
                 </a>
                 <div ui:if="subtitle" class="card-subtitle text-gray">{{subtitle}}</div>
+                <ui:slot id="header" />
             </div>
             <div class="card-body">
                 <ui:slot />

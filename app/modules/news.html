@@ -18,7 +18,7 @@
       <a name="top"></a>
       <Box>
         <Box:1>
-          <h3 class="s-title badge text-gray my-2" data-badge="{{counts|counts}}">:news.caption</h3>
+          <PageCaption caption=":news.caption" badge="{{counts|counts}}" />
         </Box:1>
         <Box:2>
           <SearchBar ui:props="{{search}}" />
@@ -38,46 +38,39 @@
         </NewsListItem>
         <Toast ui:if="error" message="{{error.message}}" />
       </div>
-      <button class="btn btn-primary btn-sm"
+      <Button title=":pakazac_bolsh"
+              mode="primary"
               data-size="20"
-              click="-> news://showMore"
-              ui:if="counts.hasMore">:pakazac_bolsh</button>
+              action="-> news://showMore"
+              ui:if="counts.hasMore" />
       <a href="#top" ui:if="counts.actual|isAbove:5">:naverx</a>
     </div>
   </template>
 
   <template id="NewsListItem">
     <div class="column col-12 col-sm-12 my-2">
-      <div class="card">
-        <div class="card-header">
+      <Card>
+        <Card:header>
           <div class="tile">
-            <div class="tile-icon">
-              <!-- <figure class="avatar avatar- bg-primary" data-initial="{{subject|initials}}"> -->
-              <img src="{{image}}"
-                   class="img-responsive"
-                   width="90"
-                   data-id="{{id}}"
-                   click="itemClick" />
-              <!-- </figure> -->
+            <div class="tile-icon" data-id="{{id}}" click="{{itemClick}}">
+              <Avatar image="{{image}}" initial="{{subject|initials}}" />
             </div>
             <div class="tile-content">
               <h5 class="tile-title" data-id="{{id}}" click="{{itemClick}}">{{subject|translit}}</h5>
               <div>
-                <small class="text-gray">{{created_at|date}}</small>
+                <small class="text-gray">{{modified_at|date}}</small>
                 <small class="text-gray mx-1"><a href="{{link}}" target="_blank">{{link|hostOf}}</a></small>
                 <small class="text-gray" ui:if="tags">({{tags}})</small>
               </div>
             </div>
           </div>
-        </div>
-        <div class="card-body">
-          <img src="/assets/grodno2.svg" height="10" width="10" />
-          <small class="mx-2">{{preview|translit}}</small>
-        </div>
+        </Card:header>
+        <img src="/assets/grodno2.svg" height="10" width="10" />
+        <small class="mx-2">{{preview|translit}}</small>
         <!-- <div class="card-footer">
           <button class="btn btn-primary btn-sm">Do</button>
         </div> -->
-      </div>
+      </Card>
     </div>
   </template>
 

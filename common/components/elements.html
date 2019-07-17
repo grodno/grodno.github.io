@@ -10,6 +10,10 @@
         </div>
     </template>
 
+    <template id="PageCaption">
+        <h3 class="s-title badge text-gray my-2" data-badge="{{badge}}">{{caption}}</h3>
+    </template>
+
     <template id="Button">
         <button class="btn btn-{{mode}}"
                 data="{{data}}"
@@ -27,6 +31,12 @@
                 click="{{action}}">
             <i class="icon icon-plus"></i>
         </button>
+    </template>
+
+    <template id="Avatar">
+        <figure class="avatar avatar- bg-primary" data-initial="{{initial}}">
+            <img src="{{image}}" class="img-responsive" />
+        </figure>
     </template>
 
     <template id="Hero">

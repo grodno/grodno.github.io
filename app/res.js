@@ -16,6 +16,16 @@ export default {
     { name: 'S13.ru', id: '//s13.ru' },
     { name: 'Forum', id: '//forum.grodno.net/' }
   ],
+  info: {
+    tabs: [
+      { name: 'S13.ru', id: '//s13.ru' },
+      { name: 'Forum', id: '//forum.grodno.net/' }
+    ],
+    columns: [
+      { name: 'S13.ru', id: '//s13.ru' },
+      { name: 'Forum', id: '//forum.grodno.net/' }
+    ]
+  },
   news_form: [
     { id: 'subject', type: 'name', typeSpec: 'city' },
     { id: 'preview', type: 'text', typeSpec: 'unit' },
