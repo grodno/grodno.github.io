@@ -21,7 +21,7 @@ var config = {
   },
   module: commons.module,
   resolve: commons.resolve,
-  mode: 'development',
+  // mode: 'development',
   optimization: {
     // We no not want to minimize our code.
     minimize: false

@@ -33,7 +33,7 @@ export const showCounts = (counts, postfix = '', prefix = '') => {
   if (actual === total) { return total + ' ' + postfix }
   return prefix + " " + actual + ' / ' + total + ' ' + postfix;
 }
-export const reducers = {
+export const presenters = {
   upper: s => ('' + s).toUpperCase(),
   hostOf: s => urlParse(s).target || s,
   date: s => representDate(s),

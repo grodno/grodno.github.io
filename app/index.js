@@ -12,9 +12,9 @@ import others from './modules/others.html';
 import { dig } from 'furnitura';
 import res from './res.js';
 import meta from './meta.js'
-import { reducers } from '../common/reducers';
+import { presenters } from '../common/presenters';
 
-Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))({ ...res, ...meta.result, reducers });
+Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))({ ...res, ...meta.result, presenters });
 
 const ref = {};
 const launch = () => {

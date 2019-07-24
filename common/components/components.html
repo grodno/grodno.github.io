@@ -29,13 +29,13 @@
                     <ui:slot id="title" />
                 </div>
             </div>
-            <div class="panel-nav" ui:if="slot:nav">
+            <div class="panel-nav" ui:if="slot(nav)">
                 <ui:slot id="nav" />
             </div>
             <div class="panel-body">
                 <ui:slot />
             </div>
-            <div class="panel-footer" ui:if="slot:footer">
+            <div class="panel-footer" ui:if="slot(footer)">
                 <ui:slot id="footer" />
             </div>
         </div>
@@ -68,7 +68,7 @@
                href="#sidebar">
                 <i class="icon icon-menu" />
             </a>
-            <div id="sidebar" class="off-canvas-sidebar">
+            <div id="sidebar" class="off-canvas-sidebar" ui:if="slot(aside)">
                 <div class="fixed">
                     <ui:slot id="aside" />
                 </div>

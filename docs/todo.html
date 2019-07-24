@@ -2,42 +2,44 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dzi-UI • TodoMVC</title>
-    <link rel="stylesheet" href="assets/css/todo/base.css">
-    <link rel="stylesheet" href="assets/css/todo/index.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Armatura • TodoMVC</title>
+  <link rel="stylesheet" href="css/todo/base.css">
+  <link rel="stylesheet" href="css/todo/index.css">
 </head>
 
 <script type="text/x-template" id="TodoApp">
-  <ui:fragment>
-    <TodoStore ui:ref="store" />
+  <div>
+    <TodoStore ui:ref="todo" />
     <section class="todoapp">
-      <Header title=":title"/>
-      <ui:fragment ui:if="notEmpty" >
-        <Main/>
-        <Filter current="{{filterId}}">
-          <span class="todo-count"><strong>{{itemsLeft}}</strong> item(s) left</span>
-          <button class="clear-completed" ui:key="right" ui:if="hasCompleted" click="-> purge">Clear completed</button>
+      <Caption title=":title" />
+      <ui:fragment ui:if="<- todo:notEmpty">
+        <Main />
+        <Filter current="<- todo:filterId">
+          <span class="todo-count"><strong><- todo:itemsLeft</strong><span>:items_left</span></span>
+          <Filter:right>
+            <button class="clear-completed" ui:if="<- todo:hasCompleted" click="-> todo:purge">:clear_completed</button>
+          </Filter:right>
         </Filter>
       </ui:fragment>
     </section>
-    <ui:footerType hint=":hint"/>
-  </ui:fragment>
+    <ui:tag tag="<- todo:footerType"/>
+  </div>
 </script>
 
-<script type="text/x-template" id="Header">
+<script type="text/x-template" id="Caption">
   <header class="header">
     <h1>{{title|upper}}</h1>
-    <input type="text" class="new-todo" placeholder=":new_todo_hint" autofocus="true" enter="-> add"/> 
+    <input type="text" class="new-todo" placeholder=":new_todo_hint" autofocus="true" enter="-> todo:add"/> 
   </header>
 </script>
 
 <script type="text/x-template" id="Main">
   <section class="main">
-    <input id="toggle-all" class="toggle-all" type="checkbox" toggle="-> toggle"/>
+    <input id="toggle-all" class="toggle-all" type="checkbox" toggle="-> todo:toggle"/>
     <label for="toggle-all">Mark all as complete</label>
-    <TodoList data="<- shownItems"/>
+    <TodoList data="<- todo:shownItems"/>
   </section>
 </script>
 
@@ -68,103 +70,106 @@
 
 <script type="text/x-template" id="Hint">
   <footer class="info">
-    <p>{{hint}}</p>
+    <p>:hint</p>
   </footer>
 </script>
 
 <script type="text/x-template" id="TodoItem">
   <li class="completed:{{completed}} editing:{{editing}}">
     <div class="view">
-      <input class="toggle" type="checkbox" checked="{{completed}}" data-id="{{id}}" click="-> inverse"/>
-      <label data-editing="true" dblclick="{{assign}}">{{name}}</label>
-      <button ui:if="completed" class="destroy" data-id="{{id}}" click="-> rm"></button>
+      <input class="toggle" type="checkbox" checked="{{completed}}" data-id="{{id}}" click="-> todo:inverse"/>
+      <label data-editing="true" dblclick="->">{{name}}</label>
+      <button ui:if="completed" class="destroy" data-id="{{id}}" click="-> todo:rm"></button>
     </div>
-    <input type="text" class="edit" value="{{name}}" data-editing="false" data-id="{{id}}" enter="-> save" blur="{{assign}}"/>
+    <input type="text" class="edit" value="{{name}}" data-editing="false" data-id="{{id}}" enter="-> todo:save" blur="->"/>
   </li>
 </script>
 
 <script type="text/javascript" src="armatura.js"></script>
 
 <script type="module">
-    // filters metadata
-    const upper = s => ('' + s).toUpperCase()
-    const capitalize = s => !s ? '' : s[0].toUpperCase() + s.slice(1);
-    const dig = (o, steps, def) => {
-        const x = steps.split('.').reduce((r, e) => r ? r[e === '0' ? 0 : e] : r, o);
-        return typeof x === 'undefined' ? def : x;
-    };
-    const FILTERS = [
-        { id: 'all', values: [true, false] },
-        { id: 'active', values: [false] },
-        { id: 'completed', values: [true] }
-    ]
-    //pure actions:
-    const ACTIONS = {
-        inverse: ({ items }, { id }) => ({ items: items.map(e => { if (e.id === id) { e.completed = !e.completed }; return e }) }),
-        save: ({ items }, { id, value }) => ({ items: (!value) ? items.filter(e => e.id !== id) : items.map(e => { if (e.id === id) { e.name = value }; return e }) }),
-        rm: ({ items }, { id }) => ({ items: items.filter(e => e.id !== id) }),
-        filter: (st, { filterId }) => ({ filterId: FILTERS.find(e => e.id === filterId) ? filterId : 'all' }),
-        purge: ({ items }) => ({ items: items.filter(e => !e.completed) }),
-        toggle: ({ items }, { value }) => ({ items: items.map(e => { e.completed = value; return e }) }),
-        add: ({ items, nextId }, { value }) => !value ? null : { nextId: nextId + 1, items: [].concat({ id: nextId, name: value, completed: false }, items) }
+  // filters metadata
+  const upper = s => ('' + s).toUpperCase()
+  const capitalize = s => !s ? '' : s[0].toUpperCase() + s.slice(1);
+  const dig = (o, steps, def) => {
+    const x = steps.split('.').reduce((r, e) => r ? r[e === '0' ? 0 : e] : r, o);
+    return typeof x === 'undefined' ? def : x;
+  };
+  const FILTERS = [
+    { id: 'all', values: [true, false] },
+    { id: 'active', values: [false] },
+    { id: 'completed', values: [true] }
+  ]
+  //pure actions:
+  const ACTIONS = {
+    inverse: ({ items }, { id }) => ({ items: items.map(e => { if (e.id === id) { e.completed = !e.completed }; return e }) }),
+    save: ({ items }, { id, value }) => ({ items: (!value) ? items.filter(e => e.id !== id) : items.map(e => { if (e.id === id) { e.name = value }; return e }) }),
+    rm: ({ items }, { id }) => ({ items: items.filter(e => e.id !== id) }),
+    filter: (st, { filterId }) => ({ filterId: FILTERS.find(e => e.id === filterId) ? filterId : 'all' }),
+    purge: ({ items }) => ({ items: items.filter(e => !e.completed) }),
+    toggle: ({ items }, { value }) => ({ items: items.map(e => { e.completed = value; return e }) }),
+    add: ({ items, nextId }, { value }) => !value ? null : { nextId: nextId + 1, items: [].concat({ id: nextId, name: value, completed: false }, items) }
+  }
+  // static resources
+  Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))(
+    {
+      title: 'todos',
+      items_left: ' item(s) left',
+      clear_completed: 'Clear completed',
+      hint: 'Double-click to edit a todo',
+      new_todo_hint: 'What needs to be done?',
+      filters: FILTERS,
+      presenters: { upper, capitalize }
     }
-    // static resources
-    Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))(
-        {
-            title: 'todos',
-            hint: 'Double-click to edit a todo',
-            new_todo_hint: 'What needs to be done?',
-            filters: FILTERS,
-            reducers: { upper, capitalize }
-        }
-    );
+  );
 
-    // top-level app component
-    class TodoStore extends armatura.ApiService {
-
-        constructor(options) {
-            super(options)
-            this.data = JSON.parse(localStorage.getItem('TODO:1') || 'null') || { items: [], nextId: 1 }
-        }
-        // hook on init
-        init() {
-            // use hash as a filter key. invoke immediately.
-            const onhash = () => this.emitToMe('filter', { filterId: window.location.hash.slice(1) || FILTERS[0].id })
-            window.onhashchange = onhash
-            onhash()
-        }
-        assign(delta, cb) {
-            Object.assign(this.data, delta)
-            localStorage.setItem('TODO:1', JSON.stringify(this.data))
-        }
-        getShownItems() {
-            const { filterId, items } = this.data
-            const values = !filterId ? [] : FILTERS.find(e => e.id === filterId).values
-            return items.filter(e => values.includes(!!e.completed))
-        }
-        getNotEmpty() {
-            return this.data.items.length > 0
-        }
-        getItemsLeft() {
-            return this.data.items.filter(e => !e.completed).length
-        }
-        getHasCompleted() {
-            return this.data.items.length - this.getItemsLeft()
-        }
-        getShownItemsCount() {
-            return this.getShownItems().length
-        }
-        // resolve dynamic component type `<ui:footerType .../>
-        getFooterType() {
-            return this.getShownItemsCount() > 0 ? 'Hint' : 'Attribution'
-        }
+  // service component
+  class TodoStore extends armatura.ApiService {
+    constructor(options) {
+      super(options)
+      //load data from storage
+      this.data = JSON.parse(localStorage.getItem('TODO:1') || 'null') || { items: [], nextId: 1 }
+      // generate action handlers
+      Object.entries(ACTIONS).forEach(([key, fn]) => {
+        this['on' + capitalize(key)] = ({ data: payload }) =>
+          localStorage.setItem('TODO:1', JSON.stringify(Object.assign(this.data, fn(this.data, payload))))
+      })
     }
-
-    const staticTypes = ([]).concat([...document.getElementsByTagName('script')])
-        .filter(e => e.id && e.type === 'text/x-template')
-        .map(e => ({ NAME: e.id, TEMPLATE: e.innerText }))
-
-    armatura.register(...staticTypes, TodoStore).run()
+    // hook on init
+    init() {
+      // use hash as a filter key. invoke immediately.
+      (onhash => { window.onhashchange = onhash; return onhash })(() => this.emitToMe('filter', { filterId: window.location.hash.slice(1) || FILTERS[0].id }))()
+    }
+    getShownItems() {
+      const { filterId, items } = this.data
+      const values = !filterId ? [] : FILTERS.find(e => e.id === filterId).values
+      return items.filter(e => values.includes(!!e.completed))
+    }
+    getNotEmpty() {
+      return this.data.items.length > 0
+    }
+    getFilterId() {
+      return this.data.filterId
+    }
+    getItemsLeft() {
+      return this.data.items.filter(e => !e.completed).length
+    }
+    getHasCompleted() {
+      return this.data.items.length - this.getItemsLeft()
+    }
+    getShownItemsCount() {
+      return this.getShownItems().length
+    }
+    getFooterType() {
+      return this.getShownItemsCount() > 0 ? 'Hint' : 'Attribution'
+    }
+  }
+  // load components from templates
+  const staticTypes = ([]).concat([...document.getElementsByTagName('script')])
+    .filter(e => e.id)
+    .map(e => ({ NAME: e.id, TEMPLATE: e.innerHTML }))
+  // register components and run 
+  armatura.register(...staticTypes, TodoStore).run()
 </script>
 
 </html>
