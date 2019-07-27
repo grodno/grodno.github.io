@@ -3,10 +3,14 @@
   z-index: 400!important;
 }
 
+.menu .menu-item>a {
+  border-radius: .1rem;
+  color:#5755d9;
+}
 
 li span input:checked ~ span {
   color: white;
-  background-color: blue;
+  background-color:#5755d9;
 }
 
 .stack {
@@ -33,6 +37,9 @@ li span input:checked ~ span {
 }
 @media (max-width: 960px) {
 
+  .off-canvas .off-canvas-sidebar {
+    /* padding: .4rem .4rem .4rem .4rem!important; */
+  }
   .off-canvas .off-canvas-content {
     /* padding: .4rem .4rem .4rem .4rem!important; */
   }
