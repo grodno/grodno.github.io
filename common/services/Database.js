@@ -37,9 +37,9 @@ export class DatabaseService extends ApiService {
   syncAll() {
     return this.getMeta()
       .then(meta => Promise.all(this.dbkeys
-        .map(id => [id, dig(meta, `${id}.last_modified`)])
+        .map(id => [id, dig(meta, `${id}.last_modified`) || 0])
         .map(([id, since = 0]) => this.remote.getCollection(id, since)
-          .then(docs => [id, docs, docs.reduce((last, { modified_at: at = 0 }) => Math.max(at, last), since)]))))
+          .then(docs => [id, docs, docs.reduce((last, { modified_at: at = 0 }) => Math.max(at || 0, last || 0), since)]))))
       .then(all => this.localUpdate(all.reduce((d, [coll, docs, last_modified]) => {
         d[`_meta`].push({ id: `${coll}`, last_modified });
         d[coll] = docs;
@@ -53,7 +53,7 @@ export class DatabaseService extends ApiService {
   syncTable(id) {
     return this.getTableMeta(id)
       .then(meta => this.remote.getCollection(id, dig(meta, `last_modified`))
-        .then(docs => [docs, docs.reduce((last, e) => e.modified_at > last ? e.modified_at : last, dig(meta, `last_modified`))]))
+        .then(docs => [docs, docs.reduce((last, e) => (e.modified_at || 0) > last ? e.modified_at : last, dig(meta, `last_modified`) || 0)]))
       .then(([docs, last_modified]) => this.localUpdate({ [id]: docs, _meta: { [id]: { id, last_modified } } }))
       .then(this.notify)
       .then(() => { this.log('DB sync OK'); })

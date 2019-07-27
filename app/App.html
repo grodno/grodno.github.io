@@ -8,11 +8,15 @@
             <LocalStorage ui:ref="local" />
             <DatabaseService ui:ref="db" schema=":dbSchema" />
             <UserService ui:ref="user" />
+            <SWRunner />
+            <GARunner account="UA-3066107-3" />
             <Sidebar>
                 <Sidebar:aside>
                     <div style="height: 100vh; width:200px">
                         <Navbar>
-                            <h3 class="p-2">:app.name</h3>
+                            <a href="#/">
+                                <h3 class="p-2">:app.name</h3>
+                            </a>
                         </Navbar>
                         <div class="m-2">
                             <NavTree data="<- nav://sitemap" />
@@ -22,26 +26,55 @@
                 <ui:fragment>
                     <Navbar logo=":app.logo">
                         <Navbar:right>
-                            <UserBar />
+                            <UserBar ui:props="<- user:info" />
                         </Navbar:right>
                     </Navbar>
                     <Container>
                         <PageRouter ui:props="<- nav://route" />
                     </Container>
+                    <Footer />
                 </ui:fragment>
             </Sidebar>
         </ui:fragment>
     </template>
-    </template>
+
     <template id="TopNews">
         <ui:fragment>
             <ResService ui:ref="res" />
             <Firebase ui:ref="firebase" config=":firebaseConfig" />
             <LocalStorage ui:ref="local" />
             <DatabaseService ui:ref="db" schema=":dbSchema" />
-            <SWRunner />
-            <GARunner account="UA-3066107-3" />
+
             <NewsPage />
         </ui:fragment>
+    </template>
+
+    <template id="Footer">
+        <footer class="px-2 bg-dark">
+            <!-- <div class="columns">
+                <div class="column col-4 col-sm-12">
+                    <h6 class="ui inverted header">Ab'javy</h6>
+                    <ul class="ui inverted link list">
+                        <li><a href="http://realty.grodno.co/" class="item">Zhytlo</a></li>
+                        <li><a href="http://cars.grodno.co/" class="item">Samoxody</a></li>
+                        <li><a href="http://job.grodno.co/" class="item">Pratsa</a></li>
+                        <li><a href="http://service.grodno.co/" class="item">Paslugi</a></li>
+                    </ul>
+                </div>
+            </div> -->
+            <div class="">
+                <a class="item" href="#">Site Map</a>
+                <span> | </span>
+                <a class="item" href="#">Contact Us</a>
+                <span> | </span>
+                <a class="item" href="#">Terms and Conditions</a>
+                <span> | </span>
+                <a class="item" href="#">Privacy Policy</a>
+            </div>
+            <div class="">
+                <small>Administracya saita ne mae daqynennia i ne adkazvae za zmest dopisaw karystalnikaw.</small>
+            </div>
+
+        </footer>
     </template>
 </body>

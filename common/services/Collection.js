@@ -67,7 +67,7 @@ export class Collection extends ApiService {
   }
 
   setData(data) {
-    this.data = data.map(e => new Item(e));
+    this.data = data.filter(e => e.status !== 'deleted').map(e => new Item(e));
     this.notify();
   }
 
@@ -177,6 +177,7 @@ export class Collection extends ApiService {
   }
   async onDeleteEntry({ data }) {
     await this.upsert({ ...data, status: 'deleted' });
+    this.entry = { open: false }
   }
 
 }

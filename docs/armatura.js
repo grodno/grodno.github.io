@@ -2468,6 +2468,14 @@ const DOM_SETTERS = {
       return false;
     });
   },
+  change: function change(e, v) {
+    this.setAttribute('change:change', !v ? null : ev => {
+      this.$attributes.change(_objectSpread({
+        value: e.value
+      }, e.$dataset), ev);
+      return false;
+    });
+  },
   toggle: function toggle(e, v) {
     this.setAttribute('toggle:change', !v ? null : ev => {
       this.$attributes.toggle(_objectSpread({
@@ -2654,10 +2662,10 @@ function compileTag(_ref3) {
   const r = {
     tag: 'ui:fragment',
     uid: 'tag:' + expr + uid,
-    $tag: {
+    $tag: compile({
       attrs: filterMapKey(attrs, 'tag'),
-      nodes: nodes.map(compileNode)
-    }
+      nodes
+    })
   };
 
   if (expr.slice(0, 2) === '<-') {
@@ -2692,7 +2700,19 @@ function compile(r) {
     const aProps = attrs.get('ui:props');
 
     if (aProps.slice(0, 2) === '<-') {
-      (r.inits || (r.inits = [])).push(c => c.connect(aProps.slice(2).trim(), rr => rr));
+      const val = aProps.slice(2).trim();
+
+      if (val) {
+        (r.inits || (r.inits = [])).push(c => c.connect(val, rr => rr));
+      } else {
+        (r.updates || (r.updates = [])).push((c, acc) => {
+          let $ = c;
+
+          for (; $.owner && $.tag === 'ui:fragment'; $ = $.owner) {}
+
+          Object.assign(acc, $.impl);
+        });
+      }
     } else {
       const getter = expression(aProps);
       (r.updates || (r.updates = [])).push((c, acc) => Object.assign(acc, getter(c)));
@@ -2705,9 +2725,21 @@ function compile(r) {
       const v2 = v.slice(0, 2);
 
       if (v2 === '<-') {
-        (r.inits || (r.inits = [])).push(c => c.connect(v.slice(2).trim(), rr => ({
-          [k]: rr
-        })));
+        const val = v.slice(2).trim();
+
+        if (val) {
+          (r.inits || (r.inits = [])).push(c => c.connect(val, rr => ({
+            [k]: rr
+          })));
+        } else {
+          (r.updates || (r.updates = [])).push(makeApplicator(c => {
+            let $ = c;
+
+            for (; $.owner && $.tag === 'ui:fragment'; $ = $.owner) {}
+
+            return $.impl;
+          }));
+        }
       } else if (v2 === '->') {
         (r.updates || (r.updates = [])).push(makeApplicator(compile_emitter(v.slice(2).trim(), k), k));
       } else {
@@ -2860,8 +2892,8 @@ const resolveTemplateArray = function resolveTemplateArray(owner, tmpl) {
   return tmpl && tmpl.length ? tmpl.reduce((m, t) => resolveTemplate(owner, t, m), acc) : null;
 };
 
-const resolveProps = (props, owner) => props && props.length ? props.reduce((acc, fnProp) => {
-  fnProp(owner, acc);
+const resolveProps = (props, c) => props && props.length ? props.reduce((acc, fn) => {
+  fn(c, acc);
   return acc;
 }, {}) : null;
 
@@ -3121,20 +3153,14 @@ class component_Component {
       this.content = new Map();
       resolveTemplate(this, node, acc);
     } else if (this.$tag) {
-      const {
-        attrs,
-        nodes
-      } = this.$tag;
       const tag = this.impl.$data;
       this.content = new Map();
 
       if (tag) {
-        resolveTemplate(this, {
+        resolveTemplate(this, component_objectSpread({}, this.$tag, {
           tag,
-          uid: this.impl.$data + ':' + this.uid,
-          attrs,
-          nodes
-        }, acc);
+          uid: this.impl.$data + ':' + this.uid
+        }), acc);
       }
     } else if (this.content) {
       this.content.forEach((v, k) => acc.set(k, v));
@@ -3275,7 +3301,7 @@ class component_Component {
       error
     }, applicator ? applicator(r) : r));
 
-    return url ? this.api.emitter.connect(url, cb, this.impl) : cb(null, this.owner.impl);
+    return this.api.emitter.connect(url, cb, this.impl.data);
   }
 
   emit(key, data) {
@@ -3527,7 +3553,7 @@ class api_EventEmitter {
       }
     };
 
-    this.connect = (key, cb, ctx) => {
+    this.connect = (key, cb, data) => {
       const url = urlParse(key);
       const {
         type,
@@ -3538,7 +3564,7 @@ class api_EventEmitter {
           const ref = type ? api[type] : api;
           const method = ref && ref[capitalize(target, 'get')];
           const val = method.call(ref, api_objectSpread({}, url, {
-            data: ctx.data
+            data
           }));
 
           if (val && val.then) {

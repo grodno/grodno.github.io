@@ -1,5 +1,5 @@
 import { Filter } from './Filter';
-import { Map } from './Map';
+import { Mapbox } from './Mapbox';
 import { Form, FormField } from './Form';
 import components from './components.html';
 import elements from './elements.html';
@@ -9,6 +9,6 @@ import fields from './fields.html';
 import { loadTemplates } from 'armatura/support.js';
 
 export default [
-  Map, Filter, Form, FormField,
+  Mapbox, Filter, Form, FormField,
   ...loadTemplates(components, elements, layouts, userinfo, fields)
 ];

@@ -6,6 +6,6 @@ export class ResService extends ApiService {
     }
 
     getEnum({ data: { enum: id } }) {
-        return Object.R(id).map(e => ({ ...e, name: e.name || Object.R('enum.' + e.id) || e.id }))
+        return !id ? [] : Object.R(id).map(e => ({ ...e, name: e.name || Object.R('enum.' + e.id) || e.id }))
     }
 }

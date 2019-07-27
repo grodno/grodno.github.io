@@ -1,16 +1,16 @@
 export default {
   app: {
-    name: 'Algerd',
-    logo: '/assets/flag.png',
+    name: 'Algard',
+    logo: '/assets/grodno.svg',
     version: '4.0.0',
   },
   sitemap: [
-    { name: 'Naviny', id: 'news' },
-    { name: 'Objavy', id: 'ads' },
-    { name: 'Karta', id: 'map' },
-    { name: 'Calendar', id: 'calendar' },
-    { name: 'Liudzi', id: 'people' },
-    { name: 'Info', id: 'info' },
+    { name: 'Naviny', id: 'news', link: '#/news', caption: '' },
+    { name: 'Objavy', id: 'ads', link: '#/ads', caption: '' },
+    { name: 'Karta', id: 'map', link: '#/map', caption: '' },
+    { name: 'Calendar', id: 'calendar', link: '#/calendar', caption: '' },
+    { name: 'Liudzi', id: 'people', link: '#/people', caption: '' },
+    { name: 'Info', id: 'info', link: '#/info', caption: '' },
   ],
   media_links: [
     { name: 'S13.ru', id: '//s13.ru' },
@@ -33,7 +33,7 @@ export default {
     { id: 'tags', type: 'enum', typeSpec: 'tags' }
   ],
   news: {
-    caption: 'Naviny Algerda',
+    caption: 'Naviny Algarda',
     initialTags: 'asoba,gramadstva,dabrabyt,axtung,adukacya,biznes',
   },
   AddNewRecordData: {
@@ -66,8 +66,31 @@ export default {
     // dict: 'id, modified_at, type, scope, style',
     // order: 'id, modified_at',
     // orderRequest: 'id, modified_at'
-  }
-  ,
+  },
+  geojson: {
+    "type": "FeatureCollection",
+    "features": [{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [23.82351, 53.676995945586]
+      },
+      "properties": {
+        "title": "Mapbox DC",
+        "icon": "monument"
+      }
+    }, {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [23.8234651, 53.6769959776]
+      },
+      "properties": {
+        "title": "Mapbox SF",
+        "icon": "harbor"
+      }
+    }]
+  },
   /* Enumerations */
   gender: [
     { "id": "male" },

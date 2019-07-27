@@ -51,20 +51,18 @@ export class Firebase extends ApiService {
   getCurrentUser() {
     return this.auth.currentUser;
   }
-  linkProvider(cb) {
+  linkProvider() {
     const provider = new this.providers.Google();
     provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-    this.auth.signInWithPopup(provider).then(function (result) {
+    return this.auth.signInWithPopup(provider).then((result) => {
       // This gives you a Google Access Token. You can use it to access the Google API.
       // var token = result.credential.accessToken
       // The signed-in user info.
       var googleUser = result.user;
-      var credential = this.auth.GoogleAuthProvider.credential(
-        googleUser.getAuthResponse().id_token);
+      var credential = this.auth.GoogleAuthProvider.credential(googleUser.getAuthResponse().id_token);
       this.getCurrentUser().linkAndRetrieveDataWithCredential(credential).then(function (usercred) {
         var user = usercred.user;
         console.log('Anonymous account successfully upgraded', user);
-        cb();
       }, function (error) {
         console.log('Error upgrading anonymous account', error);
       });
@@ -81,8 +79,8 @@ export class Firebase extends ApiService {
       // ...
     });
   }
-  logout(cb) {
-    cb();
+  logout() {
+    return this.signInAnonymously();
   }
   getCollection(coll, since) {
     return ((c) => since ? c.where('modified_at', '>', since) : c)(this.firestore.collection(coll))

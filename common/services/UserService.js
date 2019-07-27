@@ -38,12 +38,14 @@ export class UserService extends ApiService {
                 // console.log('  Photo URL: ' + profile.photoURL)
             });
         }
-        return user || {};
+        return !user ? { isLoading: true } : {
+            ...user, isLoading: false
+        };
     }
     onLogin() {
-        this.fb.linkProvider();
+        return this.fb.linkProvider();
     }
     onLogout() {
-        this.fb.logout();
+        return this.fb.logout();
     }
 }
