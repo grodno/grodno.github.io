@@ -73,7 +73,7 @@ export default {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [23.82351, 53.676995945586]
+        "coordinates": [23.8234751, 53.6769959]
       },
       "properties": {
         "title": "Mapbox DC",
@@ -83,7 +83,7 @@ export default {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [23.8234651, 53.6769959776]
+        "coordinates": [23.8234752, 53.6769957]
       },
       "properties": {
         "title": "Mapbox SF",

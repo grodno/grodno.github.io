@@ -110,6 +110,9 @@ export class Firebase extends ApiService {
       const c = this.firestore.collection(coll);
       delta[coll].forEach(d => {
         d.modified_at = now;
+        if (!d.created_at) {
+          d.created_at = now
+        }
         var ref = c.doc('' + d.id);
         batch.set(ref, d, { merge: true });
       });

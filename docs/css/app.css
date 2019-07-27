@@ -25,7 +25,7 @@ li span input:checked ~ span {
 }
 .map-container {
   position:fixed;
-  top:0;
+  top:48px;
   bottom:0;
   left:200px;
   right:0;

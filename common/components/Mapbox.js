@@ -12,21 +12,24 @@ export class Mapbox {
         center: [23.8234751, 53.6769959], // starting position [lng, lat]
         zoom: 13 // starting zoom
       });
-      this.map.onload = () => this.map.addLayer({
-        "id": "points",
-        "type": "symbol",
-        "source": {
-          "type": "geojson",
-          "data": this.data
-        },
-        "layout": {
-          "icon-image": "{icon}-15",
-          "text-field": "{title}",
-          "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-          "text-offset": [0, 0.6],
-          "text-anchor": "top"
-        }
-      });
+      this.map.on('load', function () {
+        this.map.addLayer({
+          "id": "points",
+          "type": "symbol",
+          "source": {
+            "type": "geojson",
+            "data": this.data
+          },
+          "layout": {
+            "icon-image": "{icon}-15",
+            "text-field": "{title}",
+            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+            "text-offset": [0, 0.6],
+            "text-anchor": "top"
+          }
+
+        });
+      })
     }, 0)
   }
 }
