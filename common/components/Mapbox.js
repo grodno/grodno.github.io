@@ -4,21 +4,22 @@ export class Mapbox {
     <div class="map-container"></div>`
   }
   init({ ctx }) {
+    const T = this;
     setTimeout(() => {
-      mapboxgl.accessToken = 'pk.eyJ1IjoiYWxpdHNrZXZpY2giLCJhIjoiY2p5MTlibGdvMDlodjNub2h3amR0dDY5aCJ9.9_KmMHsPcWhrN06K2MBpsg';
-      this.map = new mapboxgl.Map({
+      mapboxgl.accessToken = 'pk.eyJ1IjoiYWxpdHNrZXZpY2giLCJhIjoiY2p5bWtwYmgwMGluZDNpbXRwMWk2eG51NyJ9.PHQubjbq-xlcJJGeBT4yNw';
+      const map = new mapboxgl.Map({
         container: ctx.firstChild, // container id
         style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
         center: [23.8234751, 53.6769959], // starting position [lng, lat]
         zoom: 13 // starting zoom
       });
-      this.map.on('load', function () {
-        this.map.addLayer({
-          "id": "points",
+      map.on('load', () => {
+        map.addLayer({
+          "id": "points2",
           "type": "symbol",
           "source": {
             "type": "geojson",
-            "data": this.data
+            "data": T.data
           },
           "layout": {
             "icon-image": "{icon}-15",

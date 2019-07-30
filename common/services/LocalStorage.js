@@ -11,7 +11,7 @@ export class LocalStorage {
     this.get = (key) => cache[key] || (cache[key] = parse(storage.getItem(key)));
 
     this.assign = (delta, cb = nope) => {
-      Object.entries(delta).forEach((key, val = null) => {
+      Object.entries(delta).forEach(([key, val = null]) => {
         cache[key] = val;
         storage.setItem(key, JSON.stringify(val));
       });

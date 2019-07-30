@@ -1,7 +1,7 @@
 export class SWRunner {
     init() {
 
-        if (window.location.host === 'localhost') { return }
+        if (window.location.host.includes('localhost')) { return }
 
         const navigator = window.navigator;
         if ('serviceWorker' in navigator) {
@@ -18,7 +18,7 @@ export class SWRunner {
 
 export class GARunner {
     init() {
-        if (window.location.host === 'localhost') { return }
+        if (window.location.host.includes('localhost')) { return }
 
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {

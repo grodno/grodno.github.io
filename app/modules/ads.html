@@ -1,0 +1,98 @@
+<body id="app">
+  <template id="AdsPage">
+    <ui:fragment>
+      <GSheetsService url=":ads.apiUrl" ui:ref="ads-data" />
+      <Collection ui:ref="ads"
+                  data="<- ads-data://items"
+                  upsert="-> ads-data://items"
+                  initials=":ads.initialTags" />
+      <AdsList ui:props="<- ads://info" />
+      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> ads:openAddNew" />
+      <AdsUpdateModal ui:props="<- ads:entry" />
+      <AdsCreateModal ui:props="<- ads:newEntry" />
+      <Toast ui:if="error" message="{{error.message}}" />
+    </ui:fragment>
+  </template>
+
+  <template id="AdsList">
+    <div class="container bg-gray" style="max-width:940px;">
+      <a name="top"></a>
+      <Box>
+        <Box:1>
+          <PageCaption caption=":ads.caption" badge="{{counts|counts}}" />
+        </Box:1>
+        <Box:2>
+          <SearchBar ui:props="{{search}}" />
+        </Box:2>
+      </Box>
+      <div class="sticky bg-gray py-2">
+        <Chips data="{{tags}}" click="-> ads:tag" />
+      </div>
+      <div class="columns">
+        <AdsListItem ui:props="{{item}}" itemClick="{{openEntry}}" ui:each="item of data">
+          <ui:loading>
+            <div class="column col-12 loading"></div>
+          </ui:loading>
+          <ui:empty>
+            <h6 class="column col-12">Nic nema</h6>
+          </ui:empty>
+        </AdsListItem>
+        <Toast ui:if="error" message="{{error.message}}" />
+      </div>
+      <Button title=":pakazac_bolsh"
+              mode="primary"
+              data-size="20"
+              action="-> ads:showMore"
+              ui:if="counts.hasMore" />
+      <a href="#top" ui:if="counts.actual|isAbove:5">:naverx</a>
+    </div>
+  </template>
+
+  <template id="AdsListItem">
+    <div class="column col-6 col-sm-12 my-2">
+      <Card>
+        <Card:header>
+          <div class="tile">
+            <div class="tile-icon" data-id="{{id}}" click="{{itemClick}}">
+              <Avatar image="{{image}}" initial="{{subject|initials}}" />
+            </div>
+            <div class="tile-content">
+              <h5 class="tile-title" data-id="{{id}}" click="{{itemClick}}">{{subject|translit}}</h5>
+              <div>
+                <small class="text-gray">{{modified_at|date}}</small>
+                <small class="text-gray mx-1"><a href="{{link}}" target="_blank">{{link|hostOf}}</a></small>
+                <small class="text-gray">{{boardName}}</small>
+                <small class="text-gray" ui:if="tags">({{tags}})</small>
+              </div>
+            </div>
+          </div>
+        </Card:header>
+        <!-- <img src="/assets/grodno2.svg" height="10" width="10" />
+        <small class="mx-2">{{preview|translit}}</small> -->
+        <!-- <div class="card-footer">
+          <button class="btn btn-primary btn-sm">Do</button>
+        </div> -->
+      </Card>
+    </div>
+  </template>
+
+  <template id="AdsCreateModal">
+    <Modal ui:if="open" open="{{open}}" title="Add a new record" close="{{cancel}}">
+      <Form fields=":news_form" data="{{data}}" change="->" />
+      <Modal:footer>
+        <Button title=":create_new" mode="primary" data="{{data}}" action="{{submit}}" />
+      </Modal:footer>
+    </Modal>
+  </template>
+
+  <template id="AdsUpdateModal">
+    <Modal ui:if="open" open="{{open}}" title="Edit record (#{{id}})" close="{{cancel}}">
+      <Form fields=":news_form" data="{{data}}" change="->" />
+      <Modal:footer>
+        <Button title=":update" mode="primary" data="{{data}}" action="{{submit}}" />
+        <Button title=":delete" mode="danger" action="{{delete}}" />
+      </Modal:footer>
+    </Modal>
+  </template>
+
+</body>

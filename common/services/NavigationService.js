@@ -12,7 +12,7 @@ export class NavigationService extends ApiService {
       }
     }
     window.addEventListener('hashchange', hashchange);
-    hashchange();
+    setTimeout(()=>hashchange(),0);
   }
   update(d) {
     const { target, path, params } = d;

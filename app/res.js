@@ -8,9 +8,9 @@ export default {
     { name: 'Naviny', id: 'news', link: '#/news', caption: '' },
     { name: 'Objavy', id: 'ads', link: '#/ads', caption: '' },
     { name: 'Karta', id: 'map', link: '#/map', caption: '' },
-    { name: 'Calendar', id: 'calendar', link: '#/calendar', caption: '' },
-    { name: 'Liudzi', id: 'people', link: '#/people', caption: '' },
-    { name: 'Info', id: 'info', link: '#/info', caption: '' },
+    // { name: 'Calendar', id: 'calendar', link: '#/calendar', caption: '' },
+    // { name: 'Liudzi', id: 'people', link: '#/people', caption: '' },
+    // { name: 'Info', id: 'info', link: '#/info', caption: '' },
   ],
   media_links: [
     { name: 'S13.ru', id: '//s13.ru' },
@@ -35,6 +35,11 @@ export default {
   news: {
     caption: 'Naviny Algarda',
     initialTags: 'asoba,gramadstva,dabrabyt,axtung,adukacya,biznes',
+  },
+  ads: {
+    caption: 'Pryvatnye objavy',
+    initialTags: 'apartments,service,tools,cars,interior',
+    apiUrl: 'https://script.google.com/macros/s/AKfycbywXmp_80WQVBJNTfCMvUF9kWWd4syjPoCcxPJzVWKRd2vBqZy8/exec'
   },
   AddNewRecordData: {
     title: 'Add a new record',
@@ -83,11 +88,11 @@ export default {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [23.8234752, 53.6769957]
+        "coordinates": [23.8244752, 53.6769959]
       },
       "properties": {
         "title": "Mapbox SF",
-        "icon": "harbor"
+        "icon": "monument"
       }
     }]
   },

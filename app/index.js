@@ -7,6 +7,7 @@ import main from './modules/main.html';
 import calendar from './modules/calendar.html';
 import geomap from './modules/map.html';
 import news from './modules/news.html';
+import ads from './modules/ads.html';
 import others from './modules/others.html';
 
 import { dig } from 'furnitura';
@@ -19,7 +20,7 @@ Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))({ ...res, ...meta.re
 const ref = {};
 const launch = () => {
   ref.done = register(
-    ...loadTemplates(App, main, news, calendar, geomap, others),
+    ...loadTemplates(App, main, news, ads, calendar, geomap, others),
     ...components,
     ...Object.values(commonServices),
   ).run();
