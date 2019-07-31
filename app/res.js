@@ -1,13 +1,13 @@
 export default {
   app: {
-    name: 'Gardarus',
+    name: 'Algardium',
     faceImg: '/assets/grodno2.svg',
     logo: '/assets/algard-face.png',
-    slogan: 'Esti feliqa - nur en Gardarus.',
+    slogan: 'Esti feliqa - Algardium nur.',
     small: 'Solnca wsxodzit i zaxodzit, a volnea plynj Niemana ne spyniaet sa ni na mig.',
-    concept: `Gardarus - e mestom nedzvyqajnym. Tut qas beghyt pa-svojmu i inny masshtab padzej,
+    concept: `Algardium - e mestom nedzvyqajnym. Tut qas beghyt pa-svojmu i inny masshtab padzej,
     zdarenni abumowleny i wsio navokal prasiaknuto asobym sensam.
-    Trebo adno zawvaghac znaki, sluxac tishynu, tob dotknuci getae drugoe realnosti.`,
+    Trebo adno zawvaghac znaki, sluxac tishynu, tob dotknuci tae inshae realnosti.`,
     history: ` e vluqnaj qastkaj gistoryi susvetnaj. 
     Liosy, zvyqai, roznye movy i kultury tesno perapleli sa tut w admyslovy uzor.
     Nash gorad e prykladom tradycyj siabrowstva i wzaemnaj povagi migh liudzmi. 
@@ -45,7 +45,7 @@ export default {
     { id: 'tags', type: 'text' }
   ],
   news: {
-    caption: 'Naviny Gardarus',
+    caption: 'Naviny Algardium',
     initialTags: 'asoba,gramadstva,dabrabyt,axtung,adukacya,biznes',
   },
   ads: {
