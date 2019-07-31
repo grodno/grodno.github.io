@@ -1,7 +1,19 @@
 export default {
   app: {
-    name: 'Algard',
-    logo: '/assets/grodno.svg',
+    name: 'Gardarus',
+    faceImg: '/assets/grodno2.svg',
+    logo: '/assets/algard-face.png',
+    slogan: 'Esti feliqa - nur en Gardarus.',
+    small: 'Solnca wsxodzit i zaxodzit, a volnea plynj Niemana ne spyniaet sa ni na mig.',
+    concept: `Gardarus - e mestom nedzvyqajnym. Tut qas beghyt pa-svojmu i inny masshtab padzej,
+    zdarenni abumowleny i wsio navokal prasiaknuto asobym sensam.
+    Trebo adno zawvaghac znaki, sluxac tishynu, tob dotknuci getae drugoe realnosti.`,
+    history: ` e vluqnaj qastkaj gistoryi susvetnaj. 
+    Liosy, zvyqai, roznye movy i kultury tesno perapleli sa tut w admyslovy uzor.
+    Nash gorad e prykladom tradycyj siabrowstva i wzaemnaj povagi migh liudzmi. 
+    My roznye, ale nas jednae vera w lepshae majbytne, katorae my razam buduemo dzenj za dniom.
+    Tut liubiat pavtorac:
+    "Use my liudzi", "Nex zhye volnosc", "Xto krutic, toj mae".`,
     version: '4.0.0',
   },
   sitemap: [
@@ -27,13 +39,13 @@ export default {
     ]
   },
   news_form: [
-    { id: 'subject', type: 'name', typeSpec: 'city' },
-    { id: 'preview', type: 'text', typeSpec: 'unit' },
-    { id: 'body', type: 'text', typeSpec: 'country' },
-    { id: 'tags', type: 'enum', typeSpec: 'tags' }
+    { id: 'subject', type: 'name' },
+    { id: 'preview', type: 'text' },
+    { id: 'body', type: 'text' },
+    { id: 'tags', type: 'text' }
   ],
   news: {
-    caption: 'Naviny Algarda',
+    caption: 'Naviny Gardarus',
     initialTags: 'asoba,gramadstva,dabrabyt,axtung,adukacya,biznes',
   },
   ads: {

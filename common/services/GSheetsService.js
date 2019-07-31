@@ -25,6 +25,7 @@ export class GSheetsService extends ApiService {
         Object.values(items).forEach(e => {
           const board = boards[e.boardId] || { name: '#' + e.boardId }
           e.boardName = board.name
+          e.link = 'https://forum.grodno.net/index.php?topic=' + e.id
           e.tags = Object.keys([e.tags, board.tags, board.action].reduce((acc, s) => {
             (s || '').split(',').forEach(ss => { if (ss) { acc[ss] = 1 } })
             return acc;

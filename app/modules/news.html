@@ -85,7 +85,7 @@
 
   <template id="NewsUpdateModal">
     <Modal ui:if="open" open="{{open}}" title="Edit record (#{{id}})" close="{{cancel}}">
-      <Form fields=":news_form" data="{{data}}" change="->" />
+      <Form fields=":news_form" data="{{data|mv}}" change="->" />
       <Modal:footer>
         <Button title=":update" mode="primary" data="{{data}}" action="{{submit}}" />
         <Button title=":delete" mode="danger" action="{{delete}}" />

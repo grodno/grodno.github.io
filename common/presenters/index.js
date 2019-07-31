@@ -42,6 +42,7 @@ export const presenters = {
   initials: x => !x ? '' : x.split(' ').slice(0, 2).map(s => s.slice(0, 1).toUpperCase()).join(''),
   not: x => !x,
   translit,
+  mv: obj => Object.keys(obj).reduce((r, k) => { if (typeof r[k] === 'string') { r[k + '_mv'] = 1; r[k] = translit(r[k]) }; return r }, obj),
   rest: x => x ? x.slice(1) : [],
   limit: x => x ? x.slice(0, 50) : [],
   ifAbove: (x, limit = 0) => +x > +limit ? x : '',

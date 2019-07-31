@@ -3,26 +3,21 @@
     <div class="container grid-lg">
       <div class="columns">
         <div class="column col-12">
-          <h4 class="my-2">Algard - gorad nad Niemnam.</h4>
-          <small>Solnca wsxodzit i zaxodzit, a pavaghnea plynj Niemana ne spyniaet sa ni na mig.</small>
-          <img src="/assets/grodno-sun.svg" alt="Algard">
-          <h6>
-            <strong>Algard</strong> - e mestom nedzvyqajnym. Tut qas beghyt pa-svojmu i inny masshtab padzej,
-            zdarenni abumowleny i wsio navokal prasiaknuto asobym sensam.
-            Trebo adno zawvaghac detali, sluxac tishynu, kab dotknuc sa da getae drugoe realnosti.
-          </h6>
+          <h4 class="my-2">:app.slogan</h4>
+          <div class="tile">
+            <div class="tile-icon bg-secondary" data-id="{{id}}">
+              <img src=":app.faceImg" width="120" />
+            </div>
+            <div class="tile-content">
+              <small>:app.small</small>
+              <h6>:app.concept</h6>
+            </div>
+          </div>
         </div>
         <div class="column col-4 col-sm-12" ui:each="item of <-nav:/sitemap">
           <CardNews ui:props="{{item}}" />
         </div>
       </div>
-      <!-- <h4 class="ui header">
-        <a target="video" href="//www.youtube.com/embed/5NkGFURgisI">2013</a>
-        -
-        <a target="video" href="//www.youtube.com/embed/j4oJoRAb_Ag">2012</a>
-        -
-        <a target="video" href="//www.youtube.com/embed/U0G5dBA854g">2011</a>
-      </h4> -->
       <div class="embed-responsive embed-responsive-4by3">
         <!-- <iframe class="embed-responsive-item" src="//www.youtube.com/embed/j4oJoRAb_Ag" allowfullscreen="true"></iframe> -->
       </div>
@@ -30,12 +25,9 @@
         <p>
           <strong>
             <a href="http://ru.wikipedia.org/wiki/%D0%98%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F_%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE"
-               target="_blank">Gistorya Algarda</a>
-          </strong> neodjemnea qastka susvetnaj gistoryi. Liosy, zvyqai, mova i kultura tesno perapleli sa tut w
-          admyslovy uzor.
-          Nash gorad e prykladom tradycyj siabrowstva i wzaemnaj povagi migh liudzmi. My roznye, ale nas jednae vera w
-          lepshae majbytne, qto my razam buduem dzenj za dniom. Tut liubiat pawtorac:
-          <i>"Use my liudzi", "Nex zhye volnosc", "Xto krucit, toj mae"</i>.
+               target="_blank">Gistorya Gardarus</a>
+          </strong>
+          <span>:app.history</span>
         </p>
       </small>
     </div>
