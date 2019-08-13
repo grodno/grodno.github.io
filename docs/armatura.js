@@ -2863,8 +2863,8 @@ const render = (c, $content, ctx) => {
 
     cc.up(props);
   });
-  c.rendering = false;
   c.eachChild(cc => !cc.isInited ? cc.init() : 0);
+  c.rendering = false;
   deep.shift();
 };
 // CONCATENATED MODULE: ./lib/armatura/resolve.js
@@ -3122,7 +3122,12 @@ class component_Component {
       if (data && data.length) {
         data.forEach((d, index) => {
           const id = "".concat(uid, "-$").concat(d.id || index);
-          const $this = Object.create(this);
+          let $this = this;
+
+          for (; $.owner && $.tag === 'ui:fragment'; $this = $.owner) {} // alt:
+          // const $this = Object.create(this)
+
+
           $this.impl = {
             [itemId]: d,
             [itemId + 'Index']: index
@@ -3182,7 +3187,7 @@ class component_Component {
   }
 
   init() {
-    if (this.isDone) {
+    if (this.isDone || this.isInited) {
       return;
     }
 
