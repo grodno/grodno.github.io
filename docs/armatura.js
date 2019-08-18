@@ -98,13 +98,30 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var store = __webpack_require__(15)('wks');
+var uid = __webpack_require__(13);
+var Symbol = __webpack_require__(3).Symbol;
+var USE_SYMBOL = typeof Symbol == 'function';
+
+var $exports = module.exports = function (name) {
+  return store[name] || (store[name] =
+    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
+};
+
+$exports.store = store;
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var $iterators = __webpack_require__(48);
 var getKeys = __webpack_require__(21);
 var redefine = __webpack_require__(11);
 var global = __webpack_require__(3);
 var hide = __webpack_require__(4);
 var Iterators = __webpack_require__(25);
-var wks = __webpack_require__(1);
+var wks = __webpack_require__(0);
 var ITERATOR = wks('iterator');
 var TO_STRING_TAG = wks('toStringTag');
 var ArrayValues = Iterators.Array;
@@ -156,23 +173,6 @@ for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++
     if (explicit) for (key in $iterators) if (!proto[key]) redefine(proto, key, $iterators[key], true);
   }
 }
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var store = __webpack_require__(15)('wks');
-var uid = __webpack_require__(14);
-var Symbol = __webpack_require__(3).Symbol;
-var USE_SYMBOL = typeof Symbol == 'function';
-
-var $exports = module.exports = function (name) {
-  return store[name] || (store[name] =
-    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
-};
-
-$exports.store = store;
 
 
 /***/ }),
@@ -295,7 +295,7 @@ module.exports = function (it) {
 var global = __webpack_require__(3);
 var hide = __webpack_require__(4);
 var has = __webpack_require__(8);
-var SRC = __webpack_require__(14)('src');
+var SRC = __webpack_require__(13)('src');
 var $toString = __webpack_require__(53);
 var TO_STRING = 'toString';
 var TPL = ('' + $toString).split(TO_STRING);
@@ -331,6 +331,158 @@ __webpack_require__(16).inspectSource = function (it) {
 
 "use strict";
 
+
+var isRegExp = __webpack_require__(67);
+var anObject = __webpack_require__(2);
+var speciesConstructor = __webpack_require__(68);
+var advanceStringIndex = __webpack_require__(32);
+var toLength = __webpack_require__(22);
+var callRegExpExec = __webpack_require__(33);
+var regexpExec = __webpack_require__(34);
+var fails = __webpack_require__(7);
+var $min = Math.min;
+var $push = [].push;
+var $SPLIT = 'split';
+var LENGTH = 'length';
+var LAST_INDEX = 'lastIndex';
+var MAX_UINT32 = 0xffffffff;
+
+// babel-minify transpiles RegExp('x', 'y') -> /x/y and it causes SyntaxError
+var SUPPORTS_Y = !fails(function () { RegExp(MAX_UINT32, 'y'); });
+
+// @@split logic
+__webpack_require__(36)('split', 2, function (defined, SPLIT, $split, maybeCallNative) {
+  var internalSplit;
+  if (
+    'abbc'[$SPLIT](/(b)*/)[1] == 'c' ||
+    'test'[$SPLIT](/(?:)/, -1)[LENGTH] != 4 ||
+    'ab'[$SPLIT](/(?:ab)*/)[LENGTH] != 2 ||
+    '.'[$SPLIT](/(.?)(.?)/)[LENGTH] != 4 ||
+    '.'[$SPLIT](/()()/)[LENGTH] > 1 ||
+    ''[$SPLIT](/.?/)[LENGTH]
+  ) {
+    // based on es5-shim implementation, need to rework it
+    internalSplit = function (separator, limit) {
+      var string = String(this);
+      if (separator === undefined && limit === 0) return [];
+      // If `separator` is not a regex, use native split
+      if (!isRegExp(separator)) return $split.call(string, separator, limit);
+      var output = [];
+      var flags = (separator.ignoreCase ? 'i' : '') +
+                  (separator.multiline ? 'm' : '') +
+                  (separator.unicode ? 'u' : '') +
+                  (separator.sticky ? 'y' : '');
+      var lastLastIndex = 0;
+      var splitLimit = limit === undefined ? MAX_UINT32 : limit >>> 0;
+      // Make `global` and avoid `lastIndex` issues by working with a copy
+      var separatorCopy = new RegExp(separator.source, flags + 'g');
+      var match, lastIndex, lastLength;
+      while (match = regexpExec.call(separatorCopy, string)) {
+        lastIndex = separatorCopy[LAST_INDEX];
+        if (lastIndex > lastLastIndex) {
+          output.push(string.slice(lastLastIndex, match.index));
+          if (match[LENGTH] > 1 && match.index < string[LENGTH]) $push.apply(output, match.slice(1));
+          lastLength = match[0][LENGTH];
+          lastLastIndex = lastIndex;
+          if (output[LENGTH] >= splitLimit) break;
+        }
+        if (separatorCopy[LAST_INDEX] === match.index) separatorCopy[LAST_INDEX]++; // Avoid an infinite loop
+      }
+      if (lastLastIndex === string[LENGTH]) {
+        if (lastLength || !separatorCopy.test('')) output.push('');
+      } else output.push(string.slice(lastLastIndex));
+      return output[LENGTH] > splitLimit ? output.slice(0, splitLimit) : output;
+    };
+  // Chakra, V8
+  } else if ('0'[$SPLIT](undefined, 0)[LENGTH]) {
+    internalSplit = function (separator, limit) {
+      return separator === undefined && limit === 0 ? [] : $split.call(this, separator, limit);
+    };
+  } else {
+    internalSplit = $split;
+  }
+
+  return [
+    // `String.prototype.split` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.split
+    function split(separator, limit) {
+      var O = defined(this);
+      var splitter = separator == undefined ? undefined : separator[SPLIT];
+      return splitter !== undefined
+        ? splitter.call(separator, O, limit)
+        : internalSplit.call(String(O), separator, limit);
+    },
+    // `RegExp.prototype[@@split]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@split
+    //
+    // NOTE: This cannot be properly polyfilled in engines that don't support
+    // the 'y' flag.
+    function (regexp, limit) {
+      var res = maybeCallNative(internalSplit, regexp, this, limit, internalSplit !== $split);
+      if (res.done) return res.value;
+
+      var rx = anObject(regexp);
+      var S = String(this);
+      var C = speciesConstructor(rx, RegExp);
+
+      var unicodeMatching = rx.unicode;
+      var flags = (rx.ignoreCase ? 'i' : '') +
+                  (rx.multiline ? 'm' : '') +
+                  (rx.unicode ? 'u' : '') +
+                  (SUPPORTS_Y ? 'y' : 'g');
+
+      // ^(? + rx + ) is needed, in combination with some S slicing, to
+      // simulate the 'y' flag.
+      var splitter = new C(SUPPORTS_Y ? rx : '^(?:' + rx.source + ')', flags);
+      var lim = limit === undefined ? MAX_UINT32 : limit >>> 0;
+      if (lim === 0) return [];
+      if (S.length === 0) return callRegExpExec(splitter, S) === null ? [S] : [];
+      var p = 0;
+      var q = 0;
+      var A = [];
+      while (q < S.length) {
+        splitter.lastIndex = SUPPORTS_Y ? q : 0;
+        var z = callRegExpExec(splitter, SUPPORTS_Y ? S : S.slice(q));
+        var e;
+        if (
+          z === null ||
+          (e = $min(toLength(splitter.lastIndex + (SUPPORTS_Y ? 0 : q)), S.length)) === p
+        ) {
+          q = advanceStringIndex(S, q, unicodeMatching);
+        } else {
+          A.push(S.slice(p, q));
+          if (A.length === lim) return A;
+          for (var i = 1; i <= z.length - 1; i++) {
+            A.push(z[i]);
+            if (A.length === lim) return A;
+          }
+          q = p = e;
+        }
+      }
+      A.push(S.slice(p));
+      return A;
+    }
+  ];
+});
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+var id = 0;
+var px = Math.random();
+module.exports = function (key) {
+  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
+};
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 // ECMAScript 6 symbols shim
 var global = __webpack_require__(3);
 var has = __webpack_require__(8);
@@ -341,8 +493,8 @@ var META = __webpack_require__(61).KEY;
 var $fails = __webpack_require__(7);
 var shared = __webpack_require__(15);
 var setToStringTag = __webpack_require__(29);
-var uid = __webpack_require__(14);
-var wks = __webpack_require__(1);
+var uid = __webpack_require__(13);
+var wks = __webpack_require__(0);
 var wksExt = __webpack_require__(42);
 var wksDefine = __webpack_require__(62);
 var enumKeys = __webpack_require__(63);
@@ -579,158 +731,6 @@ setToStringTag(global.JSON, 'JSON', true);
 
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var isRegExp = __webpack_require__(67);
-var anObject = __webpack_require__(2);
-var speciesConstructor = __webpack_require__(68);
-var advanceStringIndex = __webpack_require__(32);
-var toLength = __webpack_require__(22);
-var callRegExpExec = __webpack_require__(33);
-var regexpExec = __webpack_require__(34);
-var fails = __webpack_require__(7);
-var $min = Math.min;
-var $push = [].push;
-var $SPLIT = 'split';
-var LENGTH = 'length';
-var LAST_INDEX = 'lastIndex';
-var MAX_UINT32 = 0xffffffff;
-
-// babel-minify transpiles RegExp('x', 'y') -> /x/y and it causes SyntaxError
-var SUPPORTS_Y = !fails(function () { RegExp(MAX_UINT32, 'y'); });
-
-// @@split logic
-__webpack_require__(36)('split', 2, function (defined, SPLIT, $split, maybeCallNative) {
-  var internalSplit;
-  if (
-    'abbc'[$SPLIT](/(b)*/)[1] == 'c' ||
-    'test'[$SPLIT](/(?:)/, -1)[LENGTH] != 4 ||
-    'ab'[$SPLIT](/(?:ab)*/)[LENGTH] != 2 ||
-    '.'[$SPLIT](/(.?)(.?)/)[LENGTH] != 4 ||
-    '.'[$SPLIT](/()()/)[LENGTH] > 1 ||
-    ''[$SPLIT](/.?/)[LENGTH]
-  ) {
-    // based on es5-shim implementation, need to rework it
-    internalSplit = function (separator, limit) {
-      var string = String(this);
-      if (separator === undefined && limit === 0) return [];
-      // If `separator` is not a regex, use native split
-      if (!isRegExp(separator)) return $split.call(string, separator, limit);
-      var output = [];
-      var flags = (separator.ignoreCase ? 'i' : '') +
-                  (separator.multiline ? 'm' : '') +
-                  (separator.unicode ? 'u' : '') +
-                  (separator.sticky ? 'y' : '');
-      var lastLastIndex = 0;
-      var splitLimit = limit === undefined ? MAX_UINT32 : limit >>> 0;
-      // Make `global` and avoid `lastIndex` issues by working with a copy
-      var separatorCopy = new RegExp(separator.source, flags + 'g');
-      var match, lastIndex, lastLength;
-      while (match = regexpExec.call(separatorCopy, string)) {
-        lastIndex = separatorCopy[LAST_INDEX];
-        if (lastIndex > lastLastIndex) {
-          output.push(string.slice(lastLastIndex, match.index));
-          if (match[LENGTH] > 1 && match.index < string[LENGTH]) $push.apply(output, match.slice(1));
-          lastLength = match[0][LENGTH];
-          lastLastIndex = lastIndex;
-          if (output[LENGTH] >= splitLimit) break;
-        }
-        if (separatorCopy[LAST_INDEX] === match.index) separatorCopy[LAST_INDEX]++; // Avoid an infinite loop
-      }
-      if (lastLastIndex === string[LENGTH]) {
-        if (lastLength || !separatorCopy.test('')) output.push('');
-      } else output.push(string.slice(lastLastIndex));
-      return output[LENGTH] > splitLimit ? output.slice(0, splitLimit) : output;
-    };
-  // Chakra, V8
-  } else if ('0'[$SPLIT](undefined, 0)[LENGTH]) {
-    internalSplit = function (separator, limit) {
-      return separator === undefined && limit === 0 ? [] : $split.call(this, separator, limit);
-    };
-  } else {
-    internalSplit = $split;
-  }
-
-  return [
-    // `String.prototype.split` method
-    // https://tc39.github.io/ecma262/#sec-string.prototype.split
-    function split(separator, limit) {
-      var O = defined(this);
-      var splitter = separator == undefined ? undefined : separator[SPLIT];
-      return splitter !== undefined
-        ? splitter.call(separator, O, limit)
-        : internalSplit.call(String(O), separator, limit);
-    },
-    // `RegExp.prototype[@@split]` method
-    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@split
-    //
-    // NOTE: This cannot be properly polyfilled in engines that don't support
-    // the 'y' flag.
-    function (regexp, limit) {
-      var res = maybeCallNative(internalSplit, regexp, this, limit, internalSplit !== $split);
-      if (res.done) return res.value;
-
-      var rx = anObject(regexp);
-      var S = String(this);
-      var C = speciesConstructor(rx, RegExp);
-
-      var unicodeMatching = rx.unicode;
-      var flags = (rx.ignoreCase ? 'i' : '') +
-                  (rx.multiline ? 'm' : '') +
-                  (rx.unicode ? 'u' : '') +
-                  (SUPPORTS_Y ? 'y' : 'g');
-
-      // ^(? + rx + ) is needed, in combination with some S slicing, to
-      // simulate the 'y' flag.
-      var splitter = new C(SUPPORTS_Y ? rx : '^(?:' + rx.source + ')', flags);
-      var lim = limit === undefined ? MAX_UINT32 : limit >>> 0;
-      if (lim === 0) return [];
-      if (S.length === 0) return callRegExpExec(splitter, S) === null ? [S] : [];
-      var p = 0;
-      var q = 0;
-      var A = [];
-      while (q < S.length) {
-        splitter.lastIndex = SUPPORTS_Y ? q : 0;
-        var z = callRegExpExec(splitter, SUPPORTS_Y ? S : S.slice(q));
-        var e;
-        if (
-          z === null ||
-          (e = $min(toLength(splitter.lastIndex + (SUPPORTS_Y ? 0 : q)), S.length)) === p
-        ) {
-          q = advanceStringIndex(S, q, unicodeMatching);
-        } else {
-          A.push(S.slice(p, q));
-          if (A.length === lim) return A;
-          for (var i = 1; i <= z.length - 1; i++) {
-            A.push(z[i]);
-            if (A.length === lim) return A;
-          }
-          q = p = e;
-        }
-      }
-      A.push(S.slice(p));
-      return A;
-    }
-  ];
-});
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-var id = 0;
-var px = Math.random();
-module.exports = function (key) {
-  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
-};
-
-
-/***/ }),
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -915,7 +915,7 @@ module.exports = $export;
 /***/ (function(module, exports, __webpack_require__) {
 
 var shared = __webpack_require__(15)('keys');
-var uid = __webpack_require__(14);
+var uid = __webpack_require__(13);
 module.exports = function (key) {
   return shared[key] || (shared[key] = uid(key));
 };
@@ -937,7 +937,7 @@ module.exports = (
 
 var def = __webpack_require__(6).f;
 var has = __webpack_require__(8);
-var TAG = __webpack_require__(1)('toStringTag');
+var TAG = __webpack_require__(0)('toStringTag');
 
 module.exports = function (it, tag, stat) {
   if (it && !has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
@@ -1101,7 +1101,7 @@ var redefine = __webpack_require__(11);
 var hide = __webpack_require__(4);
 var fails = __webpack_require__(7);
 var defined = __webpack_require__(20);
-var wks = __webpack_require__(1);
+var wks = __webpack_require__(0);
 var regexpExec = __webpack_require__(34);
 
 var SPECIES = wks('species');
@@ -1299,7 +1299,7 @@ module.exports = function (object, names) {
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports.f = __webpack_require__(1);
+exports.f = __webpack_require__(0);
 
 
 /***/ }),
@@ -1547,7 +1547,7 @@ addToUnscopables('entries');
 /***/ (function(module, exports, __webpack_require__) {
 
 // 22.1.3.31 Array.prototype[@@unscopables]
-var UNSCOPABLES = __webpack_require__(1)('unscopables');
+var UNSCOPABLES = __webpack_require__(0)('unscopables');
 var ArrayProto = Array.prototype;
 if (ArrayProto[UNSCOPABLES] == undefined) __webpack_require__(4)(ArrayProto, UNSCOPABLES, {});
 module.exports = function (key) {
@@ -1590,7 +1590,7 @@ var Iterators = __webpack_require__(25);
 var $iterCreate = __webpack_require__(55);
 var setToStringTag = __webpack_require__(29);
 var getPrototypeOf = __webpack_require__(60);
-var ITERATOR = __webpack_require__(1)('iterator');
+var ITERATOR = __webpack_require__(0)('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
 var FF_ITERATOR = '@@iterator';
 var KEYS = 'keys';
@@ -1697,7 +1697,7 @@ var setToStringTag = __webpack_require__(29);
 var IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-__webpack_require__(4)(IteratorPrototype, __webpack_require__(1)('iterator'), function () { return this; });
+__webpack_require__(4)(IteratorPrototype, __webpack_require__(0)('iterator'), function () { return this; });
 
 module.exports = function (Constructor, NAME, next) {
   Constructor.prototype = create(IteratorPrototype, { next: descriptor(1, next) });
@@ -1797,7 +1797,7 @@ module.exports = Object.getPrototypeOf || function (O) {
 /* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var META = __webpack_require__(14)('meta');
+var META = __webpack_require__(13)('meta');
 var isObject = __webpack_require__(9);
 var has = __webpack_require__(8);
 var setDesc = __webpack_require__(6).f;
@@ -1953,7 +1953,7 @@ exports.f = __webpack_require__(5) ? gOPD : function getOwnPropertyDescriptor(O,
 // 7.2.8 IsRegExp(argument)
 var isObject = __webpack_require__(9);
 var cof = __webpack_require__(19);
-var MATCH = __webpack_require__(1)('match');
+var MATCH = __webpack_require__(0)('match');
 module.exports = function (it) {
   var isRegExp;
   return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
@@ -1967,7 +1967,7 @@ module.exports = function (it) {
 // 7.3.20 SpeciesConstructor(O, defaultConstructor)
 var anObject = __webpack_require__(2);
 var aFunction = __webpack_require__(39);
-var SPECIES = __webpack_require__(1)('species');
+var SPECIES = __webpack_require__(0)('species');
 module.exports = function (O, D) {
   var C = anObject(O).constructor;
   var S;
@@ -2004,7 +2004,7 @@ module.exports = function (TO_STRING) {
 
 // getting tag from 19.1.3.6 Object.prototype.toString()
 var cof = __webpack_require__(19);
-var TAG = __webpack_require__(1)('toStringTag');
+var TAG = __webpack_require__(0)('toStringTag');
 // ES3 wrong here
 var ARG = cof(function () { return arguments; }()) == 'Arguments';
 
@@ -2094,13 +2094,13 @@ if (__webpack_require__(5) && /./g.flags != 'g') __webpack_require__(6).f(RegExp
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
-var web_dom_iterable = __webpack_require__(0);
+var web_dom_iterable = __webpack_require__(1);
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.symbol.js
-var es6_symbol = __webpack_require__(12);
+var es6_symbol = __webpack_require__(14);
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.split.js
-var es6_regexp_split = __webpack_require__(13);
+var es6_regexp_split = __webpack_require__(12);
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__(45);
@@ -2121,7 +2121,7 @@ const RE_XML_COMMENT = /<!--((?!-->)[\s\S])*-->/g;
 const RE_ATTRS = /([a-z][a-zA-Z0-9-:]+)="([^"]*)"/g;
 const RE_ESCAPE_XML_ENTITY = /["'&<>]/g;
 const RE_XML_TAG = /(<)(\/?)([a-zA-Z][a-zA-Z0-9-:]*)((?:\s+[a-z][a-zA-Z0-9-:]+="[^"]*")*)\s*(\/?)>/g;
-const SINGLE_TAGS = 'img input br'.split(' ').reduce((r, e) => {
+const SINGLE_TAGS = 'img input br col'.split(' ').reduce((r, e) => {
   r[e] = 1;
   return r;
 }, {});
@@ -2315,7 +2315,16 @@ const capitalize = function capitalize(x) {
   const s = "".concat(x);
   return pre + s[0].toUpperCase() + s.slice(1);
 };
-const humanize = key => ('' + key).split('_').map(s => capitalize(s)).join(' ');
+const humanize = function humanize(key) {
+  let sep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
+  let jn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ' ';
+  return ('' + key).split(sep).map(s => capitalize(s)).join(jn);
+};
+const camelize = function camelize(key) {
+  let sep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
+  let jn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ' ';
+  return ('' + key).split(sep).map((s, i) => i ? capitalize(s) : s).join(jn);
+};
 const RE_SINGLE_PLACEHOLDER = /^\{\{([a-zA-Z0-9.:_$|]+)\}\}$/;
 const RE_PLACEHOLDER = /\{\{([a-zA-Z0-9.:_$|]+)\}\}/g;
 const VALUES = {
@@ -2373,19 +2382,19 @@ function stringInterpolation(v) {
     fnx.push(placeholder(expr));
     return '{{' + (fnx.length - 1) + '}}';
   });
-  return c => pattern.replace(/\{\{(\d+)\}\}/g, (s, idx) => {
+  return c => !fnx.length ? pattern : pattern.replace(/\{\{(\d+)\}\}/g, (s, idx) => {
     const r = fnx[idx](c);
     return !r && r !== 0 ? '' : r;
   });
 }
 function placeholder(expr) {
-  return representWithPipes(expr, key => key[0] === ':' ? (k => c => c.string(k))(key.slice(1).trim()) : c => c.prop(key));
+  return representWithPipes(expr, key => key[0] === ':' ? (fn => c => c.string(fn(c)))(stringInterpolation(key.slice(1).trim())) : c => c.prop(key));
 }
 function representWithPipes(expr, fn) {
   const pipes = expr.split('|').map(s => s.trim());
   const key = pipes.shift();
   const initial = fn(key);
-  return !pipes.length ? initial : c => pipes.reduce((r, pk) => c.represent(r, pk), initial(c));
+  return !pipes.length ? initial : c => pipes.reduce((r, pk) => c.pipe(r, pk), initial(c));
 } // DOM
 
 const DOM_SETTERS = {
@@ -2413,7 +2422,7 @@ const DOM_SETTERS = {
 
     if (v) {
       Object.keys(v).forEach(k => {
-        e.dataset[k] = v[k];
+        e.dataset[camelize(k, '-', '')] = v[k];
       });
     }
   },
@@ -2524,11 +2533,11 @@ const hasSlot = (c, id) => {
   let r = false;
 
   if (id && id != 'default') {
-    c.content.forEach(e => {
+    c.content && c.content.forEach(e => {
       r = r || e.tag === c.tag + ':' + id;
     });
   } else {
-    c.content.forEach(e => {
+    c.content && c.content.forEach(e => {
       r = r || e.tag.slice(0, c.tag.length + 1) !== c.tag + ':';
     });
   }
@@ -2673,7 +2682,7 @@ function compileTag(_ref3) {
       $data: rr
     })));
   } else {
-    const gttr = expression('{:'.includes(expr[0]) ? expr : '{{' + expr + '}}');
+    const gttr = expression(expr);
     (r.updates || (r.updates = [])).push((c, acc) => {
       acc['$data'] = gttr(c);
     });
@@ -2701,18 +2710,7 @@ function compile(r) {
 
     if (aProps.slice(0, 2) === '<-') {
       const val = aProps.slice(2).trim();
-
-      if (val) {
-        (r.inits || (r.inits = [])).push(c => c.connect(val, rr => rr));
-      } else {
-        (r.updates || (r.updates = [])).push((c, acc) => {
-          let $ = c;
-
-          for (; $.owner && $.tag === 'ui:fragment'; $ = $.owner) {}
-
-          Object.assign(acc, $.impl);
-        });
-      }
+      (r.inits || (r.inits = [])).push(c => c.connect(val, rr => rr));
     } else {
       const getter = expression(aProps);
       (r.updates || (r.updates = [])).push((c, acc) => Object.assign(acc, getter(c)));
@@ -2726,20 +2724,9 @@ function compile(r) {
 
       if (v2 === '<-') {
         const val = v.slice(2).trim();
-
-        if (val) {
-          (r.inits || (r.inits = [])).push(c => c.connect(val, rr => ({
-            [k]: rr
-          })));
-        } else {
-          (r.updates || (r.updates = [])).push(makeApplicator(c => {
-            let $ = c;
-
-            for (; $.owner && $.tag === 'ui:fragment'; $ = $.owner) {}
-
-            return $.impl;
-          }));
-        }
+        (r.inits || (r.inits = [])).push(c => c.connect(val, rr => ({
+          [k]: rr
+        })));
       } else if (v2 === '->') {
         (r.updates || (r.updates = [])).push(makeApplicator(compile_emitter(v.slice(2).trim(), k), k));
       } else {
@@ -2782,7 +2769,15 @@ const reg = ctr => {
   const name = ctor.NAME = ctor.NAME || ctor.name || fnName(ctor);
   const text = ctor.TEMPLATE || ctor.prototype.TEMPLATE;
 
-  ctor.$TEMPLATE = () => CACHE[name] || (CACHE[name] = text ? compileNode(parseXML(text, name)) : []);
+  ctor.$TEMPLATE = () => {
+    try {
+      return CACHE[name] || (CACHE[name] = text ? compileNode(parseXML(typeof text === 'function' ? text() : text, name)) : []);
+    } catch (ex) {
+      console.log('compile ' + name, ex);
+    }
+
+    return [];
+  };
 
   REGISTRY.set(name, ctor);
 };
@@ -2815,12 +2810,12 @@ function render_defineProperty(obj, key, value) { if (key in obj) { Object.defin
 
 const deep = [];
 const render = (c, $content, ctx) => {
-  c.eachChild(cc => !$content.has(cc.uid) ? cc.done() : 0);
-
-  if (!$content.size) {
+  if (!$content || !$content.size) {
+    c.eachChild(cc => cc.done());
     return;
   }
 
+  c.eachChild(cc => !$content.has(cc.uid) ? cc.done() : 0);
   deep.unshift('  ');
   const ch = c.children || (c.children = new Map());
   c.rendering = true;
@@ -2867,491 +2862,6 @@ const render = (c, $content, ctx) => {
   c.rendering = false;
   deep.shift();
 };
-// CONCATENATED MODULE: ./lib/armatura/resolve.js
-
-
-const resolveSlot = (owner, id, acc) => {
-  let $ = owner;
-
-  for (; $.owner && $.tag === 'ui:fragment'; $ = $.owner) {}
-
-  $.content.forEach(v => {
-    if (id) {
-      if (v.tag === $.tag + ':' + id) {
-        v.content.forEach(vv => acc.set(vv.uid, vv));
-      }
-    } else if (v.tag.slice(0, $.tag.length + 1) !== $.tag + ':') {
-      acc.set(v.uid, v);
-    }
-  });
-  return acc;
-};
-
-const resolveTemplateArray = function resolveTemplateArray(owner, tmpl) {
-  let acc = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Map();
-  return tmpl && tmpl.length ? tmpl.reduce((m, t) => resolveTemplate(owner, t, m), acc) : null;
-};
-
-const resolveProps = (props, c) => props && props.length ? props.reduce((acc, fn) => {
-  fn(c, acc);
-  return acc;
-}, {}) : null;
-
-function resolveRegular(acc, owner, _ref) {
-  let {
-    tag,
-    updates,
-    initials,
-    inits,
-    nodes,
-    uid,
-    id,
-    ref,
-    $if,
-    $each,
-    $tag
-  } = _ref;
-
-  if (tag === 'ui:slot') {
-    return resolveSlot(owner, id, acc);
-  }
-
-  const props = resolveProps(updates, owner);
-  const content = resolveTemplateArray(owner, nodes);
-  return acc.set(uid, {
-    tag,
-    id,
-    uid,
-    ref,
-    owner,
-    initials,
-    inits,
-    $if,
-    $each,
-    $tag,
-    props,
-    content
-  });
-}
-
-function resolveTemplate(owner, tmpl) {
-  let acc = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Map();
-
-  if (!tmpl) {
-    return acc;
-  }
-
-  if (tmpl.reduce) {
-    return tmpl.length ? resolveTemplateArray(owner, tmpl, acc) : acc;
-  }
-
-  return resolveRegular(acc, owner, tmpl);
-}
-// CONCATENATED MODULE: ./lib/armatura/dom.js
-
-
-
-
-const dom_doc = window.document;
-class dom_Element {
-  constructor($) {
-    let attrs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    this.elt = $.tag === '#text' ? dom_doc.createTextNode('') : dom_doc.createElement($.tag);
-    this.$attributes = {};
-    this.$ = $;
-    this.applyAttributes(attrs); // console.log('new element' + $.tag)
-  }
-
-  done() {
-    const e = this.elt; // console.log('done element' + this.$.tag)
-
-    const lstnrs = this.$listeners;
-
-    if (lstnrs) {
-      Object.keys(lstnrs).forEach(k => e.removeEventListener(k, lstnrs[k]));
-      this.$listeners = null;
-    }
-
-    const p = e.parentElement;
-
-    if (p) {
-      p.removeChild(e);
-    }
-
-    this.elt = this.$attributes = null;
-  }
-
-  set(delta) {
-    this.delta = this.delta ? Object.assign(this.delta, delta) : delta;
-    return this.$.nodes || delta && Object.keys(delta).length;
-  }
-
-  render(p) {
-    const e = this.elt;
-    const $ = this.$;
-
-    if ($.content) {
-      e.cursor = null;
-      render($, $.content, e);
-      e.cursor = null;
-    }
-
-    if (this.delta) {
-      this.applyAttributes(this.delta);
-      this.delta = null;
-    }
-
-    const before = p.cursor ? p.cursor.nextSibling : p.firstChild;
-
-    if (!before) {
-      p.appendChild(e);
-    } else if (e !== before) {
-      p.insertBefore(e, before);
-    }
-
-    p.cursor = e;
-  }
-
-  applyAttributes(theirs) {
-    const e = this.elt;
-    const mines = this.$attributes;
-
-    for (let key in theirs) {
-      if (theirs.hasOwnProperty(key) && !(DOM_VALUE_COMPARATORS[key] || DOM_VALUE_COMPARATORS._)(e, theirs[key], mines[key])) {
-        const value = theirs[key];
-        const setter = DOM_SETTERS[key]; // console.log('setAttribute' + this.$.tag, key, value)
-
-        if (setter) {
-          setter.call(this, e, value);
-        } else {
-          this.setAttribute(key, value);
-        }
-      }
-    }
-
-    this.$attributes = theirs;
-  }
-
-  setAttribute(key, value) {
-    if (value != null) {
-      if (typeof value === 'function') {
-        if (!this.listeners) {
-          this.listeners = new Map();
-        }
-
-        if (!this.listeners.has(key)) {
-          const [akey, ekey = akey] = key.split(':');
-          this.elt.addEventListener(ekey, value, false);
-          this.listeners.set(key, value);
-        }
-      } else {
-        this.elt.setAttribute(key, value);
-      }
-    } else {
-      if (this.listeners && this.listeners.has(key)) {
-        const [akey, ekey = akey] = key.split(':');
-        this.elt.removeEventListener(ekey, this.listeners.get(key));
-        this.listeners.delete(key);
-      } else {
-        this.elt.removeAttribute(key);
-      }
-    }
-  }
-
-}
-// CONCATENATED MODULE: ./lib/armatura/component.js
-
-
-
-
-function component_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { component_defineProperty(target, key, source[key]); }); } return target; }
-
-function component_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-class component_Component {
-  constructor(Ctor, options) {
-    Object.assign(this, options);
-
-    if (this.parent) {
-      this.api = this.parent.api;
-      this.impl = Ctor ? new Ctor({
-        ref: this.ref,
-        api: this.api,
-        props: this.props
-      }) : new dom_Element(this, this.props);
-    } else {
-      this.api = this.impl = new Ctor();
-    }
-
-    if (this.ref) {
-      const hidden = this.api[this.ref];
-      this.api[this.ref] = this.impl;
-      this.defer(() => {
-        this.api[this.ref] = hidden;
-      });
-    }
-  }
-
-  renderFragment() {
-    const acc = new Map();
-
-    if (this.$each) {
-      const $each = this.$each;
-      const {
-        $data: data
-      } = this.impl;
-      const {
-        itemId,
-        itemNode,
-        emptyNode,
-        loadingNode
-      } = $each;
-      const {
-        tag,
-        updates,
-        initials = {},
-        nodes,
-        uid
-      } = itemNode;
-      this.content = new Map();
-
-      if (data && data.length) {
-        data.forEach((d, index) => {
-          const id = "".concat(uid, "-$").concat(d.id || index);
-          let $this = this;
-
-          for (; $.owner && $.tag === 'ui:fragment'; $this = $.owner) {} // alt:
-          // const $this = Object.create(this)
-
-
-          $this.impl = {
-            [itemId]: d,
-            [itemId + 'Index']: index
-          };
-          resolveTemplate($this, {
-            tag,
-            initials,
-            updates,
-            nodes,
-            uid: id
-          }, acc);
-        });
-      } else if (!data) {
-        if (loadingNode) {
-          resolveTemplate(this.owner, loadingNode, acc);
-        }
-      } else if (!data.length) {
-        if (emptyNode) {
-          resolveTemplate(this.owner, emptyNode, acc);
-        }
-      }
-    } else if (this.$if) {
-      const $if = this.$if;
-      const {
-        $data
-      } = this.impl;
-      const node = $data ? $if.then : $if.else;
-      this.content = new Map();
-      resolveTemplate(this, node, acc);
-    } else if (this.$tag) {
-      const tag = this.impl.$data;
-      this.content = new Map();
-
-      if (tag) {
-        resolveTemplate(this, component_objectSpread({}, this.$tag, {
-          tag,
-          uid: this.impl.$data + ':' + this.uid
-        }), acc);
-      }
-    } else if (this.content) {
-      this.content.forEach((v, k) => acc.set(k, v));
-    }
-
-    render(this, acc, this.ctx);
-  }
-
-  render() {
-    this.ctx.cursor = this.prevElt;
-
-    if (this.impl.render) {
-      this.impl.render(this.ctx);
-    } else if (this.tag === 'ui:fragment') {
-      this.renderFragment();
-    } else {
-      render(this, resolveTemplate(this, this.impl.constructor.$TEMPLATE()), this.ctx);
-    }
-  }
-
-  init() {
-    if (this.isDone || this.isInited) {
-      return;
-    }
-
-    this.isInited = true;
-
-    if (this.inits) {
-      this.inits.forEach(f => this.defer(f(this)));
-      delete this.inits;
-    }
-
-    if (this.impl.init) {
-      this.defer(this.impl.init(this));
-    }
-  }
-
-  done() {
-    if (this.isDone) {
-      return;
-    }
-
-    this.isDone = true;
-
-    if (this.impl.done) {
-      this.impl.done(this);
-    }
-
-    this.eachChild(c => {
-      c.parent = null;
-      c.done();
-    });
-
-    if (this.parent) {
-      this.parent.children.delete(this.uid);
-    }
-
-    if (this.defered) {
-      this.defered.forEach(f => f(this));
-      delete this.defered;
-    }
-
-    cleanUp(this);
-  }
-
-  defer(fn) {
-    if (fn && typeof fn === 'function') {
-      (this.defered || (this.defered = [])).push(fn);
-    }
-  }
-
-  eachChild(fn) {
-    let ch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.children;
-
-    if (ch) {
-      ch.forEach(fn);
-    }
-  }
-
-  up(Δ) {
-    if (this.isDone) {
-      return;
-    }
-
-    if (Δ && Δ.then) {
-      Δ.then(r => this.up(r));
-      return;
-    }
-
-    const c = this;
-    const impl = c.impl;
-
-    if (this.impl.set) {
-      this.impl.set(Δ);
-    } else if (Δ) {
-      Object.entries(Δ).forEach((_ref) => {
-        let [k, their] = _ref;
-        const mine = impl[k];
-
-        if (typeof their !== 'undefined' && their !== mine) {
-          const setter = impl['set' + k[0].toUpperCase() + k.slice(1)];
-
-          if (setter) {
-            setter.call(impl, their);
-          } else {
-            impl[k] = their;
-          }
-        }
-      });
-    }
-
-    (this.parent.rendering ? this : this.parent).render();
-  }
-
-  prop(propId) {
-    let $ = this.impl.get ? this.impl.get() : this.impl;
-    const [pk, ...path] = propId.split('.');
-    const gettr = $[capitalize(pk, 'get')];
-    let value = undefined;
-
-    if (gettr) {
-      value = gettr.call($, this);
-    } else if (pk in $) {
-      value = $[pk];
-    } else {
-      return this.owner && this.tag === 'ui:fragment' ? this.owner.prop(propId) : value;
-    }
-
-    if (path.length) {
-      value = path.reduce((r, p) => r ? r[p] : r, value);
-    }
-
-    return typeof value === 'function' ? boundFn(this, value) : value;
-  }
-
-  connect(url, applicator) {
-    const cb = (error, r) => this.up(component_objectSpread({
-      error
-    }, applicator ? applicator(r) : r));
-
-    return this.api.emitter.connect(url, cb, this.impl.data);
-  }
-
-  emit(key, data) {
-    let $ = this;
-
-    for (; $.owner && $.tag === 'ui:fragment'; $ = $.owner) {}
-
-    if (key) {
-      this.api.emitter.emit(key, data).then(r => $.up(component_objectSpread({
-        error: null
-      }, r))).catch(error => $.up({
-        error
-      }));
-    } else {
-      $.up(component_objectSpread({
-        error: null
-      }, data));
-    }
-  }
-
-  string(key) {
-    return this.resource(key) || humanize(key);
-  }
-
-  resource(key) {
-    try {
-      return Object.R(key);
-    } catch (ex) {
-      console.error('resource', ex);
-      return null;
-    }
-  }
-
-  represent(value, key) {
-    try {
-      const [id, ...args] = key.split(':');
-      const fn = this.resource('presenters.' + id);
-      return fn ? fn.apply(this.impl, [value, ...args]) : value;
-    } catch (ex) {
-      console.error('reduce', ex);
-      return value;
-    }
-  }
-
-}
 // CONCATENATED MODULE: ./lib/armatura/url.js
 
 
@@ -3500,160 +3010,641 @@ function decodeValue(val) {
 function encodeValue(value) {
   return encodeURIComponent(typeof value === 'object' ? JSON.stringify(value) : "".concat(value));
 }
-// CONCATENATED MODULE: ./lib/armatura/api.js
+// CONCATENATED MODULE: ./lib/armatura/resolve.js
+
+
+const resolveSlot = (owner, id, acc) => {
+  let $ = owner;
+
+  for (; $.owner && $.tag === 'ui:fragment'; $ = $.owner) {}
+
+  $.content && $.content.forEach(v => {
+    if (id) {
+      if (v.tag === $.tag + ':' + id) {
+        v.content.forEach(vv => acc.set(vv.uid, vv));
+      }
+    } else if (v.tag.slice(0, $.tag.length + 1) !== $.tag + ':') {
+      acc.set(v.uid, v);
+    }
+  });
+  return acc;
+};
+
+const resolveTemplateArray = function resolveTemplateArray(owner, tmpl) {
+  let acc = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Map();
+  return tmpl && tmpl.length ? tmpl.reduce((m, t) => resolveTemplate(owner, t, m), acc) : null;
+};
+
+const resolveProps = (props, c) => props && props.length ? props.reduce((acc, fn) => {
+  fn(c, acc);
+  return acc;
+}, {}) : null;
+
+function resolveRegular(acc, owner, _ref) {
+  let {
+    tag,
+    updates,
+    initials,
+    inits,
+    nodes,
+    uid,
+    id,
+    ref,
+    $if,
+    $each,
+    $tag
+  } = _ref;
+
+  if (tag === 'ui:slot') {
+    return resolveSlot(owner, id, acc);
+  }
+
+  const props = resolveProps(updates, owner);
+  const content = resolveTemplateArray(owner, nodes);
+  return acc.set(uid, {
+    tag,
+    id,
+    uid,
+    ref,
+    owner,
+    initials,
+    inits,
+    $if,
+    $each,
+    $tag,
+    props,
+    content
+  });
+}
+
+function resolveTemplate(owner, tmpl) {
+  let acc = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Map();
+
+  if (!tmpl) {
+    return acc;
+  }
+
+  if (tmpl.reduce) {
+    return tmpl.length ? resolveTemplateArray(owner, tmpl, acc) : acc;
+  }
+
+  return resolveRegular(acc, owner, tmpl);
+}
+// CONCATENATED MODULE: ./lib/armatura/dom.js
 
 
 
-function api_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { api_defineProperty(target, key, source[key]); }); } return target; }
 
-function api_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+const dom_doc = window.document;
+class dom_Element {
+  constructor() {
+    let attrs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    let $ = arguments.length > 1 ? arguments[1] : undefined;
+    this.elt = $.tag === '#text' ? dom_doc.createTextNode('') : dom_doc.createElement($.tag);
+    this.$attributes = {};
+    this.$ = this.elt.$ = $;
+    this.applyAttributes(attrs); // console.log('new element' + $.tag)
+  }
+
+  done() {
+    const e = this.elt; // console.log('done element' + this.$.tag)
+
+    const lstnrs = this.$listeners;
+
+    if (lstnrs) {
+      Object.keys(lstnrs).forEach(k => e.removeEventListener(k, lstnrs[k]));
+      this.$listeners = null;
+    }
+
+    const p = e.parentElement;
+
+    if (p) {
+      p.removeChild(e);
+    }
+
+    this.elt = this.$attributes = null;
+  }
+
+  set(delta) {
+    this.delta = this.delta ? Object.assign(this.delta, delta) : delta;
+    return this.$.nodes || delta && Object.keys(delta).length;
+  }
+
+  render(p) {
+    const e = this.elt;
+    const $ = this.$;
+
+    if ($.content) {
+      e.cursor = null;
+      render($, $.content, e);
+      e.cursor = null;
+    }
+
+    if (this.delta) {
+      this.applyAttributes(this.delta);
+      this.delta = null;
+    }
+
+    const before = p.cursor ? p.cursor.nextSibling : p.firstChild;
+
+    if (!before) {
+      p.appendChild(e);
+    } else if (e !== before) {
+      p.insertBefore(e, before);
+    }
+
+    if (p.cursor) {
+      p.cursor.$.nextElt = e;
+    }
+
+    p.cursor = e;
+  }
+
+  applyAttributes(theirs) {
+    const e = this.elt;
+    const mines = this.$attributes;
+
+    for (let key in theirs) {
+      if (theirs.hasOwnProperty(key) && !(DOM_VALUE_COMPARATORS[key] || DOM_VALUE_COMPARATORS._)(e, theirs[key], mines[key])) {
+        const value = theirs[key];
+        const setter = DOM_SETTERS[key]; // console.log('setAttribute' + this.$.tag, key, value)
+
+        if (setter) {
+          setter.call(this, e, value);
+        } else {
+          this.setAttribute(key, value);
+        }
+      }
+    }
+
+    this.$attributes = theirs;
+  }
+
+  setAttribute(key, value) {
+    if (value != null) {
+      if (typeof value === 'function') {
+        if (!this.listeners) {
+          this.listeners = new Map();
+        }
+
+        if (!this.listeners.has(key)) {
+          const [akey, ekey = akey] = key.split(':');
+          this.elt.addEventListener(ekey, value, false);
+          this.listeners.set(key, value);
+        }
+      } else {
+        this.elt.setAttribute(key, value);
+      }
+    } else {
+      if (this.listeners && this.listeners.has(key)) {
+        const [akey, ekey = akey] = key.split(':');
+        this.elt.removeEventListener(ekey, this.listeners.get(key));
+        this.listeners.delete(key);
+      } else {
+        this.elt.removeAttribute(key);
+      }
+    }
+  }
+
+}
+// CONCATENATED MODULE: ./lib/armatura/component.js
 
 
 
-class api_EventEmitter {
-  constructor(api) {
-    const bundle = {};
 
-    this.notify = function (key) {
-      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
+function component_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { component_defineProperty(target, key, source[key]); }); } return target; }
+
+function component_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+class component_Component {
+  constructor(ctor, options) {
+    var _this = this;
+
+    Object.assign(this, options);
+    const {
+      ref,
+      parent,
+      props
+    } = this;
+    const Ctor = ctor || dom_Element;
+
+    if (parent) {
+      this.api = parent.api;
+
+      if (ref) {
+        Object.assign(props, {
+          api: this.api,
+          ref,
+          emit: function emit() {
+            return _this.emit(...arguments);
+          },
+          log: function log() {
+            for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = arguments[_key];
+            }
+
+            return console.log(ref + ': ', ...args);
+          },
+          error: _error => console.error(ref + ': ', _error)
+        });
       }
 
-      const listeners = bundle[key];
+      this.impl = new Ctor(props, this);
+      this.impl.$ = this;
+    } else {
+      this.api = this.impl = new Ctor();
+    }
 
-      if (listeners) {
-        bundle[key].forEach(e => e(...args));
+    if (ref) {
+      const hidden = this.api[ref];
+      this.api[ref] = this.impl;
+      this.defer(() => {
+        this.api[ref] = hidden;
+      });
+    }
+  }
+
+  resolveFragmentTemplate() {
+    const acc = new Map();
+
+    if (this.$each) {
+      const $each = this.$each;
+      const {
+        $data: data
+      } = this.impl;
+      const {
+        itemId,
+        itemNode,
+        emptyNode,
+        loadingNode
+      } = $each;
+      const {
+        tag,
+        updates,
+        initials = {},
+        nodes,
+        uid
+      } = itemNode;
+
+      if (data && data.length) {
+        if (!data.forEach) {
+          throw new Error('wrong ui:each data', data);
+        }
+
+        data.forEach((d, index) => {
+          const id = "".concat(uid, "-$").concat(d.id || index);
+          const $owner = Object.create(this.owner);
+          const $ownerImpl = Object.create(this.owner.impl);
+          Object.assign($ownerImpl, {
+            [itemId]: d,
+            [itemId + 'Index']: index
+          });
+          Object.assign($owner, {
+            impl: $ownerImpl
+          });
+          resolveTemplate($owner, {
+            tag,
+            initials,
+            updates,
+            nodes,
+            uid: id
+          }, acc);
+        });
+      } else if (!data) {
+        if (loadingNode) {
+          resolveTemplate(this.owner, loadingNode, acc);
+        }
+      } else if (!data.length) {
+        if (emptyNode) {
+          resolveTemplate(this.owner, emptyNode, acc);
+        }
       }
-    };
+    } else if (this.$if) {
+      const $if = this.$if;
+      const {
+        $data
+      } = this.impl;
+      const node = $data ? $if.then : $if.else;
+      resolveTemplate(this, node, acc);
+    } else if (this.$tag) {
+      const tag = this.impl.$data;
 
-    this.subscribe = (key, fn) => {
-      const uuid = nextId();
-      const listeners = bundle[key] || (bundle[key] = new Map());
-      fn();
-      listeners.set(uuid, fn);
-      return () => listeners.delete(uuid);
-    };
+      if (tag) {
+        resolveTemplate(this, component_objectSpread({}, this.$tag, {
+          tag,
+          uid: this.impl.$data + ':' + this.uid
+        }), acc);
+      }
+    } else if (this.content) {
+      this.content.forEach((v, k) => acc.set(k, v));
+    }
 
-    this.emit = (key, data) => {
-      const url = urlParse(key, {
+    return acc;
+  }
+
+  render() {
+    this.ctx.cursor = this.prevElt;
+
+    if (this.impl.render) {
+      this.impl.render(this.ctx);
+    } else {
+      render(this, this.resolveTemplate(), this.ctx);
+    }
+  }
+
+  resolveTemplate() {
+    if (this.tag === 'ui:fragment') {
+      return this.resolveFragmentTemplate();
+    }
+
+    return resolveTemplate(this, this.impl.constructor.$TEMPLATE());
+  }
+
+  init() {
+    if (this.isDone || this.isInited) {
+      return;
+    }
+
+    this.isInited = true;
+
+    if (this.inits) {
+      this.inits.forEach(f => this.defer(f(this)));
+      delete this.inits;
+    }
+
+    if (this.impl.init) {
+      this.defer(this.impl.init(this));
+    }
+  }
+
+  done() {
+    if (this.isDone) {
+      return;
+    }
+
+    this.isDone = true;
+
+    if (this.impl.done) {
+      this.impl.done(this);
+    }
+
+    this.eachChild(c => {
+      c.parent = null;
+      c.done();
+    });
+
+    if (this.parent) {
+      this.parent.children.delete(this.uid);
+
+      if (this.prevElt) {
+        this.prevElt.nextElt = this.nextElt;
+      }
+    }
+
+    if (this.defered) {
+      this.defered.forEach(f => f(this));
+      delete this.defered;
+    }
+
+    cleanUp(this);
+  }
+
+  defer(fn) {
+    if (fn && typeof fn === 'function') {
+      (this.defered || (this.defered = [])).push(fn);
+    }
+  }
+
+  eachChild(fn) {
+    let ch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.children;
+
+    if (ch) {
+      ch.forEach(fn);
+    }
+  }
+
+  up(Δ) {
+    if (this.isDone) {
+      return;
+    }
+
+    if (Δ && Δ.then) {
+      Δ.then(r => this.up(r));
+      return;
+    }
+
+    const c = this;
+    const impl = c.impl;
+    let changed = false;
+
+    if (this.impl.set) {
+      changed = this.impl.set(Δ);
+    } else if (Δ) {
+      Object.entries(Δ).forEach((_ref) => {
+        let [k, their] = _ref;
+        const mine = impl[k];
+
+        if (typeof their !== 'undefined' && their !== mine) {
+          const setter = impl['set' + k[0].toUpperCase() + k.slice(1)];
+
+          if (setter) {
+            setter.call(impl, their);
+          } else {
+            impl[k] = their;
+          }
+
+          changed = true;
+        }
+      });
+    }
+
+    this.render();
+
+    if (this.ref && changed) {
+      this.notify();
+    }
+  }
+
+  prop(propId) {
+    let $ = this.impl.get ? this.impl.get() : this.impl;
+    const [pk, ...path] = propId.split('.');
+    const gettr = $[capitalize(pk, 'get')];
+    let value = undefined;
+
+    if (gettr) {
+      value = gettr.call($, this);
+    } else if (pk in $) {
+      value = $[pk];
+    } else {
+      return this.owner && this.owner.prop && this.tag === 'ui:fragment' ? this.owner.prop(propId) : value;
+    }
+
+    if (path.length) {
+      value = path.reduce((r, p) => r ? r[p] : r, value);
+    }
+
+    return typeof value === 'function' ? boundFn(this, value) : value;
+  }
+
+  get actualOwner() {
+    let $ = this;
+
+    for (; $.owner && $.tag === 'ui:fragment'; $ = $.owner) {}
+
+    return $;
+  }
+
+  string(key) {
+    return this.resource(key) || humanize(key);
+  }
+
+  resource(key) {
+    try {
+      return Object.R(key);
+    } catch (ex) {
+      console.error('resource', ex);
+      return null;
+    }
+  }
+
+  pipe(value, key) {
+    try {
+      const [id, ...args] = key.split(':');
+      const fn = this.resource('pipes.' + id);
+      return fn ? fn.apply(this.impl, [value, ...args]) : value;
+    } catch (ex) {
+      console.error('reduce', ex);
+      return value;
+    }
+  }
+
+  raceCondition(key) {
+    const COUNTERS = this.$weak || (this.$weak = new Map());
+    const counter = 1 + (COUNTERS.get(key) || 0);
+    COUNTERS.set(key, counter);
+    return fn => {
+      if (counter === COUNTERS.get(key)) {
+        runInBrowser(fn);
+      }
+
+      ;
+    };
+  }
+  /**
+   *  Arrows.
+   */
+
+
+  notify() {
+    if (this.listeners && !this.notifying) {
+      this.notifying = true;
+      this.listeners.forEach(e => e(this.impl));
+      this.notifying = false;
+    }
+  }
+
+  subscribe(fn) {
+    const uuid = nextId();
+    const listeners = this.listeners || (this.listeners = new Map());
+    fn(this.impl);
+    listeners.set(uuid, fn);
+    return () => listeners.delete(uuid);
+  }
+
+  connect(key, applicator) {
+    const data = this.impl.data;
+    const url = urlParse(key, {
+      data
+    });
+    const {
+      type = this.ref,
+      target
+    } = url;
+    const ref = this.api[type];
+
+    if (!ref) {
+      console.error('connect: No such ref ' + type, key);
+    }
+
+    return ref && ref.$.subscribe(() => {
+      try {
+        const racer = this.raceCondition(type + ':load:' + target);
+
+        const callback = (error, r) => racer(() => this.up(component_objectSpread({
+          error
+        }, applicator ? applicator(r) : r)));
+
+        const result = ref.$.prop(target);
+        result && result.then ? result.then(r => callback(null, r), callback) : callback(null, result);
+      } catch (ex) {
+        console.error('connect ' + type + ':' + target, ex);
+        this.up({
+          [type + 'Error']: ex
+        });
+      }
+    });
+  }
+
+  emit(key, data) {
+    if (key) {
+      const event = urlParse(key, {
         data
       });
       const {
-        type,
+        type = this.ref,
         target
-      } = url;
+      } = event;
+      const racer = this.raceCondition(type + ':on:' + target);
+
+      const send = event.send = r => racer(() => this.up(r));
+
+      const ref = this.api[type];
 
       try {
-        const ref = type ? api[type] : api;
-        const method = ref && ref[capitalize(target, 'on')];
-        const result = method.call(ref, url);
-        const promise = result && result.then ? result : Promise.resolve(result);
-        return promise.then(r => {
-          this.notify(type);
-          return r;
-        });
+        if (!ref) {
+          throw new ReferenceError('emit: No such ref ' + type);
+        }
+
+        const method = ref[capitalize(target, 'on')];
+
+        if (!method) {
+          throw new ReferenceError('emit ' + type + ': No such method ' + capitalize(target, 'on'));
+        }
+
+        const result = method.call(ref, event, ref);
+        console.log(type + ':' + capitalize(target, 'on'), result, event, ref);
+
+        const up = r => racer(() => ref.$.up(r));
+
+        result && result.then ? result.then(up, error => up({
+          error
+        })) : up(result);
       } catch (ex) {
         console.error('emit ' + type + ':' + target, ex);
-        return Promise.reject(ex);
+        send({
+          error: ex
+        });
       }
-    };
-
-    this.connect = (key, cb, data) => {
-      const url = urlParse(key);
-      const {
-        type,
-        target
-      } = url;
-      return this.subscribe(type, () => {
-        try {
-          const ref = type ? api[type] : api;
-          const method = ref && ref[capitalize(target, 'get')];
-          const val = method.call(ref, api_objectSpread({}, url, {
-            data
-          }));
-
-          if (val && val.then) {
-            val.then(r => cb(null, r), cb);
-          } else {
-            cb(null, val);
-          }
-        } catch (ex) {
-          console.error('connect ' + type + ':' + target, ex);
-          cb(ex);
-        }
-      });
-    };
-  }
-
-}
-class Api {
-  constructor() {
-    this.emitter = new api_EventEmitter(this);
-  }
-
-}
-class ApiService {
-  constructor(_ref) {
-    let {
-      api,
-      ref,
-      props
-    } = _ref;
-    Object.assign(this, api_objectSpread({}, props, {
-      api,
-      ref
-    }));
-
-    this.notify = function () {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
-      }
-
-      return api.emitter.notify(ref, ...args);
-    };
-
-    this.emit = function () {
-      return api.emitter.emit(...arguments);
-    };
-
-    this.emitToMe = function (key) {
-      for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-        args[_key3 - 1] = arguments[_key3];
-      }
-
-      return api.emitter.emit(ref + ':' + key, ...args);
-    };
-
-    this.subscribe = function () {
-      return api.emitter.subscribe(...arguments);
-    };
-
-    this.log = function () {
-      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
-      }
-
-      return console.log(ref + ': ', ...args);
-    };
-
-    this.error = error => console.error(ref + ': ', error);
+    } else {
+      this.actualOwner.up(data);
+    }
   }
 
 }
 // CONCATENATED MODULE: ./lib/armatura/index.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "register", function() { return register; });
-/* concated harmony reexport EventEmitter */__webpack_require__.d(__webpack_exports__, "EventEmitter", function() { return api_EventEmitter; });
-/* concated harmony reexport Api */__webpack_require__.d(__webpack_exports__, "Api", function() { return Api; });
-/* concated harmony reexport ApiService */__webpack_require__.d(__webpack_exports__, "ApiService", function() { return ApiService; });
-/* concated harmony reexport urlParse */__webpack_require__.d(__webpack_exports__, "urlParse", function() { return urlParse; });
-/* concated harmony reexport urlStringify */__webpack_require__.d(__webpack_exports__, "urlStringify", function() { return urlStringify; });
 
 
 
 
 
 
-
+class Api {}
 
 function register() {
   for (var _len = arguments.length, types = new Array(_len), _key = 0; _key < _len; _key++) {

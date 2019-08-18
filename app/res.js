@@ -16,9 +16,9 @@ export default {
     "Use my liudzi", "Nex zhye volnosc", "Xto krutic, toj mae".`,
     version: '4.0.0',
     sitemap: [
-      { name: 'Naviny', id: 'news', link: '#/news', caption: '' },
-      { name: 'Objavy', id: 'ads', link: '#/ads', caption: '' },
-      { name: 'Karta', id: 'map', link: '#/map', caption: '' },
+      { name: 'Naviny', id: 'news', link: '#/news', description: 'Naviny na dobu' },
+      { name: 'Objavy', id: 'ads', link: '#/ads', description: 'Pryvatye abjavy' },
+      { name: 'Karta', id: 'map', link: '#/map', description: 'Na Miaste' },
       // { name: 'Calendar', id: 'calendar', link: '#/calendar', caption: '' },
       // { name: 'Liudzi', id: 'people', link: '#/people', caption: '' },
       // { name: 'Info', id: 'info', link: '#/info', caption: '' },
