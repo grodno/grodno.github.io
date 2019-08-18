@@ -15,15 +15,15 @@ export default {
     Tut liubiat pavtorac:
     "Use my liudzi", "Nex zhye volnosc", "Xto krutic, toj mae".`,
     version: '4.0.0',
+    sitemap: [
+      { name: 'Naviny', id: 'news', link: '#/news', caption: '' },
+      { name: 'Objavy', id: 'ads', link: '#/ads', caption: '' },
+      { name: 'Karta', id: 'map', link: '#/map', caption: '' },
+      // { name: 'Calendar', id: 'calendar', link: '#/calendar', caption: '' },
+      // { name: 'Liudzi', id: 'people', link: '#/people', caption: '' },
+      // { name: 'Info', id: 'info', link: '#/info', caption: '' },
+    ],
   },
-  sitemap: [
-    { name: 'Naviny', id: 'news', link: '#/news', caption: '' },
-    { name: 'Objavy', id: 'ads', link: '#/ads', caption: '' },
-    { name: 'Karta', id: 'map', link: '#/map', caption: '' },
-    // { name: 'Calendar', id: 'calendar', link: '#/calendar', caption: '' },
-    // { name: 'Liudzi', id: 'people', link: '#/people', caption: '' },
-    // { name: 'Info', id: 'info', link: '#/info', caption: '' },
-  ],
   media_links: [
     { name: 'S13.ru', id: '//s13.ru' },
     { name: 'Forum', id: '//forum.grodno.net/' }

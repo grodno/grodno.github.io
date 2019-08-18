@@ -36,7 +36,7 @@
 
   <template id="CardNews">
     <div class="my-1">
-      <Card title="{{name}}" subtitle="{{caption}}" ui:props="<-">
+      <Card title="{{name}}" subtitle="{{caption}}">
         <li ui:each="e of links"><a href="#/{{e.link}}" class="item">{{e.name|subject|translit}}</a></li>
       </Card>
     </div>

@@ -1,14 +1,11 @@
 
 import { urlParse, fnId, arrayToHash, dig } from 'furnitura';
 import { LocalStorage } from './LocalStorage';
-import { ApiService } from 'armatura';
 
-export class GSheetsService extends ApiService {
-  constructor(options) {
-    super(options);
-    this.local = new LocalStorage()
-  }
+export class GSheetsService {
+
   async init() {
+    this.local = new LocalStorage()
     this.syncAll();
   }
   syncAll() {
@@ -25,7 +22,7 @@ export class GSheetsService extends ApiService {
         Object.values(items).forEach(e => {
           const board = boards[e.boardId] || { name: '#' + e.boardId }
           e.boardName = board.name
-          e.link = 'https://forum.grodno.net/index.php?topic=' + e.id
+          e.link = 'https://forum.grodno.net/index.php?topic=' + e.topicId
           e.tags = Object.keys([e.tags, board.tags, board.action].reduce((acc, s) => {
             (s || '').split(',').forEach(ss => { if (ss) { acc[ss] = 1 } })
             return acc;

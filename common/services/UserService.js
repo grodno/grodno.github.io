@@ -1,6 +1,5 @@
-import { ApiService } from 'armatura';
 
-export class UserService extends ApiService {
+export class UserService {
     get fb() {
         return this.api.firebase;
     }
@@ -23,8 +22,7 @@ export class UserService extends ApiService {
                 // User is signed out.
                 // ...
             }
-            // ...
-            this.notify();
+            this.emit('signed')
         });
     }
     getInfo() {
@@ -47,5 +45,10 @@ export class UserService extends ApiService {
     }
     onLogout() {
         return this.fb.logout();
+    }
+    onSigned() {
+        return {
+            _: NaN
+        };
     }
 }

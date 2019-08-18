@@ -1,21 +1,20 @@
 import { sortBy } from 'furnitura';
 import { translit } from 'mova';
-import { ApiService } from 'armatura';
 
 const analyzeDataByTags = (data, selection, initials = '') => {
-  const sel = [...selection]
+  const sel = Object.values(selection).filter(Boolean)
   const reshta = { id: 'zzz', name: '[reshta]', count: 0, selected: false }
   if (sel.length || !initials) {
     const actualData = data.filter(e => sel.reduce((r, s) => r && e.$tags.has(s), true));
     const tagsHash = actualData.reduce((r, e) => {
       e.$tags.forEach(id => {
         if (id === reshta.id) { return r; }
-        const tag = r[id] || (r[id] = { id, name: id, count: 0, selected: selection.has(id) });
+        const tag = r[id] || (r[id] = { id, name: id, count: 0, selected: selection[id] });
         tag.count++
       })
       return r;
     }, {});
-    if (sel.length === 1 && selection.has(reshta.id)) {
+    if (sel.length === 1 && selection[reshta.id]) {
       tagsHash[reshta.id] = Object.assign(reshta, { selected: true });
     }
     return { actualData, tagsHash }
@@ -56,19 +55,17 @@ class Item {
   get $searchData() { return this.$$searchData || (this.$$searchData = (this.title + ' ' + translit(this.title) + ' ' + this.preview + ' ' + translit(this.preview)).toLowerCase()) }
 }
 
-export class Collection extends ApiService {
+export class Collection {
 
-  constructor(options) {
-    super(options)
-    this.selection = new Set();
+  constructor() {
+    this.selection = {};
     this.shownLimit = 50;
     this.sortBy = '-ts';
     this.kluqPoshuku = ''
   }
 
   setData(data) {
-    this.data = data.filter(e => e.status !== 'deleted').map(e => new Item(e));
-    this.notify();
+    this.data = !data ? [] : data.filter(e => e.status !== 'deleted').map(e => new Item(e));
   }
 
   getInfo() {
@@ -86,7 +83,7 @@ export class Collection extends ApiService {
     return {
       tags,
       data: sortedData.slice(0, this.shownLimit),
-      openEntry: ({ id }) => this.emitToMe("openEntry", this.data.find(e => e.id === id)),
+      openEntry: ({ id }) => this.emit("openEntry", this.data.find(e => e.id === id)),
       counts: {
         total: this.data.length,
         actual: actualData.length,
@@ -96,14 +93,19 @@ export class Collection extends ApiService {
         kluq: this.kluqPoshuku,
         value: this.inputKluqPoshuku,
         suggestions: this.kluqPoshuku === this.inputKluqPoshuku ? null : suggestions,
-        input: (data) => this.emitToMe("inputKluq", data),
-        enter: (data) => this.emitToMe("znajdzPoKluqu", data),
+        input: (data) => this.emit("inputKluq", data),
+        enter: (data) => this.emit("znajdzPoKluqu", data),
       }
     }
   }
 
-  onTag({ data: { id } }) {
-    if (this.selection.has(id)) { this.selection.delete(id); } else { this.selection.add(id); }
+  onTag({ data: { id } }, { selection }) {
+    return {
+      selection: {
+        ...selection,
+        [id]: selection[id] ? '' : id
+      }
+    }
   }
 
   onZnajdzPoKluqu({ data: { value } }) {
@@ -123,61 +125,61 @@ export class Collection extends ApiService {
   /**
    * New Entry
    */
-  getNewEntry() {
-    return this.newEntry || {};
-  }
 
   onOpenAddNew({ data }) {
-    this.newEntry = {
-      ...data,
-      ...this.newEntry,
-      cancel: () => this.emitToMe("cancelAddNew"),
-      submit: (data) => this.emitToMe("saveNew", data),
-      open: true
-    };
+    return {
+      newEntry: {
+        ...data,
+        ...this.newEntry,
+        cancel: () => this.emit("cancelAddNew"),
+        submit: (data) => this.emit("saveNew", data),
+        open: true
+      }
+    }
   }
 
   onCancelAddNew() {
-    this.newEntry = { ...this.newEntry, open: false };
+    return {
+      newEntry: { ...this.newEntry, open: false }
+    }
   }
 
   async onSaveNew({ data }) {
     delete data.id;
     await this.upsert(data)
-    this.newEntry = { ...this.newEntry, data, open: false };
+    return {
+      newEntry: { ...this.newEntry, data, open: false }
+    }
   }
   /**
    * Entry
    */
-  getEntry() {
-    return this.entry || {
-
-    };
-  }
 
   onOpenEntry({ data, data: { id } }) {
-    this.entry = {
-      id,
-      data: Object.entries(data).reduce((r, [k, v]) => { if (k[0] !== '$') { r[k] = v }; return r }, {}),
-      ...this.entry,
-      cancel: () => this.emitToMe("cancelEntry"),
-      submit: (data) => this.emitToMe("saveEntry", data),
-      delete: () => this.emitToMe("deleteEntry", { id }),
-      open: true
-    };
+    return {
+      entry: {
+        id,
+        data: Object.entries(data).reduce((r, [k, v]) => { if (k[0] !== '$') { r[k] = v }; return r }, {}),
+        ...this.entry,
+        cancel: () => this.emit("cancelEntry"),
+        submit: (data) => this.emit("saveEntry", data),
+        delete: () => this.emit("deleteEntry", { id }),
+        open: true
+      }
+    }
   }
 
   onCancelEntry() {
-    this.entry = { open: false };
+    return { entry: { open: false } }
   }
 
   async onSaveEntry({ data }) {
     await this.upsert(data)
-    this.entry = { open: false };
+    return { entry: { open: false } }
   }
   async onDeleteEntry({ data }) {
     await this.upsert({ ...data, status: 'deleted' });
-    this.entry = { open: false }
+    return { entry: { open: false } }
   }
 
 }

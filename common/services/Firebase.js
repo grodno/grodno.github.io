@@ -1,7 +1,6 @@
 import '../../vendor/firebase/firebase-app.js';
 import '../../vendor/firebase/firebase-firestore.js';
 import '../../vendor/firebase/firebase-auth.js';
-import { ApiService } from 'armatura';
 
 const unpackDocs = s => s.docs.reduce((r, e) => {
   const d = e.data();
@@ -10,11 +9,10 @@ const unpackDocs = s => s.docs.reduce((r, e) => {
   return r;
 }, []);
 
-export class Firebase extends ApiService {
-  constructor(options) {
-    super(options)
+export class Firebase {
+  constructor({ config }) {
     const firebase = window.firebase;
-    firebase.initializeApp(this.config);
+    firebase.initializeApp(config);
     this.firestore = firebase.firestore();
     this.firestore.enablePersistence({ synchronizeTabs: true }).catch(function (err) {
       if (err.code === 'failed-precondition') {

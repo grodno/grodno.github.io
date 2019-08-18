@@ -2,7 +2,7 @@
   <template id="NewsPage">
     <ui:fragment>
       <Collection ui:ref="news"
-                  data="<- db://index/news"
+                  data="<- db://news"
                   upsert="-> db://upsert/news"
                   initials=":news.initialTags" />
       <NewsList ui:props="<- news://info" />

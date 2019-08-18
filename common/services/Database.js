@@ -1,19 +1,19 @@
-import { urlParse, fnId, arrayToHash, dig } from 'furnitura';
+import { capitalize, fnId, arrayToHash, dig } from 'furnitura';
 import Dexie from 'dexie';
-import { ApiService } from 'armatura';
 
-export class DatabaseService extends ApiService {
-  constructor(options) {
-    super(options);
-    const { schema, name = 'dexie' } = this;
+export class DatabaseService {
+  constructor({ api: { firebase }, schema, name = 'dexie' }) {
     const dexie = new Dexie(name, 1);
     dexie.version(1).stores({ ...schema, _meta: 'id' });
     Object.assign(this, {
       dexie,
-      remote: this.api.firebase,
+      remote: firebase,
       cache: {},
       dbkeys: Object.keys(schema)
     });
+    this.dbkeys.forEach(key => {
+      this['get' + capitalize(key)] = () => this.getIndex(key)
+    })
   }
   openDb() {
     // Open the database
@@ -26,7 +26,7 @@ export class DatabaseService extends ApiService {
   }
   async init() {
     await this.openDb();
-    this.syncAll()
+    this.emit('opened')
   }
   getMeta() {
     return this.getTable('_meta').toArray().then(arr => arrayToHash(arr))
@@ -46,9 +46,9 @@ export class DatabaseService extends ApiService {
         this.log('sync', coll, last_modified, docs);
         return d;
       }, { _meta: [] })))
-      .then(this.notify)
       .then(() => { this.log('sync all: OK'); })
-      .catch((err) => this.log('sync all: error: ' + err));;
+      .catch((err) => this.log('sync all: error: ' + err))
+      .then(() => ({ _: NaN }))
   }
   syncTable(id) {
     return this.getTableMeta(id)
@@ -70,9 +70,7 @@ export class DatabaseService extends ApiService {
   getDict({ data: { dict } }) {
     return this.getCollection('dict').where('type').equals(dict).toArray();
   }
-  getIndex(url) {
-    url = urlParse(url);
-    const [kind, index, indexKey, desc] = url.path;
+  getIndex(kind) {
     if (!this.dbkeys.includes(kind)) {
       return null;
     }
@@ -114,13 +112,21 @@ export class DatabaseService extends ApiService {
     }
     await this.update({ [kind]: [data] });
     this.log('onUpsert', data);
+    return { _: NaN }
   }
   async onUpdate({ path: [kind], data }) {
     await this.update({ [kind]: [data] });
     this.log('Updated', data);
+    return { _: NaN }
+
   }
   async onDelete({ path: [kind, id] }) {
     await this.update({ [kind]: [{ id, status: 'deleted' }] });
     this.log('Deleted', id);
+    return { _: NaN }
+
+  }
+  onOpened() {
+    return this.syncAll()
   }
 }

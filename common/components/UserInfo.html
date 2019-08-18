@@ -7,12 +7,12 @@
           <div class="loading"></div>
         </ui:then>
         <ui:else>
-          <ui:fragment ui:if="!email">
+          <ui:fragment ui:if="!info.email">
             <ui:then>
               <a click="-> user:login" class="anchor" aria-hidden="true">:login</a>
             </ui:then>
             <ui:else>
-              <UserPanel ui:props="<-" />
+              <UserPanel ui:props="{{info}}" />
             </ui:else>
           </ui:fragment>
         </ui:else>

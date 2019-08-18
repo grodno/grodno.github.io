@@ -15,7 +15,7 @@ import res from './res.js';
 import meta from './meta.js'
 import { presenters } from '../common/presenters';
 
-Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))({ ...res, ...meta.result, presenters });
+Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))({ ...res, ...meta.result, pipes: presenters });
 
 const ref = {};
 const launch = () => {
