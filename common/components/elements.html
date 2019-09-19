@@ -1,48 +1,48 @@
 <body id="app">
     <template id="Toast">
-        <div ui:if="!closed"
+        <div ui:if={!closed}
              class="toast toast-primary"
              style="position:fixed; right:5rem; bottom:1rem; width: 20rem;">
             <button class="btn btn-clear float-right"
                     click="->"
                     data-closed="true"></button>
-            <p>{{message}}</p>
+            <p>{message}</p>
         </div>
     </template>
 
     <template id="PageCaption">
-        <h3 class="s-title badge text-gray my-2" data-badge="{{badge}}">{{caption}}</h3>
+        <h3 class="s-title badge text-gray my-2" data-badge={badge}>{caption}</h3>
     </template>
 
     <template id="Button">
-        <button class="btn btn-{{mode}}"
-                data="{{data}}"
-                click="{{action}}">
-            <i ui:if="icon" class="icon icon-{{icon}}"></i>
-            <span data-tooltip="{{tooltip}}">{{title}}</span>
+        <button class="btn btn-{mode}"
+                data={data}
+                click={action}>
+            <i ui:if={icon} class="icon icon-{icon}"></i>
+            <span data-tooltip={tooltip}>{title}</span>
         </button>
     </template>
 
     <template id="BigRedButton">
         <button class="btn tooltip tooltip-left fixed bg-error circle "
                 style="right:1rem; bottom:1rem; width: 2rem;"
-                data="{{data}}"
-                data-tooltip="{{tooltip}}"
-                click="{{action}}">
+                data={data}
+                data-tooltip={tooltip}
+                click={action}>
             <i class="icon icon-plus"></i>
         </button>
     </template>
 
     <template id="Avatar">
-        <figure class="avatar avatar- bg-primary" data-initial="{{initial}}">
-            <img src="{{image}}" class="img-responsive" />
+        <figure class="avatar avatar- bg-primary" data-initial={initial}>
+            <img src={image} class="img-responsive" />
         </figure>
     </template>
 
     <template id="Hero">
         <div class="hero bg-dark p-0">
             <div class="hero-body px-2">
-                <h1>{{title}}</h1>
+                <h1>{title}</h1>
             </div>
         </div>
     </template>
@@ -50,20 +50,20 @@
     <template id="IFrame">
         <iframe width="100%" height="450" frameborder="0"
                 style="border:0"
-                src="{{src}}"
+                src={src}
                 allowfullscreen="1"></iframe>`
     </template>
 
     <template id="Dropdown">
         <div class="dropdown">
             <a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-                {{name}}<i class="icon icon-caret"></i>
+                {name}<i class="icon icon-caret"></i>
             </a>
             <!-- menu component -->
             <ul class="menu" style="right:0;left:auto;">
-                <li ui:each="item of data" class="menu-item active:{{item.id}}=={{value}}" data-id="{{item.id}}"
-                    data-name="{{item.name}}" click="{{onChanged}}">
-                    <a>{{item.name}}</a>
+                <li ui:for="item of data" class="menu-item active:{item.id}=={value}" data-id={item.id}
+                    data-name={item.name} click={onChanged}>
+                    <a>{item.name}</a>
                 </li>
             </ul>
         </div>
@@ -71,13 +71,13 @@
 
     <template id="Select">
         <select class="form-select"
-                change="{{change}}">
-            <option selected="{{selected}}"
+                change={change}>
+            <option selected={selected}
                     value=""
-                    ui:if="!required">...</option>
-            <option ui:each="option of options"
-                    selected="{{selected}}"
-                    value="{{option.id}}">{{option.name}}</option>
+                    ui:if={!required}>...</option>
+            <option ui:for="option of options"
+                    selected={selected}
+                    value={option.id}>{option.name}</option>
         </select>
     </template>
 
@@ -88,21 +88,21 @@
                 <div class="input-group input-inline">
                     <input class="form-input" type="search"
                            placeholder=":kluq_poshuku"
-                           keypress="{{input}}"
-                           value="{{value}}" />
+                           keypress={input}
+                           value={value} />
                 </div>
                 <i class="form-icon icon icon-cross c-hand" data-value=""
-                   click="{{enter}}"
-                   ui:if="value"></i>
+                   click={enter}
+                   ui:if={value}></i>
             </div>
-            <ul class="menu" ui:if="suggestions">
-                <li class="menu-item" ui:each="item of suggestions" data-value="{{item.id}}" click="{{enter}}">
+            <ul class="menu" ui:if={suggestions}>
+                <li class="menu-item" ui:for="item of suggestions" data-value={item.id} click={enter}>
                     <a>
                         <div class="tile tile-centered">
                             <div class="tile-icon">
                             </div>
                             <div class="tile-content">
-                                {{item.name}}
+                                {item.name}
                             </div>
                         </div>
                     </a>

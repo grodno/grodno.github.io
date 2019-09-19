@@ -5,43 +5,43 @@
 </template>
 
 <template id="PlacesListItem">
-  <div class="column col-4 col-sm-12" data-modal="true" click="{{assign}}">
+  <div class="column col-4 col-sm-12" data-modal="true" click={assign}>
     <div class="card">
       <div class="card-image">
-        <Parallax backImage="{{item.photo}}" />
+        <Parallax backImage={item.photo} />
       </div>
       <div class="card-header">
-        <h5 class="card-title">{{ item.title | subject }}</h5>
+        <h5 class="card-title">{ item.title | subject }</h5>
       </div>
     </div>
-    <Modal title="{{item.title|subject}}" ui:if="modal" close="{{ assign }}">
-      <span>{{ item.description }}</span>
-      <a href="{{item.link}}" target="_blank">More...</a>
+    <Modal title={item.title|subject} ui:if={modal} close={ assign }>
+      <span>{ item.description }</span>
+      <a href={item.link} target="_blank">More...</a>
     </Modal>
   </div>
 </template>
 
 <template id="PlacesList">
   <div class="columns">
-    <PlacesListItem item="{{item}}" ui:each="item of data" />
+    <PlacesListItem item={item} ui:for="item of data" />
   </div>
 </template>
 
 <template id="RoutesList">
   <div class="columns" style="max-width:350px;">
-    <div class="column col-12 col-sm-12 mt-1" ui:each="item of data">
+    <div class="column col-12 col-sm-12 mt-1" ui:for="item of data">
       <div class="card">
         <div class="card-header">
           <div class="tile">
             <div class="tile-icon">
-              <figure class="avatar avatar-lg bg-primary" data-initial="{{item.title|initials}}">
-                <img src="{{item.photo}}" class="img-responsive" />
+              <figure class="avatar avatar-lg bg-primary" data-initial={item.title|initials}>
+                <img src={item.photo} class="img-responsive" />
               </figure>
             </div>
             <div class="tile-content">
               <p class="tile-title">
                 <div>
-                  <a class="header" data="{{item}}" click="-> selectRoute">{{ item.title | subject }}</a>
+                  <a class="header" data={item} click="-> selectRoute">{ item.title | subject }</a>
                 </div>
               </p>
             </div>

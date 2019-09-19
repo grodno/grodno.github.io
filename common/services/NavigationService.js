@@ -1,19 +1,23 @@
 import { urlParse, urlStringify } from 'furnitura';
+import { AService } from './AService';
 
-export class NavigationService {
+export class NavigationService extends AService {
   init() {
     this.prevHash = ''
-    const hashchange = () => {
+    this.hashchange = () => {
 
       const hash = window.location.hash.slice(1);
       if (hash[0] === '/' && hash !== this.prevHash) {
-        this.emit('hash', { value: hash.slice(1) });
+        this.emit('this:hash', { value: hash.slice(1) });
         this.prevHash = hash
       }
     }
-    window.addEventListener('hashchange', hashchange);
-    setTimeout(() => hashchange(), 0);
-    return () => window.removeEventListener('hashchange', hashchange)
+    window.addEventListener('hashchange', this.hashchange);
+    setTimeout(() => this.hashchange(), 0);
+  }
+
+  done() {
+    () => window.removeEventListener('hashchange', this.hashchange)
   }
 
   update(d) {

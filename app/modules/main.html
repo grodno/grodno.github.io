@@ -5,7 +5,7 @@
         <div class="column col-12">
           <h4 class="my-2">:app.slogan</h4>
           <div class="tile">
-            <div class="tile-icon bg-secondary" data-id="{{id}}">
+            <div class="tile-icon bg-secondary" data-id={id}>
               <img src=":app.faceImg" width="120" />
             </div>
             <div class="tile-content">
@@ -14,8 +14,8 @@
             </div>
           </div>
         </div>
-        <div class="column col-4 col-sm-12" ui:each="item of <-nav:/sitemap">
-          <MainCard ui:props="{{item}}" />
+        <div class="column col-4 col-sm-12" ui:for="item of <-nav:/sitemap">
+          <MainCard ui:props={item} />
         </div>
       </div>
       <div class="embed-responsive embed-responsive-4by3">
@@ -36,8 +36,8 @@
 
   <template id="MainCard">
     <div class="my-1">
-      <Card title="{{name}}" subtitle="{{caption}}" link="{{link}}">
-        <span>{{description|subject|translit}}</span>
+      <Card title={name} subtitle={caption} link={link}>
+        <span>{description|subject|translit}</span>
       </Card>
     </div>
   </template>

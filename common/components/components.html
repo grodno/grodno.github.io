@@ -9,18 +9,18 @@
 
     <template id="NavTree">
         <ul class="nav">
-            <li class="nav-item {{item.class}}" ui:each="item of data">
-                <a href="#{{item.id}}">
-                    <span>{{item.name}}</span>
-                    <span ui:if="item.label" class="label label-error">{{item.label}}</span>
+            <li class="nav-item {item.class}" ui:for="item of data">
+                <a href="#{item.id}">
+                    <span>{item.name}</span>
+                    <span ui:if={item.label} class="label label-error">{item.label}</span>
                 </a>
-                <NavTree ui:if="item.subs" data="{{item.subs}}" />
+                <NavTree ui:if={item.subs} data={item.subs} />
             </li>
         </ul>
     </template>
 
     <template id="Panel">
-        <div class="panel" style="{{style}}">
+        <div class="panel" style={style}>
             <div class="panel-header">
                 <div class="panel-title">
                     <ui:slot id="title" />
@@ -40,14 +40,14 @@
 
     <template id="Card">
         <div class="card">
-            <div class="card-image" ui:if="image">
-                <img src="{{image}}" class="img-responsive" />
+            <div class="card-image" ui:if={image}>
+                <img src={image} class="img-responsive" />
             </div>
             <div class="card-header">
-                <a ui:if="title" href="{{link}}">
-                    <h5 class="card-title">{{title}}</h5>
+                <a ui:if={title} href={link}>
+                    <h5 class="card-title">{title}</h5>
                 </a>
-                <div ui:if="subtitle" class="card-subtitle text-gray">{{subtitle}}</div>
+                <div ui:if={subtitle} class="card-subtitle text-gray">{subtitle}</div>
                 <ui:slot id="header" />
             </div>
             <div class="card-body">
@@ -82,8 +82,8 @@
             <section class="navbar-section mx-2">
                 <ui:slot />
             </section>
-            <section class="navbar-center" ui:if="logo">
-                <img src="{{logo}}" alt="" height="40" width="40" />
+            <section class="navbar-center" ui:if={logo}>
+                <img src={logo} alt="" height="40" width="40" />
             </section>
             <section class="navbar-section mx-2">
                 <ui:slot id="right" />
@@ -93,31 +93,31 @@
 
     <template id="Chips">
         <div class="ui mini labels">
-            <span class="chip c-hand bg-success:{{tag.selected}} bg-secondary:{{tag.selected|not}} badge:{{tag.selected|not}}"
-                  data-badge="{{tag.count|ifAbove:3}}"
-                  data-id="{{tag.id}}"
-                  click="{{click}}"
-                  ui:each="tag of data">
-                <span>{{tag.name}}<small ui:if="tag.selected2">{{tag.count}}</small></span>
+            <span class="chip c-hand bg-success:{tag.selected} bg-secondary:{tag.selected|not} badge:{tag.selected|not}"
+                  data-badge={tag.count|ifAbove:3}
+                  data-id={tag.id}
+                  click={click}
+                  ui:for="tag of data">
+                <span>{tag.name}<small ui:if={tag.selected2}>{tag.count}</small></span>
             </span>
         </div>
     </template>
 
     <template id="Tabs">
         <ul class="tab tab-block">
-            <li class="tab-item  c-hand" ui:each="item of data">
-                <a href="#tab?tab={{item.value}}">{{item.name}}</a>
+            <li class="tab-item  c-hand" ui:for="item of data">
+                <a href="#tab?tab={item.value}">{item.name}</a>
             </li>
         </ul>
     </template>
 
     <template id="Modal">
-        <div class="modal modal active:{{open}}">
-            <a class="modal-overlay" aria-label="Close" click="{{close}}"></a>
+        <div class="modal modal active:{open}">
+            <a class="modal-overlay" aria-label="Close" click={close}></a>
             <div class="modal-container">
                 <div class="modal-header">
-                    <a class="btn btn-clear float-right" aria-label=":close" click="{{close}}"></a>
-                    <div class="modal-title h5" ui:if="title">{{title}}</div>
+                    <a class="btn btn-clear float-right" aria-label=":close" click={close}></a>
+                    <div class="modal-title h5" ui:if={title}>{title}</div>
                     <ui:slot id="header" />
                 </div>
                 <div class="modal-body" style="max-height: 70vh;">

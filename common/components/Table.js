@@ -1,24 +1,24 @@
 import { filterFn } from '../core/utils.js'
 
 export class Table {
-  TEMPLATE () {
+  TEMPLATE() {
     return /* html */`
     <table class="table table-scroll">
         <thead>
         <tr>
-            <th><a href="#sort?field={{col1.id}}">{{col1.name}}</a></th>
-            <th ui:each="col of columns"><a click="{{onHeader}}" data-value="{{colField}}">{{colName}}</a></th>
+            <th><a href="#sort?field={col1.id}">{col1.name}</a></th>
+            <th ui:for="col of columns"><a click={onHeader} data-value={colField}>{colName}</a></th>
         </tr>
         </thead>
         <tbody>
-        <tr ui:each="item of items">
-            <td><a click="{{onItem}}" data-value="{{item.id}}">{{cell1}}</a></td>
-            <td ui:each="col of columns"><ui:type>{{cell}}</ui:type></td>
+        <tr ui:for="item of items">
+            <td><a click={onItem} data-value={item.id}>{cell1}</a></td>
+            <td ui:for="col of columns"><ui:type>{cell}</ui:type></td>
         </tr>
         </tbody>
     </table>`
   }
-  assign (delta) {
+  assign(delta) {
     if (delta && (delta.filter || delta.data || delta.sortBy)) {
       const filter = delta.filter || this.filter
       const data = delta.data || this.data
@@ -30,23 +30,23 @@ export class Table {
     }
     this.super_assign(delta)
   }
-  setColumns (v) {
+  setColumns(v) {
     this.col1 = v[0]
     this.columns = v.slice(1)
   }
-  getCell1 () {
+  getCell1() {
     return this.item[this.col1.id]
   }
-  getColName () {
+  getColName() {
     return this.col.name || this.col.id
   }
-  getColField () {
+  getColField() {
     return this.col.field || this.col.id
   }
-  getCell () {
+  getCell() {
     return this.item[this.col.id]
   }
-  getType () {
+  getType() {
     return this.itemIndex % 2 === 0 ? 'b' : 'i'
   }
 }

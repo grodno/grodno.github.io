@@ -14,12 +14,12 @@
     <TodoStore ui:ref="todo" />
     <section class="todoapp">
       <Caption title=":title" />
-      <ui:fragment ui:if="<- todo:notEmpty">
+      <ui:fragment ui:if={<- todo:notEmpty}>
         <Main />
         <Filter current="<- todo:filterId">
           <span class="todo-count"><strong><- todo:itemsLeft</strong><span>:items_left</span></span>
           <Filter:right>
-            <button class="clear-completed" ui:if="<- todo:hasCompleted" click="-> todo:purge">:clear_completed</button>
+            <button class="clear-completed" ui:if={<- todo:hasCompleted} click="-> todo:purge">:clear_completed</button>
           </Filter:right>
         </Filter>
       </ui:fragment>
@@ -30,7 +30,7 @@
 
 <script type="text/x-template" id="Caption">
   <header class="header">
-    <h1>{{title|upper}}</h1>
+    <h1>{title|upper}</h1>
     <input type="text" class="new-todo" placeholder=":new_todo_hint" autofocus="true" enter="-> todo:add"/> 
   </header>
 </script>
@@ -45,7 +45,7 @@
 
 <script type="text/x-template" id="TodoList">
   <ul class="todo-list">
-    <TodoItem ui:props="{{item}}" ui:each="item of data"/>
+    <TodoItem ui:props={item} ui:for="item of data"/>
   </ul>
 </script>
 
@@ -53,8 +53,8 @@
   <footer class="footer">
     <ui:slot/>
     <ul class="filters">
-      <li ui:each="filter of :filters">
-        <a class="selected:{{current}}=={{filter.id}}" id="{{filter.id}}" href="#{{filter.id}}">{{filter.id|capitalize}}</a>
+      <li ui:for="filter of :filters">
+        <a class="selected:{current}=={filter.id}" id={filter.id} href="#{filter.id}">{filter.id|capitalize}</a>
       </li>
     </ul>
     <ui:slot id="right"/>
@@ -75,13 +75,13 @@
 </script>
 
 <script type="text/x-template" id="TodoItem">
-  <li class="completed:{{completed}} editing:{{editing}}">
+  <li class="completed:{completed} editing:{editing}">
     <div class="view">
-      <input class="toggle" type="checkbox" checked="{{completed}}" data-id="{{id}}" click="-> todo:inverse"/>
-      <label data-editing="true" dblclick="->">{{name}}</label>
-      <button ui:if="completed" class="destroy" data-id="{{id}}" click="-> todo:rm"></button>
+      <input class="toggle" type="checkbox" checked={completed} data-id={id} click="-> todo:inverse"/>
+      <label data-editing="true" dblclick="->">{name}</label>
+      <button ui:if={completed} class="destroy" data-id={id} click="-> todo:rm"></button>
     </div>
-    <input type="text" class="edit" value="{{name}}" data-editing="false" data-id="{{id}}" enter="-> todo:save" blur="->"/>
+    <input type="text" class="edit" value={name} data-editing="false" data-id={id} enter="-> todo:save" blur="->"/>
   </li>
 </script>
 
@@ -119,26 +119,27 @@
       hint: 'Double-click to edit a todo',
       new_todo_hint: 'What needs to be done?',
       filters: FILTERS,
-      presenters: { upper, capitalize }
     }
   );
 
   // service component
-  class TodoStore extends armatura.ApiService {
-    constructor(options) {
-      super(options)
+  class TodoStore {
+    constructor() {
       //load data from storage
       this.data = JSON.parse(localStorage.getItem('TODO:1') || 'null') || { items: [], nextId: 1 }
       // generate action handlers
       Object.entries(ACTIONS).forEach(([key, fn]) => {
-        this['on' + capitalize(key)] = ({ data: payload }) =>
-          localStorage.setItem('TODO:1', JSON.stringify(Object.assign(this.data, fn(this.data, payload))))
+        this['on' + capitalize(key)] = ({ data: payload }) => {
+          const data = Object.assign({}, this.data, fn(this.data, payload))
+          localStorage.setItem('TODO:1', JSON.stringify(data))
+          return { data }
+        }
       })
     }
     // hook on init
     init() {
       // use hash as a filter key. invoke immediately.
-      (onhash => { window.onhashchange = onhash; return onhash })(() => this.emitToMe('filter', { filterId: window.location.hash.slice(1) || FILTERS[0].id }))()
+      (onhash => { window.onhashchange = onhash; return onhash })(() => this.$.emit('this:filter', { filterId: window.location.hash.slice(1) || FILTERS[0].id }))()
     }
     getShownItems() {
       const { filterId, items } = this.data
@@ -168,8 +169,14 @@
   const staticTypes = ([]).concat([...document.getElementsByTagName('script')])
     .filter(e => e.id)
     .map(e => ({ NAME: e.id, TEMPLATE: e.innerHTML }))
+
   // register components and run 
-  armatura.register(...staticTypes, TodoStore).run()
+  armatura
+    .register(...staticTypes, TodoStore)
+    .run({
+      pipes: { upper, capitalize },
+      resources: Object.R
+    })
 </script>
 
 </html>

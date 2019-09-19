@@ -168,8 +168,8 @@ export default {
     { "id": "degree", "type": "enum", "typeSpec": "degree" },
     { "id": "tags", "type": "tag" },
     { "id": "city", "type": "dict", "typeSpec": "city" },
-    { "id": "organization", "shown": "{{city}}", "type": "ref", "typeSpec": "organization?city={{city}}" },
-    { "id": "unit", "shown": "{{organization}}", "type": "ref", "typeSpec": "unit?organization={{organization}}" }
+    { "id": "organization", "shown": "{city}", "type": "ref", "typeSpec": "organization?city={city}" },
+    { "id": "unit", "shown": "{organization}", "type": "ref", "typeSpec": "unit?organization={organization}" }
   ],
   organization_form: [
     { "id": "item", "type": "ref", "typeSpec": "item" },

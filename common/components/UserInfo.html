@@ -2,17 +2,17 @@
 
   <template id="UserBar">
     <div class="float-right">
-      <ui:fragment ui:if="isLoading">
+      <ui:fragment ui:if={isLoading}>
         <ui:then>
           <div class="loading"></div>
         </ui:then>
         <ui:else>
-          <ui:fragment ui:if="!info.email">
+          <ui:fragment ui:if={!info.email}>
             <ui:then>
               <a click="-> user:login" class="anchor" aria-hidden="true">:login</a>
             </ui:then>
             <ui:else>
-              <UserPanel ui:props="{{info}}" />
+              <UserPanel ui:props={info} />
             </ui:else>
           </ui:fragment>
         </ui:else>
@@ -23,15 +23,15 @@
   <template id="UserPanel">
     <div class="tile tile-centered">
       <div class="tile-icon">
-        <div class="example-tile-icon" ui:if="photoURL">
+        <div class="example-tile-icon" ui:if={photoURL}>
           <figure class="avatar avatar">
-            <img src="{{photoURL}}" alt=":avatar" />
+            <img src={photoURL} alt=":avatar" />
           </figure>
         </div>
       </div>
       <div class="tile-content">
-        <div class="tile-title" ui:if="displayName">{{displayName}}</div>
-        <a class="tile-subtitle text-gray" href="mailto:{{email}}">{{email}}</a>
+        <div class="tile-title" ui:if={displayName}>{displayName}</div>
+        <a class="tile-subtitle text-gray" href="mailto:{email}">{email}</a>
       </div>
       <div class="tile-action">
         <div class="dropdown dropdown-right">
@@ -50,13 +50,13 @@
     <div class="ui raised segment">
       <a class="ui yellow image label">
         <i class="jp flag"></i>
-        <span>{{profile.name}}</span>
+        <span>{profile.name}</span>
         <div class="detail">Citizen</div>
       </a>
       <div class="ui divided selection list">
         <div class="item" each="contact of contacts">
-          <div class="ui {{contact.color}} horizontal label">{{contact.type}}</div>
-          <a href="{{contact.link}}" target="_blank">{{contact.text}}</a>
+          <div class="ui {contact.color} horizontal label">{contact.type}</div>
+          <a href={contact.link} target="_blank">{contact.text}</a>
         </div>
       </div>
     </div>

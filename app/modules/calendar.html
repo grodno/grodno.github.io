@@ -18,7 +18,7 @@
       </div>
 
       <div class="container my-0 pt-0" style="max-width:940px;">
-        <Tags data="<- filteredTags" onItem="-> toggleTag" />
+        <Tags data="<- filteredTags" onItem="->toggleTag" />
         <PlacesSelectorList data="<- filteredPlaces" sortBy="created_at" />
       </div>
     </div>
@@ -80,8 +80,8 @@
       <div class="input-group">
         <input class="form-input" type="hidden" name="_format" value="html" />
         <input class="form-input" type="hidden" name="sheet" value="routes" />
-        <input class="form-input" type="hidden" name="places" value="{{places}}" />
-        <input class="form-input" type="hidden" name="photo" value="{{photo}}" />
+        <input class="form-input" type="hidden" name="places" value={places} />
+        <input class="form-input" type="hidden" name="photo" value={photo} />
         <button class="btn btn-primary input-group-btn">Submit</button>
       </div>
       <iframe name="submitted" width="100%" height="15" frameborder="0"></iframe>
@@ -93,20 +93,20 @@
 
       <div class="timeline-item" id="timeline-example-2" ui: each="item of data">
     <div class="timeline-left">
-        <figure class="avatar avatar-sm bg-primary" data-initial="{{item.title|initials}}">
-          <img src="{{item.photo}}" class="img-responsive" />
+        <figure class="avatar avatar-sm bg-primary" data-initial={item.title|initials}>
+          <img src={item.photo} class="img-responsive" />
         </figure>
       </div>
       <div class="timeline-content">
         <div class="tile">
           <div class="tile-content">
-            <p class="tile-subtitle">{{ item.title | subject }}</p>
+            <p class="tile-subtitle">{ item.title | subject }</p>
           </div>
           <div class="tile-action">
             <div class="btn-group btn-group-block">
-              <button class="btn disabled:{{itemIndex}}=0" data-id="{{item.id}}" data-dir="up" click="-> arrangePlace"><i class="icon icon-arrow-up"></i></button>
-              <button class="btn disabled:{{itemIndex}}={{data.length}}" data-id="{{item.id}}" data-dir="down" click="-> arrangePlace"><i class="icon icon-arrow-down"></i></button>
-              <button class="btn btn-primary" data-id="{{item.id}}" click="-> togglePlace"><i class="icon icon-cross"></i></button>
+              <button class="btn disabled:{itemIndex}=0" data-id={item.id} data-dir="up" click="-> arrangePlace"><i class="icon icon-arrow-up"></i></button>
+              <button class="btn disabled:{itemIndex}={data.length}" data-id={item.id} data-dir="down" click="-> arrangePlace"><i class="icon icon-arrow-down"></i></button>
+              <button class="btn btn-primary" data-id={item.id} click="-> togglePlace"><i class="icon icon-cross"></i></button>
             </div>
           </div>
         </div>
@@ -116,28 +116,28 @@
 
   <template id="PlacesSelectorList">
     <div class="columns">
-      <PlacesSelectorListItem item="{{item}}" ui:each="item of data"/>
+      <PlacesSelectorListItem item={item} ui:for="item of data"/>
     </div>
   </template>
 
   <template id="PlacesSelectorListItem">
     <div class="column col-4 col-sm-12">
       <div class="card">
-        <div class="card-image" data-modal="true" click="{{assign}}">
-          <Parallax backImage="{{item.photo}}" />
+        <div class="card-image" data-modal="true" click={assign}>
+          <Parallax backImage={item.photo} />
         </div>
         <div class="card-header">
           <div class="form-group">
             <label class="form-switch">
-              <input type="checkbox" checked="{{item.selected}}" data-id="{{item.id}}" toggle="-> togglePlace" />
-              <i class="form-icon"></i><h5 class="card-title">{{ item.title | subject }}</h5>
+              <input type="checkbox" checked={item.selected} data-id={item.id} toggle="-> togglePlace" />
+              <i class="form-icon"></i><h5 class="card-title">{ item.title | subject }</h5>
             </label>
           </div>
         </div>
       </div>
-      <Modal title="{{item.title|subject}}" ui: if="modal" close="{{ assign }}">
-      <span>{{ item.description }}</span>
-      <a href="{{item.link}}" target="_blank">More...</a>
+      <Modal title={item.title|subject} ui: if="modal" close={ assign }>
+      <span>{ item.description }</span>
+      <a href={item.link} target="_blank">More...</a>
       </Modal>
     </div>
   </template  >

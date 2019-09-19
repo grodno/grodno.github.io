@@ -2,12 +2,12 @@ import { capitalize, fnId, arrayToHash, dig } from 'furnitura';
 import Dexie from 'dexie';
 
 export class DatabaseService {
-  constructor({ api: { firebase }, schema, name = 'dexie' }) {
+  constructor({ schema, name = 'dexie' }, $) {
     const dexie = new Dexie(name, 1);
     dexie.version(1).stores({ ...schema, _meta: 'id' });
     Object.assign(this, {
       dexie,
-      remote: firebase,
+      remote: $.api.firebase,
       cache: {},
       dbkeys: Object.keys(schema)
     });

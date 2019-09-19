@@ -1,5 +1,6 @@
+import { AService } from './AService'
 
-export class UserService {
+export class UserService extends AService {
     get fb() {
         return this.api.firebase;
     }

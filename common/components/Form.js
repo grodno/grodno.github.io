@@ -10,8 +10,8 @@ const FIELD_TYPES = {
 export class FormField {
   get TEMPLATE() {
     return /* html */ `
-    <ui:fragment ui:if="fieldShown">
-      <ui:tag tag="{{fieldType}}" ui:props="{{fieldProps}}" onChange="{{fieldChange}}"/>
+    <ui:fragment ui:if={fieldShown}>
+      <ui:tag tag={fieldType} ui:props={fieldProps} onChange={fieldChange}/>
     </ui:fragment>`;
   }
   getFieldChange() {
@@ -42,7 +42,7 @@ export class Form {
     <div class="docs-demo columns">
       <div class="column col-9 col-sm-12">
         <div class="form-horizontal2">
-          <FormField ui:each="field of fields" ui:props="{{field}}" data="{{data}}" onChange="{{up}}"/>
+          <FormField ui:for="field of fields" ui:props={field} data={data} onChange={up}/>
         </div>
       </div>
     </div>`;

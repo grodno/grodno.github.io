@@ -2,11 +2,11 @@
     <template id="TextField">
         <div class="form-group">
             <div class="col-3 col-sm-12">
-                <label class="form-label" for="input-example-4">{{caption}}</label>
+                <label class="form-label" for="input-example-4">{caption}</label>
             </div>
             <div class="col-9 col-sm-12">
                 <input class="form-input" id="input-example-4" type="text"
-                       placeholder="{{caption}}" value="{{value}}" change="{{onChange}}">
+                       placeholder={caption} value={value} change={onChange}>
             </div>
         </div>
     </template>
@@ -15,8 +15,8 @@
             <div class="col-9 col-sm-12 col-ml-auto">
                 <label class="form-switch">
                     <input type="checkbox"
-                           toggle="{{onChange}}"
-                           checked="{{value}}"><i class="form-icon"></i> {{caption}}
+                           toggle={onChange}
+                           checked={value}><i class="form-icon"></i> {caption}
                 </label>
             </div>
         </div>
@@ -24,20 +24,20 @@
     <template id="TextareaField">
         <div class="form-group">
             <div class="col-3 col-sm-12">
-                <label class="form-label" for="input-example-6">{{caption}}</label>
+                <label class="form-label" for="input-example-6">{caption}</label>
             </div>
             <div class="col-9 col-sm-12">
                 <textarea class="form-input" style="min-height: 15vw"
-                          placeholder="{{caption}}"
-                          rows="3" change="{{onChange}}"
-                          value="{{value}}"></textarea>
+                          placeholder={caption}
+                          rows="3" change={onChange}
+                          value={value}></textarea>
             </div>
         </div>
     </template>
     <template id="RadioField">
         <div class="form-group">
             <div class="col-3 col-sm-12">
-                <label class="form-label">{{caption}}</label>
+                <label class="form-label">{caption}</label>
             </div>
             <div class="col-9 col-sm-12">
                 <label class="form-radio">
@@ -52,30 +52,30 @@
     <template id="EnumField">
         <div class="form-group">
             <div class="col-3 col-sm-12">
-                <label class="form-label">{{caption}}</label>
+                <label class="form-label">{caption}</label>
             </div>
             <div class="col-9 col-sm-12">
-                <Select change="{{onChange}}" data-enum="{{typeSpec}}" options="<- res://enum" />
+                <Select change={onChange} data-enum={typeSpec} options="<- res://enum" />
             </div>
         </div>
     </template>
     <template id="DictField">
         <div class="form-group">
             <div class="col-3 col-sm-12">
-                <label class="form-label">{{caption}}</label>
+                <label class="form-label">{caption}</label>
             </div>
             <div class="col-9 col-sm-12">
-                <Select change="{{onChange}}" data-dict="{{typeSpec}}" options="<- db://dict" />
+                <Select change={onChange} data-dict={typeSpec} options="<- db://dict" />
             </div>
         </div>
     </template>
     <template id="RefField">
         <div class="form-group">
             <div class="col-3 col-sm-12">
-                <label class="form-label">{{caption}}</label>
+                <label class="form-label">{caption}</label>
             </div>
             <div class="col-9 col-sm-12">
-                <Select change="{{onChange}}" options="<- {{typeSpec}}" />
+                <Select change={onChange} options="<- {typeSpec}" />
             </div>
         </div>
     </template>

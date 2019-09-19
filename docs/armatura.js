@@ -115,6 +115,17 @@ $exports.store = store;
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var isObject = __webpack_require__(9);
+module.exports = function (it) {
+  if (!isObject(it)) throw TypeError(it + ' is not an object!');
+  return it;
+};
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var $iterators = __webpack_require__(48);
 var getKeys = __webpack_require__(21);
 var redefine = __webpack_require__(11);
@@ -176,17 +187,6 @@ for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isObject = __webpack_require__(9);
-module.exports = function (it) {
-  if (!isObject(it)) throw TypeError(it + ' is not an object!');
-  return it;
-};
-
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
@@ -226,8 +226,8 @@ module.exports = !__webpack_require__(7)(function () {
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var anObject = __webpack_require__(2);
-var IE8_DOM_DEFINE = __webpack_require__(37);
+var anObject = __webpack_require__(1);
+var IE8_DOM_DEFINE = __webpack_require__(38);
 var toPrimitive = __webpack_require__(24);
 var dP = Object.defineProperty;
 
@@ -333,7 +333,7 @@ __webpack_require__(16).inspectSource = function (it) {
 
 
 var isRegExp = __webpack_require__(67);
-var anObject = __webpack_require__(2);
+var anObject = __webpack_require__(1);
 var speciesConstructor = __webpack_require__(68);
 var advanceStringIndex = __webpack_require__(32);
 var toLength = __webpack_require__(22);
@@ -495,20 +495,20 @@ var shared = __webpack_require__(15);
 var setToStringTag = __webpack_require__(29);
 var uid = __webpack_require__(13);
 var wks = __webpack_require__(0);
-var wksExt = __webpack_require__(42);
+var wksExt = __webpack_require__(43);
 var wksDefine = __webpack_require__(62);
 var enumKeys = __webpack_require__(63);
 var isArray = __webpack_require__(64);
-var anObject = __webpack_require__(2);
+var anObject = __webpack_require__(1);
 var isObject = __webpack_require__(9);
 var toObject = __webpack_require__(30);
 var toIObject = __webpack_require__(10);
 var toPrimitive = __webpack_require__(24);
 var createDesc = __webpack_require__(18);
-var _create = __webpack_require__(40);
+var _create = __webpack_require__(41);
 var gOPNExt = __webpack_require__(65);
 var $GOPD = __webpack_require__(66);
-var $GOPS = __webpack_require__(43);
+var $GOPS = __webpack_require__(44);
 var $DP = __webpack_require__(6);
 var $keys = __webpack_require__(21);
 var gOPD = $GOPD.f;
@@ -633,7 +633,7 @@ if (!USE_NATIVE) {
 
   $GOPD.f = $getOwnPropertyDescriptor;
   $DP.f = $defineProperty;
-  __webpack_require__(44).f = gOPNExt.f = $getOwnPropertyNames;
+  __webpack_require__(45).f = gOPNExt.f = $getOwnPropertyNames;
   __webpack_require__(31).f = $propertyIsEnumerable;
   $GOPS.f = $getOwnPropertySymbols;
 
@@ -804,7 +804,7 @@ module.exports = function (it) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 / 15.2.3.14 Object.keys(O)
-var $keys = __webpack_require__(41);
+var $keys = __webpack_require__(42);
 var enumBugKeys = __webpack_require__(28);
 
 module.exports = Object.keys || function keys(O) {
@@ -1077,7 +1077,7 @@ module.exports = patchedExec;
 "use strict";
 
 // 21.2.5.3 get RegExp.prototype.flags
-var anObject = __webpack_require__(2);
+var anObject = __webpack_require__(1);
 module.exports = function () {
   var that = anObject(this);
   var result = '';
@@ -1197,186 +1197,10 @@ module.exports = function (KEY, length, exec) {
 /* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = !__webpack_require__(5) && !__webpack_require__(7)(function () {
-  return Object.defineProperty(__webpack_require__(38)('div'), 'a', { get: function () { return 7; } }).a != 7;
-});
-
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isObject = __webpack_require__(9);
-var document = __webpack_require__(3).document;
-// typeof document.createElement is 'object' in old IE
-var is = isObject(document) && isObject(document.createElement);
-module.exports = function (it) {
-  return is ? document.createElement(it) : {};
-};
-
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports) {
-
-module.exports = function (it) {
-  if (typeof it != 'function') throw TypeError(it + ' is not a function!');
-  return it;
-};
-
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-var anObject = __webpack_require__(2);
-var dPs = __webpack_require__(56);
-var enumBugKeys = __webpack_require__(28);
-var IE_PROTO = __webpack_require__(27)('IE_PROTO');
-var Empty = function () { /* empty */ };
-var PROTOTYPE = 'prototype';
-
-// Create object with fake `null` prototype: use iframe Object with cleared prototype
-var createDict = function () {
-  // Thrash, waste and sodomy: IE GC bug
-  var iframe = __webpack_require__(38)('iframe');
-  var i = enumBugKeys.length;
-  var lt = '<';
-  var gt = '>';
-  var iframeDocument;
-  iframe.style.display = 'none';
-  __webpack_require__(59).appendChild(iframe);
-  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
-  // createDict = iframe.contentWindow.Object;
-  // html.removeChild(iframe);
-  iframeDocument = iframe.contentWindow.document;
-  iframeDocument.open();
-  iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
-  iframeDocument.close();
-  createDict = iframeDocument.F;
-  while (i--) delete createDict[PROTOTYPE][enumBugKeys[i]];
-  return createDict();
-};
-
-module.exports = Object.create || function create(O, Properties) {
-  var result;
-  if (O !== null) {
-    Empty[PROTOTYPE] = anObject(O);
-    result = new Empty();
-    Empty[PROTOTYPE] = null;
-    // add "__proto__" for Object.getPrototypeOf polyfill
-    result[IE_PROTO] = O;
-  } else result = createDict();
-  return Properties === undefined ? result : dPs(result, Properties);
-};
-
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var has = __webpack_require__(8);
-var toIObject = __webpack_require__(10);
-var arrayIndexOf = __webpack_require__(57)(false);
-var IE_PROTO = __webpack_require__(27)('IE_PROTO');
-
-module.exports = function (object, names) {
-  var O = toIObject(object);
-  var i = 0;
-  var result = [];
-  var key;
-  for (key in O) if (key != IE_PROTO) has(O, key) && result.push(key);
-  // Don't enum bug & hidden keys
-  while (names.length > i) if (has(O, key = names[i++])) {
-    ~arrayIndexOf(result, key) || result.push(key);
-  }
-  return result;
-};
-
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports.f = __webpack_require__(0);
-
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports) {
-
-exports.f = Object.getOwnPropertySymbols;
-
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
-var $keys = __webpack_require__(41);
-var hiddenKeys = __webpack_require__(28).concat('length', 'prototype');
-
-exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
-  return $keys(O, hiddenKeys);
-};
-
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 
 
-var anObject = __webpack_require__(2);
-var toLength = __webpack_require__(22);
-var advanceStringIndex = __webpack_require__(32);
-var regExpExec = __webpack_require__(33);
-
-// @@match logic
-__webpack_require__(36)('match', 1, function (defined, MATCH, $match, maybeCallNative) {
-  return [
-    // `String.prototype.match` method
-    // https://tc39.github.io/ecma262/#sec-string.prototype.match
-    function match(regexp) {
-      var O = defined(this);
-      var fn = regexp == undefined ? undefined : regexp[MATCH];
-      return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
-    },
-    // `RegExp.prototype[@@match]` method
-    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@match
-    function (regexp) {
-      var res = maybeCallNative($match, regexp, this);
-      if (res.done) return res.value;
-      var rx = anObject(regexp);
-      var S = String(this);
-      if (!rx.global) return regExpExec(rx, S);
-      var fullUnicode = rx.unicode;
-      rx.lastIndex = 0;
-      var A = [];
-      var n = 0;
-      var result;
-      while ((result = regExpExec(rx, S)) !== null) {
-        var matchStr = String(result[0]);
-        A[n] = matchStr;
-        if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
-        n++;
-      }
-      return n === 0 ? null : A;
-    }
-  ];
-});
-
-
-/***/ }),
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var anObject = __webpack_require__(2);
+var anObject = __webpack_require__(1);
 var toObject = __webpack_require__(30);
 var toLength = __webpack_require__(22);
 var toInteger = __webpack_require__(23);
@@ -1491,6 +1315,182 @@ __webpack_require__(36)('replace', 2, function (defined, REPLACE, $replace, mayb
       return capture === undefined ? '' : capture;
     });
   }
+});
+
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = !__webpack_require__(5) && !__webpack_require__(7)(function () {
+  return Object.defineProperty(__webpack_require__(39)('div'), 'a', { get: function () { return 7; } }).a != 7;
+});
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__(9);
+var document = __webpack_require__(3).document;
+// typeof document.createElement is 'object' in old IE
+var is = isObject(document) && isObject(document.createElement);
+module.exports = function (it) {
+  return is ? document.createElement(it) : {};
+};
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+module.exports = function (it) {
+  if (typeof it != 'function') throw TypeError(it + ' is not a function!');
+  return it;
+};
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+var anObject = __webpack_require__(1);
+var dPs = __webpack_require__(56);
+var enumBugKeys = __webpack_require__(28);
+var IE_PROTO = __webpack_require__(27)('IE_PROTO');
+var Empty = function () { /* empty */ };
+var PROTOTYPE = 'prototype';
+
+// Create object with fake `null` prototype: use iframe Object with cleared prototype
+var createDict = function () {
+  // Thrash, waste and sodomy: IE GC bug
+  var iframe = __webpack_require__(39)('iframe');
+  var i = enumBugKeys.length;
+  var lt = '<';
+  var gt = '>';
+  var iframeDocument;
+  iframe.style.display = 'none';
+  __webpack_require__(59).appendChild(iframe);
+  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
+  // createDict = iframe.contentWindow.Object;
+  // html.removeChild(iframe);
+  iframeDocument = iframe.contentWindow.document;
+  iframeDocument.open();
+  iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
+  iframeDocument.close();
+  createDict = iframeDocument.F;
+  while (i--) delete createDict[PROTOTYPE][enumBugKeys[i]];
+  return createDict();
+};
+
+module.exports = Object.create || function create(O, Properties) {
+  var result;
+  if (O !== null) {
+    Empty[PROTOTYPE] = anObject(O);
+    result = new Empty();
+    Empty[PROTOTYPE] = null;
+    // add "__proto__" for Object.getPrototypeOf polyfill
+    result[IE_PROTO] = O;
+  } else result = createDict();
+  return Properties === undefined ? result : dPs(result, Properties);
+};
+
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var has = __webpack_require__(8);
+var toIObject = __webpack_require__(10);
+var arrayIndexOf = __webpack_require__(57)(false);
+var IE_PROTO = __webpack_require__(27)('IE_PROTO');
+
+module.exports = function (object, names) {
+  var O = toIObject(object);
+  var i = 0;
+  var result = [];
+  var key;
+  for (key in O) if (key != IE_PROTO) has(O, key) && result.push(key);
+  // Don't enum bug & hidden keys
+  while (names.length > i) if (has(O, key = names[i++])) {
+    ~arrayIndexOf(result, key) || result.push(key);
+  }
+  return result;
+};
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports.f = __webpack_require__(0);
+
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports) {
+
+exports.f = Object.getOwnPropertySymbols;
+
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
+var $keys = __webpack_require__(42);
+var hiddenKeys = __webpack_require__(28).concat('length', 'prototype');
+
+exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
+  return $keys(O, hiddenKeys);
+};
+
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var anObject = __webpack_require__(1);
+var toLength = __webpack_require__(22);
+var advanceStringIndex = __webpack_require__(32);
+var regExpExec = __webpack_require__(33);
+
+// @@match logic
+__webpack_require__(36)('match', 1, function (defined, MATCH, $match, maybeCallNative) {
+  return [
+    // `String.prototype.match` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.match
+    function match(regexp) {
+      var O = defined(this);
+      var fn = regexp == undefined ? undefined : regexp[MATCH];
+      return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
+    },
+    // `RegExp.prototype[@@match]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@match
+    function (regexp) {
+      var res = maybeCallNative($match, regexp, this);
+      if (res.done) return res.value;
+      var rx = anObject(regexp);
+      var S = String(this);
+      if (!rx.global) return regExpExec(rx, S);
+      var fullUnicode = rx.unicode;
+      rx.lastIndex = 0;
+      var A = [];
+      var n = 0;
+      var result;
+      while ((result = regExpExec(rx, S)) !== null) {
+        var matchStr = String(result[0]);
+        A[n] = matchStr;
+        if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
+        n++;
+      }
+      return n === 0 ? null : A;
+    }
+  ];
 });
 
 
@@ -1664,7 +1664,7 @@ module.exports = __webpack_require__(15)('native-function-to-string', Function.t
 /***/ (function(module, exports, __webpack_require__) {
 
 // optional / simple context binding
-var aFunction = __webpack_require__(39);
+var aFunction = __webpack_require__(40);
 module.exports = function (fn, that, length) {
   aFunction(fn);
   if (that === undefined) return fn;
@@ -1691,7 +1691,7 @@ module.exports = function (fn, that, length) {
 
 "use strict";
 
-var create = __webpack_require__(40);
+var create = __webpack_require__(41);
 var descriptor = __webpack_require__(18);
 var setToStringTag = __webpack_require__(29);
 var IteratorPrototype = {};
@@ -1710,7 +1710,7 @@ module.exports = function (Constructor, NAME, next) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var dP = __webpack_require__(6);
-var anObject = __webpack_require__(2);
+var anObject = __webpack_require__(1);
 var getKeys = __webpack_require__(21);
 
 module.exports = __webpack_require__(5) ? Object.defineProperties : function defineProperties(O, Properties) {
@@ -1859,7 +1859,7 @@ var meta = module.exports = {
 var global = __webpack_require__(3);
 var core = __webpack_require__(16);
 var LIBRARY = __webpack_require__(17);
-var wksExt = __webpack_require__(42);
+var wksExt = __webpack_require__(43);
 var defineProperty = __webpack_require__(6).f;
 module.exports = function (name) {
   var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
@@ -1873,7 +1873,7 @@ module.exports = function (name) {
 
 // all enumerable object keys, includes symbols
 var getKeys = __webpack_require__(21);
-var gOPS = __webpack_require__(43);
+var gOPS = __webpack_require__(44);
 var pIE = __webpack_require__(31);
 module.exports = function (it) {
   var result = getKeys(it);
@@ -1905,7 +1905,7 @@ module.exports = Array.isArray || function isArray(arg) {
 
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 var toIObject = __webpack_require__(10);
-var gOPN = __webpack_require__(44).f;
+var gOPN = __webpack_require__(45).f;
 var toString = {}.toString;
 
 var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
@@ -1933,7 +1933,7 @@ var createDesc = __webpack_require__(18);
 var toIObject = __webpack_require__(10);
 var toPrimitive = __webpack_require__(24);
 var has = __webpack_require__(8);
-var IE8_DOM_DEFINE = __webpack_require__(37);
+var IE8_DOM_DEFINE = __webpack_require__(38);
 var gOPD = Object.getOwnPropertyDescriptor;
 
 exports.f = __webpack_require__(5) ? gOPD : function getOwnPropertyDescriptor(O, P) {
@@ -1965,8 +1965,8 @@ module.exports = function (it) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.3.20 SpeciesConstructor(O, defaultConstructor)
-var anObject = __webpack_require__(2);
-var aFunction = __webpack_require__(39);
+var anObject = __webpack_require__(1);
+var aFunction = __webpack_require__(40);
 var SPECIES = __webpack_require__(0)('species');
 module.exports = function (O, D) {
   var C = anObject(O).constructor;
@@ -2050,7 +2050,7 @@ __webpack_require__(26)({
 "use strict";
 
 __webpack_require__(73);
-var anObject = __webpack_require__(2);
+var anObject = __webpack_require__(1);
 var $flags = __webpack_require__(35);
 var DESCRIPTORS = __webpack_require__(5);
 var TO_STRING = 'toString';
@@ -2094,7 +2094,7 @@ if (__webpack_require__(5) && /./g.flags != 'g') __webpack_require__(6).f(RegExp
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
-var web_dom_iterable = __webpack_require__(1);
+var web_dom_iterable = __webpack_require__(2);
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.symbol.js
 var es6_symbol = __webpack_require__(14);
@@ -2102,11 +2102,11 @@ var es6_symbol = __webpack_require__(14);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.split.js
 var es6_regexp_split = __webpack_require__(12);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
-var es6_regexp_match = __webpack_require__(45);
-
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.replace.js
-var es6_regexp_replace = __webpack_require__(46);
+var es6_regexp_replace = __webpack_require__(37);
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
+var es6_regexp_match = __webpack_require__(46);
 
 // CONCATENATED MODULE: ./lib/armatura/xml.js
 
@@ -2118,9 +2118,9 @@ var es6_regexp_replace = __webpack_require__(46);
 // ----------
 const RE_XML_ENTITY = /&#?[0-9a-z]{3,5};/g;
 const RE_XML_COMMENT = /<!--((?!-->)[\s\S])*-->/g;
-const RE_ATTRS = /([a-z][a-zA-Z0-9-:]+)="([^"]*)"/g;
+const RE_ATTRS = /([a-z][a-zA-Z0-9-:]+)(="[^"]*"|={[^}]*})?/g;
 const RE_ESCAPE_XML_ENTITY = /["'&<>]/g;
-const RE_XML_TAG = /(<)(\/?)([a-zA-Z][a-zA-Z0-9-:]*)((?:\s+[a-z][a-zA-Z0-9-:]+="[^"]*")*)\s*(\/?)>/g;
+const RE_XML_TAG = /(<)(\/?)([a-zA-Z][a-zA-Z0-9-:]*)((?:\s+[a-z][a-zA-Z0-9-:]+(?:="[^"]*"|={[^}]*})?)*)\s*(\/?)>/g;
 const SINGLE_TAGS = 'img input br col'.split(' ').reduce((r, e) => {
   r[e] = 1;
   return r;
@@ -2156,6 +2156,8 @@ const decodeXmlEntities = function decodeXmlEntities() {
 
 const escapeXml = s => !s ? '' : ('' + s).replace(RE_ESCAPE_XML_ENTITY, FN_ESCAPE_XML_ENTITY);
 
+const skipQoutes = s => s[0] === '"' && s[s.length - 1] === '"' ? s.slice(1, -1) : s;
+
 let UID = 1;
 
 const parseAttrs = s => {
@@ -2172,7 +2174,11 @@ const parseAttrs = s => {
       return r;
     }
 
-    r.set(e[1], decodeXmlEntities(e[2]));
+    if (!e[2]) {
+      r.set(e[1], "true");
+    } else {
+      r.set(e[1], decodeXmlEntities(skipQoutes(e[2].slice(1))));
+    }
   }
 };
 
@@ -2204,7 +2210,7 @@ class Node {
   }
 
   setText(text) {
-    this.attrs.set('#text', text);
+    this.attrs.set('#text', decodeXmlEntities(text));
   }
 
   addChild(tag, attrs) {
@@ -2289,16 +2295,12 @@ var es6_regexp_to_string = __webpack_require__(72);
 // CONCATENATED MODULE: ./lib/armatura/utils.js
 
 
-
-
-
-
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 let COUNTER = 1;
+const VALUES = {
+  true: true,
+  false: false,
+  null: null
+};
 const nope = () => {};
 const fnId = x => x;
 const nextId = function nextId() {
@@ -2315,6 +2317,10 @@ const capitalize = function capitalize(x) {
   const s = "".concat(x);
   return pre + s[0].toUpperCase() + s.slice(1);
 };
+const lastTail = function lastTail(key) {
+  let sep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '.';
+  return ('' + key).split(sep).slice(-1)[0];
+};
 const humanize = function humanize(key) {
   let sep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
   let jn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ' ';
@@ -2325,53 +2331,35 @@ const camelize = function camelize(key) {
   let jn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ' ';
   return ('' + key).split(sep).map((s, i) => i ? capitalize(s) : s).join(jn);
 };
-const RE_SINGLE_PLACEHOLDER = /^\{\{([a-zA-Z0-9.:_$|]+)\}\}$/;
-const RE_PLACEHOLDER = /\{\{([a-zA-Z0-9.:_$|]+)\}\}/g;
-const VALUES = {
-  true: true,
-  false: false,
-  null: null
-}; // functional
-
 const fnName = ctor => (/^function\s+([\w$]+)\s*\(/.exec(ctor.toString()) || [])[1] || nextId('$C');
-const runInBrowser = (w => fn => w.requestAnimationFrame(() => fn.call(w, w.document)))(window); // Prop
+const runInBrowser = (w => fn => w.requestAnimationFrame(() => fn.call(w, w.document)))(window);
+// CONCATENATED MODULE: ./lib/armatura/compile.js
 
-const boundFn = ($, fn) => {
-  const map = $.$boundFnMap || ($.$boundFnMap = new Map());
-  let bound = map.get(fn);
 
-  if (!bound) {
-    bound = fn.bind($.impl);
-    map.set(fn, bound);
-  }
 
-  return bound;
-};
-const cleanUp = c => ['parent', 'children', 'owner', 'impl', 'app', 'ctx'].forEach(k => {
-  delete c[k];
-});
-const filterMapKey = (src, key) => {
-  const r = new Map();
-  src.forEach((v, k) => {
-    if (k !== key) {
-      r.set(k, v);
-    }
-  });
-  return r;
-}; // Compilation
+
+
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+const RE_SINGLE_PLACEHOLDER = /^\{([a-zA-Z0-9.:_$|]+)\}$/;
+const RE_PLACEHOLDER = /\{([a-zA-Z0-9.:_$|]+)\}/g; // Compilation
 
 function expression(v) {
   if (v[0] === ':') {
     return placeholder(v);
   }
 
-  if (!v.includes('{{')) {
+  if (!v.includes('{')) {
     const r = v in VALUES ? VALUES[v] : v;
     return () => r;
   }
 
   if (v.match(RE_SINGLE_PLACEHOLDER)) {
-    return placeholder(v.slice(2, -2).trim());
+    return placeholder(v.slice(1, -1).trim());
   }
 
   return stringInterpolation(v);
@@ -2395,123 +2383,11 @@ function representWithPipes(expr, fn) {
   const key = pipes.shift();
   const initial = fn(key);
   return !pipes.length ? initial : c => pipes.reduce((r, pk) => c.pipe(r, pk), initial(c));
-} // DOM
-
-const DOM_SETTERS = {
-  '#text': (e, v) => e.textContent = v == null ? '' : v,
-  error: (e, v) => e.error = v == null ? '' : v,
-  disabled: (e, v) => e.disabled = v ? true : null,
-  class: (e, v) => {
-    if (v.includes(':')) {
-      v = ('' + v).split(' ').map(s => {
-        const [cl, expr] = s.split(':');
-        if (expr === undefined) return cl;
-        const [fl, eq] = expr.split('==');
-        const disabled = eq ? fl !== eq : ['', '0', 'false', null].indexOf(fl) > -1;
-        return disabled ? '' : cl;
-      }).join(' ');
-    }
-
-    e.className = v;
-  },
-  selected: (e, v) => e.selected = v ? true : null,
-  value: (e, v) => e.value = v == null ? '' : v,
-  checked: (e, v) => e.checked = !!v,
-  data: function data(e, v) {
-    e.$dataset = _objectSpread({}, e.$dataset, v);
-
-    if (v) {
-      Object.keys(v).forEach(k => {
-        e.dataset[camelize(k, '-', '')] = v[k];
-      });
-    }
-  },
-  click: function click(e, v) {
-    this.setAttribute('click:click', !v ? null : ev => {
-      this.$attributes.click(_objectSpread({}, e.$dataset), ev);
-      return false;
-    });
-  },
-  blur: function blur(e, v) {
-    this.setAttribute('blur:blur', !v ? null : ev => {
-      this.$attributes.blur(_objectSpread({}, e.$dataset), ev);
-      return false;
-    });
-  },
-  dblclick: function dblclick(e, v) {
-    this.setAttribute('dblclick:dblclick', !v ? null : ev => {
-      this.$attributes.dblclick(_objectSpread({}, e.$dataset), ev);
-      return false;
-    });
-  },
-  scroll: function scroll(e, v) {
-    this.setAttribute('scroll:scroll', !v ? null : ev => {
-      this.$attributes.scroll(_objectSpread({}, e.$dataset), ev);
-      return false;
-    });
-  },
-  keypress: function keypress(e, v) {
-    this.setAttribute('keypress:keyup', !v ? null : ev => {
-      if (ev.keyCode !== 13 && ev.keyCode !== 27) {
-        this.$attributes.keypress(_objectSpread({
-          value: e.value
-        }, e.$dataset), ev);
-        setTimeout(() => e.focus(), 0);
-      }
-
-      return false;
-    });
-  },
-  enter: function enter(e, v) {
-    this.setAttribute('enter:keyup', !v ? null : ev => {
-      if (ev.keyCode === 13) {
-        this.$attributes.enter(_objectSpread({
-          value: e.value
-        }, e.$dataset), ev);
-      }
-
-      if (ev.keyCode === 13 || ev.keyCode === 27) {
-        e.blur();
-      }
-
-      return false;
-    });
-  },
-  change: function change(e, v) {
-    this.setAttribute('change:change', !v ? null : ev => {
-      this.$attributes.change(_objectSpread({
-        value: e.value
-      }, e.$dataset), ev);
-      return false;
-    });
-  },
-  toggle: function toggle(e, v) {
-    this.setAttribute('toggle:change', !v ? null : ev => {
-      this.$attributes.toggle(_objectSpread({
-        value: e.checked
-      }, e.$dataset), ev);
-      return false;
-    });
-  }
-};
-const DOM_VALUE_COMPARATORS = {
-  value: (e, their, _) => e.value === their,
-  _: (_2, their, mine) => their === mine
-};
-// CONCATENATED MODULE: ./lib/armatura/compile.js
-
-
-
-
-function compile_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { compile_defineProperty(target, key, source[key]); }); } return target; }
-
-function compile_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
+}
 
 const assigner = (acc, val, k) => {
   if (k.slice(0, 5) === 'data-') {
-    acc['data'] = compile_objectSpread({}, acc['data'], {
+    acc['data'] = _objectSpread({}, acc['data'], {
       [k.slice(5)]: val in VALUES ? VALUES[val] : val
     });
   } else {
@@ -2524,9 +2400,9 @@ const makeApplicator = function makeApplicator(get) {
   return (c, acc) => assigner(acc, get(c), k);
 };
 
-const compile_emitter = function emitter(v, k) {
+const emitter = function emitter(v, k) {
   let fctr = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : expression(v);
-  return c => c['$' + k] || (c['$' + k] = (data, opts) => c.emit(fctr(c), data, opts));
+  return c => c['$' + k] || (c['$' + k] = (data, cb) => c.emit(fctr(c), data, cb));
 };
 
 const hasSlot = (c, id) => {
@@ -2545,21 +2421,30 @@ const hasSlot = (c, id) => {
   return r;
 };
 
-function compileEach(_ref) {
+const filterMapKey = (src, key) => {
+  const r = new Map();
+  src.forEach((v, k) => {
+    if (k !== key) {
+      r.set(k, v);
+    }
+  });
+  return r;
+};
+function compileFor(_ref) {
   let {
     tag,
     attrs,
     uid,
     nodes
   } = _ref;
-  const [itemId,, expr] = attrs.get('ui:each').split(' ');
-  const $each = {
+  const [itemId,, expr] = attrs.get('ui:for').split(' ');
+  const $for = {
     itemId
   };
   const r = {
     tag: 'ui:fragment',
-    uid: 'each:' + expr + uid,
-    $each,
+    uid: 'for:' + expr + uid,
+    $for,
     key: attrs.get('key')
   };
 
@@ -2573,7 +2458,7 @@ function compileEach(_ref) {
     }));
     (r.inits || (r.inits = [])).push(fn);
   } else {
-    (r.updates || (r.updates = [])).push(makeApplicator(expression('{:'.includes(expr[0]) ? expr : '{{' + expr + '}}'), '$data'));
+    (r.updates || (r.updates = [])).push(makeApplicator(expression('{:'.includes(expr[0]) ? expr : '{' + expr + '}'), '$data'));
   }
 
   let $nodes = nodes;
@@ -2582,21 +2467,21 @@ function compileEach(_ref) {
     const emptyNode = $nodes.find(e => e.tag === 'ui:empty');
 
     if (emptyNode) {
-      $each.emptyNode = emptyNode.nodes.map(compileNode);
+      $for.emptyNode = emptyNode.nodes.map(compileNode);
       $nodes = $nodes.filter(e => e !== emptyNode);
     }
 
     const loadingNode = $nodes.find(e => e.tag === 'ui:loading');
 
     if (loadingNode) {
-      $each.loadingNode = loadingNode.nodes.map(compileNode);
+      $for.loadingNode = loadingNode.nodes.map(compileNode);
       $nodes = $nodes.filter(e => e !== loadingNode);
     }
   }
 
-  $each.itemNode = compileNode({
+  $for.itemNode = compileNode({
     tag,
-    attrs: filterMapKey(attrs, 'ui:each'),
+    attrs: filterMapKey(attrs, 'ui:for'),
     uid,
     nodes: $nodes
   });
@@ -2633,7 +2518,7 @@ function compileIf(_ref2) {
       acc['$data'] = neg ? !gttr(c) : gttr(c);
     });
   } else {
-    const gttr = expression('{:'.includes(expr[0]) ? expr : '{{' + expr + '}}');
+    const gttr = expression(expr.includes('{') ? expr : '{' + expr + '}');
     (r.updates || (r.updates = [])).push((c, acc) => {
       acc['$data'] = neg ? !gttr(c) : gttr(c);
     });
@@ -2723,14 +2608,14 @@ function compile(r) {
       const v2 = v.slice(0, 2);
 
       if (v2 === '<-') {
-        const val = v.slice(2).trim();
-        (r.inits || (r.inits = [])).push(c => c.connect(val, rr => ({
+        const expr = expression(v.slice(2).trim());
+        (r.inits || (r.inits = [])).push(c => c.connect(expr(c), rr => ({
           [k]: rr
         })));
       } else if (v2 === '->') {
-        (r.updates || (r.updates = [])).push(makeApplicator(compile_emitter(v.slice(2).trim(), k), k));
+        (r.updates || (r.updates = [])).push(makeApplicator(emitter(v.slice(2).trim(), k + ':emitter:' + r.uid), k));
       } else {
-        if (!v.includes('{{') && v[0] !== ':') {
+        if (!v.includes('{') && v[0] !== ':') {
           assigner(r.initials || (r.initials = {}), v, k);
         } else {
           (r.updates || (r.updates = [])).push(makeApplicator(expression(v), k));
@@ -2742,8 +2627,8 @@ function compile(r) {
   return r;
 }
 function compileNode(node) {
-  if (node.attrs.has('ui:each')) {
-    return compileEach(node);
+  if (node.attrs.has('ui:for')) {
+    return compileFor(node);
   }
 
   if (node.attrs.has('ui:if')) {
@@ -2829,19 +2714,21 @@ const render = (c, $content, ctx) => {
       initials,
       ref,
       $if,
-      $each,
+      $for,
       $tag
     } = _ref;
     let cc = ch.get(uid);
 
     if (!cc) {
-      props = render_objectSpread({}, props, initials);
+      props = props && props.data && initials && initials.data ? render_objectSpread({}, props, initials, {
+        data: render_objectSpread({}, initials.data, props.data)
+      }) : render_objectSpread({}, props, initials);
       cc = new component_Component(registerTypes.getByTag(tag), {
         props,
         tag,
         ref,
         $if,
-        $each,
+        $for,
         $tag,
         uid,
         ctx,
@@ -2849,7 +2736,7 @@ const render = (c, $content, ctx) => {
         inits,
         parent: c
       });
-      ch.set(uid, cc);
+      ch.set(uid, cc); // console.log('create', c.uid, tag, uid)
     }
 
     cc.owner = owner;
@@ -3051,7 +2938,7 @@ function resolveRegular(acc, owner, _ref) {
     id,
     ref,
     $if,
-    $each,
+    $for,
     $tag
   } = _ref;
 
@@ -3070,7 +2957,7 @@ function resolveRegular(acc, owner, _ref) {
     initials,
     inits,
     $if,
-    $each,
+    $for,
     $tag,
     props,
     content
@@ -3095,6 +2982,120 @@ function resolveTemplate(owner, tmpl) {
 
 
 
+function dom_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { dom_defineProperty(target, key, source[key]); }); } return target; }
+
+function dom_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+ // DOM
+
+const DOM_SETTERS = {
+  '#text': (e, v) => e.textContent = v == null ? '' : v,
+  error: (e, v) => e.error = v == null ? '' : v,
+  disabled: (e, v) => e.disabled = v ? true : null,
+  class: (e, v) => {
+    if (v.includes(':')) {
+      v = ('' + v).split(' ').map(s => {
+        const [cl, expr] = s.split(':');
+        if (expr === undefined) return cl;
+        const [fl, eq] = expr.split('==');
+        const disabled = eq ? fl !== eq : ['', '0', 'false', null].indexOf(fl) > -1;
+        return disabled ? '' : cl;
+      }).join(' ');
+    }
+
+    e.className = v;
+  },
+  selected: (e, v) => e.selected = v ? true : null,
+  value: (e, v) => e.value = v == null ? '' : v,
+  checked: (e, v) => e.checked = !!v,
+  data: function data(e, v) {
+    e.$dataset = dom_objectSpread({}, e.$dataset, v);
+
+    if (v) {
+      Object.keys(v).forEach(k => {
+        e.dataset[camelize(k, '-', '')] = v[k];
+      });
+    }
+  },
+  click: function click(e, v) {
+    this.setAttribute('click:click', !v ? null : ev => {
+      this.$attributes.click(dom_objectSpread({}, e.$dataset), ev);
+      return false;
+    });
+  },
+  'bubble-click': function bubbleClick(e, v) {
+    this.setAttribute('bubbled-click:click', !v ? null : ev => {
+      this.$attributes['bubble-click'](dom_objectSpread({}, e.$dataset), ev);
+      return true;
+    });
+  },
+  blur: function blur(e, v) {
+    this.setAttribute('blur:blur', !v ? null : ev => {
+      this.$attributes.blur(dom_objectSpread({}, e.$dataset), ev);
+      return false;
+    });
+  },
+  dblclick: function dblclick(e, v) {
+    this.setAttribute('dblclick:dblclick', !v ? null : ev => {
+      this.$attributes.dblclick(dom_objectSpread({}, e.$dataset), ev);
+      return false;
+    });
+  },
+  scroll: function scroll(e, v) {
+    this.setAttribute('scroll:scroll', !v ? null : ev => {
+      this.$attributes.scroll(dom_objectSpread({}, e.$dataset), ev);
+      return false;
+    });
+  },
+  keypress: function keypress(e, v) {
+    this.setAttribute('keypress:keyup', !v ? null : ev => {
+      if (ev.keyCode !== 13 && ev.keyCode !== 27) {
+        this.$attributes.keypress(dom_objectSpread({
+          value: e.value
+        }, e.$dataset), ev);
+        setTimeout(() => e.focus(), 0);
+      }
+
+      return false;
+    });
+  },
+  enter: function enter(e, v) {
+    this.setAttribute('enter:keyup', !v ? null : ev => {
+      if (ev.keyCode === 13) {
+        this.$attributes.enter(dom_objectSpread({
+          value: e.value
+        }, e.$dataset), ev);
+      }
+
+      if (ev.keyCode === 13 || ev.keyCode === 27) {
+        e.blur();
+      }
+
+      return false;
+    });
+  },
+  change: function change(e, v) {
+    this.setAttribute('change:change', !v ? null : ev => {
+      this.$attributes.change(dom_objectSpread({
+        value: e.value
+      }, e.$dataset), ev);
+      return false;
+    });
+  },
+  toggle: function toggle(e, v) {
+    this.setAttribute('toggle:change', !v ? null : ev => {
+      this.$attributes.toggle(dom_objectSpread({
+        value: e.checked
+      }, e.$dataset), ev);
+      return false;
+    });
+  }
+};
+const DOM_VALUE_COMPARATORS = {
+  value: (e, their, _) => e.value === their,
+  _: (_2, their, mine) => their === mine
+};
 const dom_doc = window.document;
 class dom_Element {
   constructor() {
@@ -3212,6 +3213,7 @@ class dom_Element {
 
 
 
+
 function component_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { component_defineProperty(target, key, source[key]); }); } return target; }
 
 function component_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -3223,8 +3225,6 @@ function component_defineProperty(obj, key, value) { if (key in obj) { Object.de
 
 class component_Component {
   constructor(ctor, options) {
-    var _this = this;
-
     Object.assign(this, options);
     const {
       ref,
@@ -3235,29 +3235,10 @@ class component_Component {
 
     if (parent) {
       this.api = parent.api;
-
-      if (ref) {
-        Object.assign(props, {
-          api: this.api,
-          ref,
-          emit: function emit() {
-            return _this.emit(...arguments);
-          },
-          log: function log() {
-            for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-              args[_key] = arguments[_key];
-            }
-
-            return console.log(ref + ': ', ...args);
-          },
-          error: _error => console.error(ref + ': ', _error)
-        });
-      }
-
       this.impl = new Ctor(props, this);
       this.impl.$ = this;
     } else {
-      this.api = this.impl = new Ctor();
+      this.api = this.impl = new Ctor(options);
     }
 
     if (ref) {
@@ -3268,12 +3249,17 @@ class component_Component {
       });
     }
   }
+  /**
+   * Rendering.
+   */
+
 
   resolveFragmentTemplate() {
     const acc = new Map();
 
-    if (this.$each) {
-      const $each = this.$each;
+    if (this.$for) {
+      // ui:for
+      const $for = this.$for;
       const {
         $data: data
       } = this.impl;
@@ -3282,7 +3268,7 @@ class component_Component {
         itemNode,
         emptyNode,
         loadingNode
-      } = $each;
+      } = $for;
       const {
         tag,
         updates,
@@ -3293,19 +3279,18 @@ class component_Component {
 
       if (data && data.length) {
         if (!data.forEach) {
-          throw new Error('wrong ui:each data', data);
+          throw new Error('wrong ui:for data', data);
         }
 
         data.forEach((d, index) => {
           const id = "".concat(uid, "-$").concat(d.id || index);
-          const $owner = Object.create(this.owner);
-          const $ownerImpl = Object.create(this.owner.impl);
-          Object.assign($ownerImpl, {
+          const $ownerImpl = Object.assign(Object.create(this.owner.impl), {
             [itemId]: d,
             [itemId + 'Index']: index
           });
-          Object.assign($owner, {
-            impl: $ownerImpl
+          const $owner = Object.assign(Object.create(this.owner), {
+            impl: $ownerImpl,
+            $propFnMap: {}
           });
           resolveTemplate($owner, {
             tag,
@@ -3325,6 +3310,7 @@ class component_Component {
         }
       }
     } else if (this.$if) {
+      // ui:if
       const $if = this.$if;
       const {
         $data
@@ -3332,15 +3318,17 @@ class component_Component {
       const node = $data ? $if.then : $if.else;
       resolveTemplate(this, node, acc);
     } else if (this.$tag) {
+      // ui:tag
       const tag = this.impl.$data;
 
       if (tag) {
         resolveTemplate(this, component_objectSpread({}, this.$tag, {
           tag,
-          uid: this.impl.$data + ':' + this.uid
+          uid: tag + ':' + this.uid
         }), acc);
       }
     } else if (this.content) {
+      // content
       this.content.forEach((v, k) => acc.set(k, v));
     }
 
@@ -3358,19 +3346,19 @@ class component_Component {
   }
 
   resolveTemplate() {
-    if (this.tag === 'ui:fragment') {
-      return this.resolveFragmentTemplate();
-    }
-
-    return resolveTemplate(this, this.impl.constructor.$TEMPLATE());
+    return this.tag === 'ui:fragment' ? this.resolveFragmentTemplate() : resolveTemplate(this, this.impl.constructor.$TEMPLATE());
   }
+  /**
+   * Life-cycle hooks.
+   */
+
 
   init() {
     if (this.isDone || this.isInited) {
       return;
     }
 
-    this.isInited = true;
+    this.isInited = true; // console.log('init', this.tag, this.uid)
 
     if (this.inits) {
       this.inits.forEach(f => this.defer(f(this)));
@@ -3378,7 +3366,11 @@ class component_Component {
     }
 
     if (this.impl.init) {
-      this.defer(this.impl.init(this));
+      const d = this.impl.init(this);
+
+      if (d) {
+        this.up(d);
+      }
     }
   }
 
@@ -3391,7 +3383,8 @@ class component_Component {
 
     if (this.impl.done) {
       this.impl.done(this);
-    }
+    } // console.log('done', this.tag, this.uid)
+
 
     this.eachChild(c => {
       c.parent = null;
@@ -3411,57 +3404,19 @@ class component_Component {
       delete this.defered;
     }
 
-    cleanUp(this);
+    this.cleanUp();
   }
+  /**
+   * Properties.
+   */
 
-  defer(fn) {
-    if (fn && typeof fn === 'function') {
-      (this.defered || (this.defered = [])).push(fn);
-    }
-  }
-
-  eachChild(fn) {
-    let ch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.children;
-
-    if (ch) {
-      ch.forEach(fn);
-    }
-  }
 
   up(Δ) {
     if (this.isDone) {
       return;
     }
 
-    if (Δ && Δ.then) {
-      Δ.then(r => this.up(r));
-      return;
-    }
-
-    const c = this;
-    const impl = c.impl;
-    let changed = false;
-
-    if (this.impl.set) {
-      changed = this.impl.set(Δ);
-    } else if (Δ) {
-      Object.entries(Δ).forEach((_ref) => {
-        let [k, their] = _ref;
-        const mine = impl[k];
-
-        if (typeof their !== 'undefined' && their !== mine) {
-          const setter = impl['set' + k[0].toUpperCase() + k.slice(1)];
-
-          if (setter) {
-            setter.call(impl, their);
-          } else {
-            impl[k] = their;
-          }
-
-          changed = true;
-        }
-      });
-    }
+    let changed = this.set(Δ); // (this.parent.rendering ? this : this.parent).render();
 
     this.render();
 
@@ -3470,42 +3425,95 @@ class component_Component {
     }
   }
 
-  prop(propId) {
-    let $ = this.impl.get ? this.impl.get() : this.impl;
-    const [pk, ...path] = propId.split('.');
-    const gettr = $[capitalize(pk, 'get')];
-    let value = undefined;
+  upAsync(promise, key) {
+    const $ = this;
+    const racer = $.raceCondition('set:' + (key || 'up'));
 
-    if (gettr) {
-      value = gettr.call($, this);
-    } else if (pk in $) {
-      value = $[pk];
+    const up = r => racer(() => $.up(r));
+
+    if (key) {
+      const akey = key.replace('Promise', '');
+      promise.then(val => up({
+        [akey + 'Error']: null,
+        [akey]: val
+      }), error => up({
+        [akey + 'Error']: error
+      }));
     } else {
-      return this.owner && this.owner.prop && this.tag === 'ui:fragment' ? this.owner.prop(propId) : value;
+      promise.then(up, error => up({
+        error
+      }));
     }
 
-    if (path.length) {
-      value = path.reduce((r, p) => r ? r[p] : r, value);
-    }
-
-    return typeof value === 'function' ? boundFn(this, value) : value;
+    return promise;
   }
 
-  get actualOwner() {
-    let $ = this;
+  set(Δ) {
+    const $ = this;
+    const impl = $.impl;
+    let changed = false;
 
-    for (; $.owner && $.tag === 'ui:fragment'; $ = $.owner) {}
+    if (impl.set) {
+      changed = impl.set(Δ);
+    } else if (Δ) {
+      if (Δ.then) {
+        $.upAsync(Δ);
+      } else {
+        Object.entries(Δ).forEach((_ref) => {
+          let [k, their] = _ref;
 
-    return $;
+          if (their && their.then) {
+            $.upAsync(their, k);
+          } else if (typeof their !== 'undefined' && their !== impl[k]) {
+            const setter = impl['set' + k[0].toUpperCase() + k.slice(1)];
+
+            if (setter) {
+              setter.call(impl, their);
+            } else {
+              impl[k] = their;
+            }
+
+            changed = true;
+          }
+        });
+      }
+    }
+
+    return changed;
+  }
+
+  prop(propId) {
+    const value = this.propGetter(propId)();
+    return typeof value === 'function' ? this.bindFn(value) : value;
+  }
+
+  propGetter(key) {
+    const $ = this;
+    const map = $.$propFnMap || ($.$propFnMap = {});
+    let fn = map[key];
+
+    if (fn) {
+      return fn;
+    }
+
+    const impl = this.impl;
+    const [pk, ...path] = key.split('.');
+    const gettr = impl[capitalize(pk, 'get')];
+    const extractor1 = gettr ? () => gettr.call(impl, $) : function () {
+      let $$ = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : impl.get ? impl.get() : impl;
+      return pk in $$ ? $$[pk] : $.owner && $.owner.prop && $.tag === 'ui:fragment' ? $.owner.prop(pk) : undefined;
+    };
+    fn = !path.length ? extractor1 : () => path.reduce((r, p) => r ? r[p] : r, extractor1());
+    return map[key] = fn;
   }
 
   string(key) {
-    return this.resource(key) || humanize(key);
+    return this.resource(key) || humanize(lastTail(key));
   }
 
   resource(key) {
     try {
-      return Object.R(key);
+      return this.api.resources(key);
     } catch (ex) {
       console.error('resource', ex);
       return null;
@@ -3515,25 +3523,12 @@ class component_Component {
   pipe(value, key) {
     try {
       const [id, ...args] = key.split(':');
-      const fn = this.resource('pipes.' + id);
+      const fn = this.api.pipes[id];
       return fn ? fn.apply(this.impl, [value, ...args]) : value;
     } catch (ex) {
-      console.error('reduce', ex);
+      console.error('pipe', ex);
       return value;
     }
-  }
-
-  raceCondition(key) {
-    const COUNTERS = this.$weak || (this.$weak = new Map());
-    const counter = 1 + (COUNTERS.get(key) || 0);
-    COUNTERS.set(key, counter);
-    return fn => {
-      if (counter === COUNTERS.get(key)) {
-        runInBrowser(fn);
-      }
-
-      ;
-    };
   }
   /**
    *  Arrows.
@@ -3565,7 +3560,7 @@ class component_Component {
       type = this.ref,
       target
     } = url;
-    const ref = this.api[type];
+    const ref = type === 'this' ? this.impl : this.api[type];
 
     if (!ref) {
       console.error('connect: No such ref ' + type, key);
@@ -3575,9 +3570,15 @@ class component_Component {
       try {
         const racer = this.raceCondition(type + ':load:' + target);
 
-        const callback = (error, r) => racer(() => this.up(component_objectSpread({
-          error
-        }, applicator ? applicator(r) : r)));
+        const callback = (error, r) => racer(() => {
+          if (error) {
+            this.error('connect error', error);
+          }
+
+          this.up(component_objectSpread({
+            error
+          }, applicator ? applicator(r) : r));
+        });
 
         const result = ref.$.prop(target);
         result && result.then ? result.then(r => callback(null, r), callback) : callback(null, result);
@@ -3590,49 +3591,139 @@ class component_Component {
     });
   }
 
-  emit(key, data) {
-    if (key) {
-      const event = urlParse(key, {
-        data
-      });
-      const {
-        type = this.ref,
-        target
-      } = event;
-      const racer = this.raceCondition(type + ':on:' + target);
-
-      const send = event.send = r => racer(() => this.up(r));
-
-      const ref = this.api[type];
-
-      try {
-        if (!ref) {
-          throw new ReferenceError('emit: No such ref ' + type);
-        }
-
-        const method = ref[capitalize(target, 'on')];
-
-        if (!method) {
-          throw new ReferenceError('emit ' + type + ': No such method ' + capitalize(target, 'on'));
-        }
-
-        const result = method.call(ref, event, ref);
-        console.log(type + ':' + capitalize(target, 'on'), result, event, ref);
-
-        const up = r => racer(() => ref.$.up(r));
-
-        result && result.then ? result.then(up, error => up({
-          error
-        })) : up(result);
-      } catch (ex) {
-        console.error('emit ' + type + ':' + target, ex);
-        send({
-          error: ex
-        });
-      }
-    } else {
+  emit(key, data, callback) {
+    if (!key) {
       this.actualOwner.up(data);
+      return;
     }
+
+    const event = urlParse(key, {
+      data
+    });
+    const {
+      type,
+      target
+    } = event;
+
+    if (!type) {
+      this.actualOwner.up({
+        [target]: data
+      });
+      return;
+    }
+
+    const racer = this.raceCondition(type + ':on:' + target);
+
+    event.callback = (error, r) => racer(() => callback ? callback(error, r) : this.up(component_objectSpread({
+      error
+    }, r)));
+
+    const ref = type === 'this' ? this.impl : this.api[type];
+
+    try {
+      if (!ref) {
+        throw new ReferenceError('emit: No such ref ' + type);
+      }
+
+      const method = ref[capitalize(target, 'on')];
+
+      if (!method) {
+        throw new ReferenceError('emit ' + type + ': No such method ' + capitalize(target, 'on'));
+      }
+
+      const result = method.call(ref, event, ref);
+      this.log(type + ':' + capitalize(target, 'on'), result, event, ref);
+
+      if (result) {
+        ref.$.up(result);
+      }
+    } catch (ex) {
+      this.error('emit ' + type + ':' + target, ex);
+      event.callback(ex);
+    }
+  }
+  /**
+   * Routines.
+   */
+
+
+  raceCondition(key) {
+    const COUNTERS = this.$weak || (this.$weak = new Map());
+    const counter = 1 + (COUNTERS.get(key) || 0);
+    COUNTERS.set(key, counter);
+    return fn => {
+      if (counter === COUNTERS.get(key)) {
+        runInBrowser(fn);
+      }
+
+      ;
+    };
+  }
+
+  defer(fn) {
+    if (fn && typeof fn === 'function') {
+      (this.defered || (this.defered = [])).push(fn);
+    }
+  }
+
+  eachChild(fn) {
+    let ch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.children;
+
+    if (ch) {
+      ch.forEach(fn);
+    }
+  }
+
+  get actualOwner() {
+    let $ = this;
+
+    for (; $.owner && $.tag === 'ui:fragment'; $ = $.owner) {}
+
+    return $;
+  }
+
+  cleanUp() {
+    ['parent', 'children', 'owner', 'impl', 'app', 'ctx'].forEach(k => {
+      delete this[k];
+    });
+  }
+
+  error() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    console.error(this.tag + this.uid, ...args);
+  }
+
+  log() {
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    console.log(this.tag + this.uid, ...args);
+  }
+
+  bindFn(f) {
+    const $ = this;
+    const map = $.$boundFnMap || ($.$boundFnMap = new Map());
+    let fn = map.get(f);
+
+    if (!fn) {
+      const bound = f.bind($.impl);
+
+      fn = function fn() {
+        const r = bound(...arguments);
+
+        if (r) {
+          $.up(r);
+        }
+      };
+
+      map.set(f, fn);
+    }
+
+    return fn;
   }
 
 }
@@ -3644,7 +3735,12 @@ class component_Component {
 
 
 
-class Api {}
+class Api {
+  constructor(options) {
+    Object.assign(this, options);
+  }
+
+}
 
 function register() {
   for (var _len = arguments.length, types = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -3656,10 +3752,18 @@ function register() {
     tag: types[0].NAME
   }]]);
   return {
-    run(ctx) {
-      const root = new component_Component(Api, {});
+    run(_ref) {
+      let {
+        pipes,
+        resources,
+        rootElement
+      } = _ref;
+      const root = new component_Component(Api, {
+        pipes,
+        resources
+      });
 
-      root.render = () => runInBrowser(doc => render(root, meta, ctx || doc.body));
+      root.render = () => runInBrowser(doc => render(root, meta, rootElement || doc.body));
 
       root.render();
       return () => {

@@ -13,9 +13,9 @@ import others from './modules/others.html';
 import { dig } from 'furnitura';
 import res from './res.js';
 import meta from './meta.js'
-import { presenters } from '../common/presenters';
+import { pipes } from '../common/pipes';
 
-Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))({ ...res, ...meta.result, pipes: presenters });
+Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))({ ...res, ...meta.result });
 
 const ref = {};
 const launch = () => {
@@ -23,7 +23,10 @@ const launch = () => {
     ...loadTemplates(App, main, news, ads, calendar, geomap, others),
     ...components,
     ...Object.values(commonServices),
-  ).run();
+  ).run({
+    pipes,
+    resources: Object.R,
+  });
 };
 
 ((hot) => {
