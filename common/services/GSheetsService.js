@@ -1,11 +1,16 @@
 
 import { urlParse, fnId, arrayToHash, dig } from 'furnitura';
 import { LocalStorage } from './LocalStorage';
+import { AService } from './AService';
 
-export class GSheetsService {
+export class GSheetsService extends AService {
+
+  constructor(props, $) {
+    super(props, $)
+    this.local = new LocalStorage()
+  }
 
   async init() {
-    this.local = new LocalStorage()
     this.syncAll();
   }
   syncAll() {
@@ -28,9 +33,9 @@ export class GSheetsService {
             return acc;
           }, {})).join(',')
         })
-        this.local.assign({ ads: { since: last || Date.now(), data: { items: { ...items0, ...items }, boards } } })
+        this.local.assign({ ads: { since: last || Date.now(), data: { items: { ...items0, ...items }, boards } } });
+        this.emit('this:sync')
       })
-      .then(this.notify)
       .then(() => { this.log('sync all: OK'); })
       .catch((err) => this.log('sync all: error: ' + err));;
   }
@@ -62,6 +67,11 @@ export class GSheetsService {
   async update(delta) {
     await this.localUpdate(delta);
     return this.remote.update(delta);
+  }
+  async onSync() {
+    this.log('onSync');
+
+    return { _: NaN }
   }
   async onUpsert({ path: [kind], data }) {
     if (!data.id) {

@@ -1,5 +1,6 @@
 import { sortBy } from 'furnitura';
 import { translit } from 'mova';
+import { AService } from './AService';
 
 const analyzeDataByTags = (data, selection, initials = '') => {
   const sel = Object.values(selection).filter(Boolean)
@@ -55,9 +56,10 @@ class Item {
   get $searchData() { return this.$$searchData || (this.$$searchData = (this.title + ' ' + translit(this.title) + ' ' + this.preview + ' ' + translit(this.preview)).toLowerCase()) }
 }
 
-export class Collection {
+export class Collection extends AService {
 
-  constructor() {
+  constructor(props, $) {
+    super(props, $)
     this.selection = {};
     this.shownLimit = 50;
     this.sortBy = '-ts';
@@ -83,7 +85,7 @@ export class Collection {
     return {
       tags,
       data: sortedData.slice(0, this.shownLimit),
-      openEntry: ({ id }) => this.emit("openEntry", this.data.find(e => e.id === id)),
+      openEntry: ({ id }) => this.emit("this:openEntry", this.data.find(e => e.id === id)),
       counts: {
         total: this.data.length,
         actual: actualData.length,
@@ -93,8 +95,8 @@ export class Collection {
         kluq: this.kluqPoshuku,
         value: this.inputKluqPoshuku,
         suggestions: this.kluqPoshuku === this.inputKluqPoshuku ? null : suggestions,
-        input: (data) => this.emit("inputKluq", data),
-        enter: (data) => this.emit("znajdzPoKluqu", data),
+        input: (data) => this.emit("this:inputKluq", data),
+        enter: (data) => this.emit("this:znajdzPoKluqu", data),
       }
     }
   }
@@ -109,18 +111,25 @@ export class Collection {
   }
 
   onZnajdzPoKluqu({ data: { value } }) {
-    this.inputKluqPoshuku = value || '';
-    this.kluqPoshuku = value || '';
+    return {
+      inputKluqPoshuku: value || '',
+      kluqPoshuku: value || ''
+    }
   }
   onInputKluq({ data: { value } }) {
-    this.inputKluqPoshuku = value || '';
-
+    return {
+      inputKluqPoshuku: value || ''
+    }
   }
   onSortBy({ data: { value } }) {
-    this.sortBy = value || '-ts';
+    return {
+      sortBy: value || '-ts'
+    }
   }
-  onShowMore({ data: { size = 50 } }) {
-    this.shownLimit += size;
+  onShowMore({ data: { size = 50 } }, { shownLimit }) {
+    return {
+      shownLimit: shownLimit + size
+    }
   }
   /**
    * New Entry
@@ -131,8 +140,8 @@ export class Collection {
       newEntry: {
         ...data,
         ...this.newEntry,
-        cancel: () => this.emit("cancelAddNew"),
-        submit: (data) => this.emit("saveNew", data),
+        cancel: () => this.emit("this:cancelAddNew"),
+        submit: (data) => this.emit("this:saveNew", data),
         open: true
       }
     }
@@ -161,9 +170,9 @@ export class Collection {
         id,
         data: Object.entries(data).reduce((r, [k, v]) => { if (k[0] !== '$') { r[k] = v }; return r }, {}),
         ...this.entry,
-        cancel: () => this.emit("cancelEntry"),
-        submit: (data) => this.emit("saveEntry", data),
-        delete: () => this.emit("deleteEntry", { id }),
+        cancel: () => this.emit("this:cancelEntry"),
+        submit: (data) => this.emit("this:saveEntry", data),
+        delete: () => this.emit("this:deleteEntry", { id }),
         open: true
       }
     }

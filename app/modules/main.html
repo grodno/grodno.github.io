@@ -3,18 +3,14 @@
     <div class="container grid-lg">
       <div class="columns">
         <div class="column col-12">
-          <h4 class="my-2">:app.slogan</h4>
+          <h4 class="my-2 text-center text-error">:app.slogan|upper</h4>
           <div class="tile">
-            <div class="tile-icon bg-secondary" data-id={id}>
-              <img src=":app.faceImg" width="120" />
-            </div>
-            <div class="tile-content">
+            <div class="tile-content text-right">
               <small>:app.small</small>
-              <h6>:app.concept</h6>
             </div>
           </div>
         </div>
-        <div class="column col-4 col-sm-12" ui:for="item of <-nav:/sitemap">
+        <div class="column col-4 col-sm-12 bg-secondary p-2 my-2" ui:for="item of <-nav:/sitemap">
           <MainCard ui:props={item} />
         </div>
       </div>
@@ -22,6 +18,9 @@
         <!-- <iframe class="embed-responsive-item" src="//www.youtube.com/embed/j4oJoRAb_Ag" allowfullscreen="true"></iframe> -->
       </div>
       <small>
+        <p>
+          <i>:app.concept</i>
+        </p>
         <p>
           <strong>
             <a href="http://ru.wikipedia.org/wiki/%D0%98%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F_%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE"

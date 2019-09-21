@@ -4,16 +4,16 @@ export default {
     faceImg: '/assets/grodno2.svg',
     logo: '/assets/algard-face.png',
     slogan: 'Esti feliqa - Algardium nur.',
-    small: 'Solnca wsxodzit i zaxodzit, a volnea plynj Niemana ne spyniaet sa ni na mig.',
-    concept: `Algardium - e mestom nedzvyqajnym. Tut qas beghyt pa-svojmu i inny masshtab padzej,
-    zdarenni abumowleny i wsio navokal prasiaknuto asobym sensam.
-    Trebo adno zawvaghac znaki, sluxac tishynu, tob dotknuci tae inshae realnosti.`,
+    small: 'Solnca wsxodzit i zaxodzit, a volnea plyn Neomana ne spyniaet sa ni na mig.',
+    concept: `Algardium - e mestom nezvyqajnym. Tut qas beghyt pa-svojmu i inny masshtab padzej,
+    i wsio navokal prasiaknuto asobym sensam.
+    Treba adno zawvaghac znaki, sluxac tishynu, tob dotknuti tae inshae realnosti.`,
     history: ` e vluqnaj qastkaj gistoryi susvetnaj. 
-    Liosy, zvyqai, roznye movy i kultury tesno perapleli sa tut w admyslovy uzor.
+    Leosy, zvyqai, roznye movy i kultury tesno perapleli sa tut w admyslovy uzor.
     Nash gorad e prykladom tradycyj siabrowstva i wzaemnaj povagi migh liudzmi. 
     My roznye, ale nas jednae vera w lepshae majbytne, katorae my razam buduemo dzenj za dniom.
     Tut liubiat pavtorac:
-    "Use my liudzi", "Nex zhye volnosc", "Xto krutic, toj mae".`,
+    "Use my liudzi", "Nex zhye volnost", "Kto krutit, toj maet".`,
     version: '4.0.0',
     sitemap: [
       { name: 'Naviny', id: 'news', link: '#/news', description: 'Naviny na dobu' },

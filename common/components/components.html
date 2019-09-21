@@ -1,12 +1,5 @@
 <body>
 
-    <template id="Container">
-        <div class="container bg-gray">
-            <ui:slot />
-        </div>
-    </template>
-
-
     <template id="NavTree">
         <ul class="nav">
             <li class="nav-item {item.class}" ui:for="item of data">
@@ -61,7 +54,7 @@
 
     <template id="Sidebar">
         <div class="off-canvas off-canvas-sidebar-show">
-            <a class="off-canvas-toggle btn btn-primary btn-action show-lg bg-warning" style="background: #ffb700;"
+            <a class="off-canvas-toggle btn btn-primary btn-action show-lg bg-red"
                href="#sidebar">
                 <i class="icon icon-menu" />
             </a>
@@ -92,14 +85,16 @@
     </template>
 
     <template id="Chips">
-        <div class="ui mini labels">
-            <span class="chip c-hand bg-success:{tag.selected} bg-secondary:{tag.selected|not} badge:{tag.selected|not}"
-                  data-badge={tag.count|ifAbove:3}
-                  data-id={tag.id}
-                  click={click}
-                  ui:for="tag of data">
-                <span>{tag.name}<small ui:if={tag.selected2}>{tag.count}</small></span>
-            </span>
+        <div class="sticky bg-gray py-2" style="z-index: 2;">
+            <div class="ui mini labels">
+                <span class="chip c-hand bg-success:{tag.selected} bg-secondary:{tag.selected|not} badge:{tag.selected|not}"
+                      data-badge={tag.count|ifAbove:3}
+                      data-id={tag.id}
+                      click={click}
+                      ui:for="tag of data">
+                    <span>{tag.name}<small ui:if={tag.selected2}>{tag.count}</small></span>
+                </span>
+            </div>
         </div>
     </template>
 

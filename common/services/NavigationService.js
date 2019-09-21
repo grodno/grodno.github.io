@@ -17,7 +17,7 @@ export class NavigationService extends AService {
   }
 
   done() {
-    () => window.removeEventListener('hashchange', this.hashchange)
+    window.removeEventListener('hashchange', this.hashchange)
   }
 
   update(d) {

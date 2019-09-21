@@ -24,9 +24,7 @@
           <SearchBar ui:props={search} />
         </Box:2>
       </Box>
-      <div class="sticky bg-gray py-2">
-        <Chips data={tags} click="-> news://tag" />
-      </div>
+      <Chips data={tags} click="-> news://tag" />
       <div class="columns">
         <NewsListItem ui:props={item} itemClick={openEntry} ui:for="item of data">
           <ui:loading>

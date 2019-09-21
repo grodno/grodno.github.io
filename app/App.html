@@ -13,11 +13,16 @@
             <Sidebar>
                 <Sidebar:aside>
                     <div class="bg-secondary" style="height: 100vh; width:200px">
-                        <a href="#/main">
-                            <h3 class="p-2">:app.name</h3>
-                        </a>
+                        <div class="text-center">
+                            <a href="#/main">
+                                <h3 class="p-2 ">:app.name</h3>
+                            </a>
+                        </div>
                         <div class="m-2">
                             <NavTree data="<- nav://sitemap" />
+                        </div>
+                        <div class="m-2 tile-icon bg-secondary ">
+                            <img src=":app.faceImg" width="120" class="centered" />
                         </div>
                     </div>
                 </Sidebar:aside>
@@ -34,6 +39,12 @@
                 </ui:fragment>
             </Sidebar>
         </ui:fragment>
+    </template>
+
+    <template id="Container">
+        <div class="container bg-gray">
+            <ui:slot />
+        </div>
     </template>
 
     <template id="PageRouter">
@@ -64,7 +75,7 @@
                     </ul>
                 </div>
             </div> -->
-            <div class="">
+            <small class="">
                 <a class="item" href="#">Site Map</a>
                 <span> | </span>
                 <a class="item" href="#">Contact Us</a>
@@ -72,12 +83,10 @@
                 <a class="item" href="#">Terms and Conditions</a>
                 <span> | </span>
                 <a class="item" href="#">Privacy Policy</a>
-            </div>
-            <div class="">
-                <small>Administracya ne mae daqynennia i ne nese zhodnoj adkazvosci za zmest dopisaw karystalnikaw
-                    saita.</small>
-            </div>
+            </small>
 
+            <small>Administracya ne mae daqynennia i ne nese zhodnoj adkazvosti za zmest dopisaw karystalnikaw
+                saita.</small>
         </footer>
     </template>
 </body>

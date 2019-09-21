@@ -1,4 +1,28 @@
 
+html {
+  line-height: 1.2;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  font-size: .9rem;
+}
+
+.bg-warning, .bg-red, .btn-primary {
+  background: #ff000d!important;
+}
+.bg-secondary {
+  background: #d9eaeb;
+}
+.badge[data-badge]::after {
+  background: #a9a8c9;
+}
+.card {
+  background: #fff;
+  border: .05rem solid rgb(180, 209, 207);
+  border-radius: 1rem;
+}
+
 .menu {
   z-index: 400!important;
 }

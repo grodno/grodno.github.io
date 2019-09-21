@@ -1,8 +1,11 @@
 import { capitalize, fnId, arrayToHash, dig } from 'furnitura';
 import Dexie from 'dexie';
+import { AService } from './AService';
 
-export class DatabaseService {
-  constructor({ schema, name = 'dexie' }, $) {
+export class DatabaseService extends AService {
+  constructor(props, $) {
+    super(props, $)
+    const { schema, name = 'dexie' } = props;
     const dexie = new Dexie(name, 1);
     dexie.version(1).stores({ ...schema, _meta: 'id' });
     Object.assign(this, {
