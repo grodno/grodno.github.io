@@ -1,10 +1,10 @@
 <body>
   <template id="MainPage">
-    <div class="container grid-lg">
+    <div class="grid-lg px-2" style="background-image:url(assets/view.png);background-size: cover;height:100%">
       <div class="columns">
         <div class="column col-12">
           <div class="tile">
-            <div class="tile-content text-right text-gray">
+            <div class="tile-content text-right">
               <small>:app.small</small>
             </div>
           </div>
@@ -17,25 +17,25 @@
       <div class="embed-responsive embed-responsive-4by3">
         <!-- <iframe class="embed-responsive-item" src="//www.youtube.com/embed/j4oJoRAb_Ag" allowfullscreen="true"></iframe> -->
       </div>
-      <small>
+      <Card class="bg-dark" style="background-color: rgb(241, 218, 248)">
         <p>
-          <i>:app.concept</i>
+          <small>:app.concept</small>
         </p>
-        <p>
-          <strong>
-            <a href="http://ru.wikipedia.org/wiki/%D0%98%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F_%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE"
-               target="_blank">Gistorya Algardium</a>
-          </strong>
-          <span>:app.history</span>
-        </p>
-      </small>
+
+        <small>
+          <a href="http://ru.wikipedia.org/wiki/%D0%98%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F_%D0%93%D1%80%D0%BE%D0%B4%D0%BD%D0%BE"
+             target="_blank">Gistorya Algardium</a>
+        </small>
+        <small>:app.history</small>
+
+      </Card>
     </div>
 
   </template>
 
   <template id="MainCard">
     <div class="my-1">
-      <Card title={name} subtitle={caption} link={link}>
+      <Card title={name} subtitle={caption} link={link} style="background-color: rgb(248, 218, 234)">
         <span>{description|subject|translit}</span>
       </Card>
     </div>

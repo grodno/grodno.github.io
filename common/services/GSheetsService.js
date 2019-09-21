@@ -25,9 +25,9 @@ export class GSheetsService extends AService {
       .then(([items, boards, last]) => {
         this.log('sync ads', last, items);
         Object.values(items).forEach(e => {
+          if (!e.kind === 'ads') return;
           const board = boards[e.boardId] || { name: '#' + e.boardId }
           e.boardName = board.name
-          e.link = 'https://forum.grodno.net/index.php?topic=' + e.topicId
           e.tags = Object.keys([e.tags, board.tags, board.action].reduce((acc, s) => {
             (s || '').split(',').forEach(ss => { if (ss) { acc[ss] = 1 } })
             return acc;

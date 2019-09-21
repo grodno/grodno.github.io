@@ -3,7 +3,7 @@ export default {
     name: 'Algardium',
     logo: '/assets/grodno2.svg',
     slogan: 'Esti feliqa - Algardium nur.',
-    small: 'Solnca wsxodzit i zaxodzit, a volnea plyn Neomana ne spyniaet sa ni na mig.',
+    small: 'Solnce wsxodzit i zaxodzit, a volnaja plynj Niomana ne spyniaet sa ni na mig.',
     concept: `Algardium - e mestom nezvyqajnym. Tut qas beghyt pa-svojmu i inny masshtab padzej,
     i wsio navokal prasiaknuto asobym sensam.
     Treba adno zawvaghac znaki, sluxac tishynu, tob dotknuti tae inshae realnosti.`,

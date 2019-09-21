@@ -12,7 +12,7 @@ body {
   background: #ff000d!important;
 }
 .bg-secondary {
-  background: #d9eaeb;
+  background: #f7edd5;
 }
 .badge[data-badge]::after {
   background: #a9a8c9;
