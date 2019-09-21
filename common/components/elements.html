@@ -33,9 +33,13 @@
         </button>
     </template>
 
+    <template id="Img">
+        <img src={src} class={class} error="->" data-src="/assets/logo.jpg" />
+    </template>
+
     <template id="Avatar">
         <figure class="avatar avatar- bg-primary" data-initial={initial}>
-            <img src={image} class="img-responsive" />
+            <Img src={image} class="img-responsive" />
         </figure>
     </template>
 

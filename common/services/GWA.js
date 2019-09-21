@@ -1,7 +1,7 @@
 export class SWRunner {
     init() {
 
-        if (window.location.host.includes('localhost')) { return }
+        //  if (window.location.host.includes('localhost')) { return }
 
         const navigator = window.navigator;
         if ('serviceWorker' in navigator) {

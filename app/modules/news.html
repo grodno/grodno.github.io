@@ -36,12 +36,8 @@
         </NewsListItem>
         <Toast ui:if={error} message={error.message} />
       </div>
-      <Button title=":pakazac_bolsh"
-              mode="primary"
-              data-size="20"
-              action="-> news://showMore"
-              ui:if={counts.hasMore} />
-      <a href="#top" ui:if={counts.actual|isAbove:5}>:naverx</a>
+      <a class="float-right" href="#top" ui:if={counts.actual|isAbove:5}>:naverx</a>
+      <a click="-> news://showMore" data-size="20" ui:if={counts.hasMore}>:pakazac_bolsh</a>
     </div>
   </template>
 

@@ -1,8 +1,7 @@
 export default {
   app: {
     name: 'Algardium',
-    faceImg: '/assets/grodno2.svg',
-    logo: '/assets/algard-face.png',
+    logo: '/assets/grodno2.svg',
     slogan: 'Esti feliqa - Algardium nur.',
     small: 'Solnca wsxodzit i zaxodzit, a volnea plyn Neomana ne spyniaet sa ni na mig.',
     concept: `Algardium - e mestom nezvyqajnym. Tut qas beghyt pa-svojmu i inny masshtab padzej,
