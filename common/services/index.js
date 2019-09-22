@@ -5,6 +5,6 @@ export * from './Database.js';
 export * from './GSheetsService.js';
 export * from './UserService.js';
 export * from './Collection.js';
-export * from './ResService.js';
+export * from './GeoService.js';
 export * from './GWA.js';
 

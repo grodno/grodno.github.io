@@ -1,5 +1,5 @@
 
-import { grodnify } from '../utils/index.js'
+import { grodnify } from '../pipes/index.js'
 import { urlStringify } from 'furnitura';
 
 /**

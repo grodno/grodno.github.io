@@ -1,6 +1,7 @@
 <template id="MapPage">
+  <GeoService ui:ref="geo" />
   <div style="position: relative;">
-    <Mapbox data=":geojson" />
+    <Mapbox data=":geojson" onitem="-> geo:select" />
   </div>
 </template>
 

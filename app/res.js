@@ -69,19 +69,7 @@ export default {
   dbSchema: {
     news: 'id, modified_at',
     users: 'id, modified_at',
-    comments: 'id, target, modified_at',
-    // medician: 'id, modified_at, nameasa, specialty, degree, city, organization',
-    // organization: 'id, modified_at, city',
-    // taxonomy: 'id, modified_at',
-    // unit: 'id, modified_at, city, organization',
-    // address: 'id, modified_at, city, street, country',
-    // patient: 'id, modified_at, birth_date, gender, marital_status, emergency_contact, phone, email, risk_factors',
-    // medication: 'id, modified_at, date',
-    // slot: 'id, modified_at',
-    // visit: 'id, modified_at, city, organization, unit, medician, person, status, date',
-    // dict: 'id, modified_at, type, scope, style',
-    // order: 'id, modified_at',
-    // orderRequest: 'id, modified_at'
+    ads: 'id, modified_at',
   },
   geojson: {
     "type": "FeatureCollection",

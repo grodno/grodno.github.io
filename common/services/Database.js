@@ -6,7 +6,7 @@ export class DatabaseService extends AService {
   constructor(props, $) {
     super(props, $)
     const { schema, name = 'dexie' } = props;
-    const dexie = new Dexie(name, 1);
+    const dexie = new Dexie(name, 2);
     dexie.version(1).stores({ ...schema, _meta: 'id' });
     Object.assign(this, {
       dexie,
@@ -29,7 +29,7 @@ export class DatabaseService extends AService {
   }
   async init() {
     await this.openDb();
-    this.emit('opened')
+    this.emit('this:opened')
   }
   getMeta() {
     return this.getTable('_meta').toArray().then(arr => arrayToHash(arr))

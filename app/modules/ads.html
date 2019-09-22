@@ -3,8 +3,8 @@
     <ui:fragment>
       <GSheetsService url=":ads.apiUrl" ui:ref="ads-data" />
       <Collection ui:ref="ads"
-                  data="<- ads-data://items"
-                  upsert="-> ads-data://items"
+                  data="<- db://ads"
+                  upsert="-> db://upsert/ads"
                   initials=":ads.initialTags" />
       <AdsList ui:props="<- ads://info" />
       <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> ads:openAddNew" />
@@ -65,8 +65,8 @@
             </div>
           </div>
         </Card:header>
-        <!-- <img src="/assets/grodno2.svg" height="10" width="10" />
-        <small class="mx-2">{preview|translit}</small> -->
+        <img src="/assets/grodno2.svg" height="10" width="10" />
+        <small class="mx-2">{preview|translit}</small>
         <!-- <div class="card-footer">
           <button class="btn btn-primary btn-sm">Do</button>
         </div> -->
