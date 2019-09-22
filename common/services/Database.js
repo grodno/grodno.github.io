@@ -8,6 +8,7 @@ export class DatabaseService extends AService {
     const { schema, name = 'dexie' } = props;
     const dexie = new Dexie(name, 2);
     dexie.version(1).stores({ ...schema, _meta: 'id' });
+    dexie.version(2).upgrade(() => null);
     Object.assign(this, {
       dexie,
       remote: $.api.firebase,
@@ -20,16 +21,15 @@ export class DatabaseService extends AService {
   }
   openDb() {
     // Open the database
-    this.dexie.open().then(() => this.log('opened')).catch(this.error);
+    this.dexie.open().then(() => this.emit('this:opened')).catch(this.error);
   }
   checkVersion() {
     if (this.api.local.get('$version') !== this.version) {
       this.api.local.assign({ $version: this.version });
     }
   }
-  async init() {
-    await this.openDb();
-    this.emit('this:opened')
+  init() {
+    this.openDb();
   }
   getMeta() {
     return this.getTable('_meta').toArray().then(arr => arrayToHash(arr))

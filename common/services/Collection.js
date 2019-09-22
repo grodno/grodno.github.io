@@ -51,7 +51,7 @@ class Item {
     Object.assign(this, opts, opts2);
   }
   get ts() { return this.$ts || (this.$ts = this.modified_at || this.created_at || -1) }
-  get $tags() { return this.$$tags || (this.$$tags = new Set((this.tags || '').split(',').filter(Boolean))) }
+  get $tags() { return this.$$tags || (this.$$tags = new Set(('' + (this.tags || '')).split(',').filter(Boolean))) }
   get title() { return this.$title || (this.$title = this.name || this.subject || this.topic || this.id) }
   get $searchData() { return this.$$searchData || (this.$$searchData = (this.title + ' ' + translit(this.title) + ' ' + this.preview + ' ' + translit(this.preview)).toLowerCase()) }
 }
