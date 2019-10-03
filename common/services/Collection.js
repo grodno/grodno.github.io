@@ -55,7 +55,6 @@ class Item {
   get title() { return this.$title || (this.$title = this.name || this.subject || this.topic || this.id) }
   get $searchData() { return this.$$searchData || (this.$$searchData = (this.title + ' ' + translit(this.title) + ' ' + this.preview + ' ' + translit(this.preview)).toLowerCase()) }
 }
-
 export class Collection extends AService {
 
   constructor(props, $) {
