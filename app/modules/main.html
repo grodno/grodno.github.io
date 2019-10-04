@@ -3,11 +3,6 @@
     <div class="grid-lg px-2" style="background-image:url(assets/view.png);background-size: cover;height:100%">
       <div class="columns">
         <div class="column col-12">
-          <div class="tile">
-            <div class="tile-content text-right">
-              <small>:app.small</small>
-            </div>
-          </div>
           <h4 class="my-2 text-center text-error">:app.slogan|upper</h4>
         </div>
         <div class="column col-4 col-sm-12 p-2 my-2" ui:for="item of <-nav:/sitemap">
@@ -18,6 +13,11 @@
         <!-- <iframe class="embed-responsive-item" src="//www.youtube.com/embed/j4oJoRAb_Ag" allowfullscreen="true"></iframe> -->
       </div>
       <Card class="bg-dark" style="background-color: rgb(241, 218, 248)">
+        <p>
+          <div class="tile-content text-right">
+            <small>:app.small</small>
+          </div>
+        </p>
         <p>
           <small>:app.concept</small>
         </p>
