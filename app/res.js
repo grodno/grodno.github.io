@@ -14,6 +14,7 @@ export default {
     Tut liubiat pavtorac:
     "Use my liudzi", "Nex zhye volnost", "Kto krutit, toj maet".`,
     version: '4.0.0',
+    disclaimer: 'Administracya ne mae daqynennia i ne nese zhodnoj adkazvosti za zmest dopisaw karystalnikaw saita.',
     sitemap: [
       { name: 'Naviny', id: 'news', link: '#/news', description: 'Naviny na dobu' },
       { name: 'Objavy', id: 'ads', link: '#/ads', description: 'Pryvatye abjavy' },

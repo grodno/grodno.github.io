@@ -94,6 +94,9 @@
                       ui:for="tag of data">
                     <span>{tag.name}<small ui:if={tag.selected2}>{tag.count}</small></span>
                 </span>
+                <span ui:if="reset" class="chip c-hand bg-gray" click={reset}>
+                    <span>x</span>
+                </span>
             </div>
         </div>
     </template>

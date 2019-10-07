@@ -25,7 +25,7 @@
           <SearchBar ui:props={search} />
         </Box:2>
       </Box>
-      <Chips data={tags} click="-> ads:tag" />
+      <Chips data={tags} click="-> ads:tag" reset={resetTags} />
       <div class="columns">
         <AdsListItem ui:props={item} itemClick={openEntry} ui:for="item of data">
           <ui:loading>

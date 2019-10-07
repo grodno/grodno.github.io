@@ -24,7 +24,7 @@
           <SearchBar ui:props={search} />
         </Box:2>
       </Box>
-      <Chips data={tags} click="-> news://tag" />
+      <Chips data={tags} click="-> news://tag" reset={resetTags} />
       <div class="columns">
         <NewsListItem ui:props={item} itemClick={openEntry} ui:for="item of data">
           <ui:loading>
@@ -54,13 +54,13 @@
               <div>
                 <small class="text-gray">{modified_at|date}</small>
                 <small class="text-gray mx-1"><a href={link} target="_blank">{link|hostOf}</a></small>
-                <small class="text-gray" ui:if={tags}>({tags})</small>
+                <!-- <small class="text-gray" ui:if={tags}>({tags})</small> -->
               </div>
             </div>
           </div>
         </Card:header>
         <img src="/assets/grodno2.svg" height="10" width="10" />
-        <small class="mx-2">{preview|translit}</small>
+        <small class="mx-2">{preview|translit2}</small>
         <!-- <div class="card-footer">
           <button class="btn btn-primary btn-sm">Do</button>
         </div> -->

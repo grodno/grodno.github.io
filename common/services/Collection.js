@@ -5,8 +5,16 @@ import { AService } from './AService';
 const analyzeDataByTags = (data, selection, initials = '') => {
   const sel = Object.values(selection).filter(Boolean)
   const reshta = { id: 'zzz', name: '[reshta]', count: 0, selected: false }
+
   if (sel.length || !initials) {
     const actualData = data.filter(e => sel.reduce((r, s) => r && e.$tags.has(s), true));
+    if (!actualData.length && initials) {
+      return {
+        actualData, tagsHash: initials.split(',')
+          .map(id => ({ id, name: id, count: 0, selected: selection[id] }))
+          .concat(reshta)
+      }
+    }
     const tagsHash = actualData.reduce((r, e) => {
       e.$tags.forEach(id => {
         if (id === reshta.id) { return r; }
@@ -27,7 +35,7 @@ const analyzeDataByTags = (data, selection, initials = '') => {
     actualData.reduce((r, e) => {
       let contained = false
       tagsHash.forEach(tag => {
-        if (e.$tags.has(tag.id)) {
+        if (tag.id && e.$tags.has(tag.id)) {
           tag.count++
           contained = true;
         }
@@ -83,6 +91,7 @@ export class Collection extends AService {
     const sortedData = sortBy(actualData, this.sortBy)
     return {
       tags,
+      resetTags: Object.keys(this.selection).length ? () => this.emit("this:resetTags") : null,
       data: sortedData.slice(0, this.shownLimit),
       openEntry: ({ id }) => this.emit("this:openEntry", this.data.find(e => e.id === id)),
       counts: {
@@ -97,6 +106,12 @@ export class Collection extends AService {
         input: (data) => this.emit("this:inputKluq", data),
         enter: (data) => this.emit("this:znajdzPoKluqu", data),
       }
+    }
+  }
+
+  onResetTags() {
+    return {
+      selection: {}
     }
   }
 

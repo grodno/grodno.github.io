@@ -1,15 +1,18 @@
-const version = "0.1.10";
+const version = "0.1.12";
 const cacheName = `grodno-${version}`;
 const content = [
     `/`,
     `/index.html`,
     `/index.js`,
+    `/lib/mapbox-gl.js`,
+    `/css/mapbox-gl.css`,
     `/css/app.css`,
     `/css/spectre.min.css`,
     `/css/spectre-exp.min.css`,
     `/css/spectre-icons.min.css`,
     `/assets/olxrd.png`,
-    `/assets/view.png`
+    `/assets/view.png`,
+    'https://fonts.gstatic.com/s/nunito/v11/XRXV3I6Li01BKofINeaBTMnFcQ.woff2'
 ]
 self.addEventListener('install', event => {
     event.waitUntil(caches.open(cacheName)
@@ -30,7 +33,7 @@ self.addEventListener('fetch', event => {
                 if (!r.status || r.status >= 400) {
                     const url = event.request.referrer + 'assets/logo.jpg'
                     // console.log('sw fetch', url);
-                    return fetch(event.request)
+                    return fetch(url)
                 }
                 return r;
             }))
