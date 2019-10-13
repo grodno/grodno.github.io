@@ -1,4 +1,7 @@
-export default {
+import meta from './meta.js'
+
+Object.resources = {
+  ...meta.result,
   app: {
     name: 'Algardium',
     logo: '/assets/olxrd.png',

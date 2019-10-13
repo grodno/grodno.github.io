@@ -1,8 +1,10 @@
+import 'ultis';
 import { register } from 'armatura';
-import components from '../common/components';
+import components from 'components';
 import App from './App.html';
-import * as commonServices from '../common/services';
-import { loadTemplates } from 'armatura/support.js';
+import * as commonServices from 'services';
+import { loadTemplates } from 'components/support.js';
+
 import main from './modules/main.html';
 import calendar from './modules/calendar.html';
 import geomap from './modules/map.html';
@@ -10,24 +12,18 @@ import news from './modules/news.html';
 import ads from './modules/ads.html';
 import others from './modules/others.html';
 
-import { dig } from 'furnitura';
-import res from './res.js';
-import meta from './meta.js'
-import { pipes } from '../common/pipes';
+import './pipes';
+import './res.js';
 
-Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))({ ...res, ...meta.result });
+const types = [
+  ...loadTemplates(App, main, news, ads, calendar, geomap, others),
+  ...components,
+  ...Object.values(commonServices),
+]
 
-const ref = {};
-const launch = () => {
-  ref.done = register(
-    ...loadTemplates(App, main, news, ads, calendar, geomap, others),
-    ...components,
-    ...Object.values(commonServices),
-  ).run({
-    pipes,
-    resources: Object.R,
-  });
-};
+let app = {};
+
+const launch = () => { app = register(...types).run(); };
 
 ((hot) => {
   if (!hot) {
@@ -35,7 +31,7 @@ const launch = () => {
     return;
   }
 
-  hot.dispose(data => ref.done());
+  hot.dispose(data => app.done());
   hot.accept();
 
   if (!hot.data) {

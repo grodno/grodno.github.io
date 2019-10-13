@@ -13,11 +13,12 @@ var config = {
     ]
   },
   output: {
-    path: __dirname + '/docs',
+    path: __dirname + '/docs/lib',
     filename: 'armatura.js',
     devtoolModuleFilenameTemplate: '[resource-path]',
-    library: 'armatura',
-    libraryTarget: 'umd',
+    // library: 'default',
+    libraryTarget: 'umd2',
+    globalObject: 'this',
   },
   module: commons.module,
   resolve: commons.resolve,

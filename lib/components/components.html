@@ -12,6 +12,19 @@
         </ul>
     </template>
 
+    <template id="Box">
+        <div class="container bg-gray">
+            <div class="columns">
+                <div class="column col-6 col-sm-12">
+                    <ui:slot id="1" />
+                </div>
+                <div class="column col-6 col-sm-12 my-2">
+                    <ui:slot id="2" />
+                </div>
+            </div>
+        </div>
+    </template>
+
     <template id="Panel">
         <div class="panel" style={style}>
             <div class="panel-header">
@@ -105,6 +118,40 @@
         <ul class="tab tab-block">
             <li class="tab-item  c-hand" ui:for="item of data">
                 <a href="#tab?tab={item.value}">{item.name}</a>
+            </li>
+        </ul>
+    </template>
+
+    <template id="Tree">
+        <div class="ui list tree">
+            <div ui:for="item of data" click={update} class="item {itemClass}" data-value={item.id}>
+                <i class="icon folder"></i>
+                <div class="content">
+                    <li click={update} data-value={id}>
+                        <div class="header">{name}</div>
+                        <div class="description">{dname}</div>
+                    </li>
+                    <Tree ui:if={item.children} data={item.children} />
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="Breadcrumbs">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item" ui:for="step in path">
+                <a href="#module/{step.id}">{step.name}</a>
+            </li>
+            <li class="breadcrumb-item" ui:if={modes.length}>
+                <div class="dropdown">
+                    <a class="btn btn-link dropdown-toggle" tabindex="0">{current.name}<i
+                           class="icon icon-caret"></i></a>
+                    <ul class="menu">
+                        <li class="menu-item" ui:for="li in modes">
+                            <a href="#module/{step.id}/mode/{li.id}">{li.name}</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         </ul>
     </template>

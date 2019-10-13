@@ -1,15 +1,7 @@
-export * from 'furnitura';
-import { capitalize, urlParse, representDate } from 'furnitura';
+import { capitalize, urlParse, representDate, humanize } from 'ultis';
 import { translit } from 'mova';
 
 export const grodnify = s => s + ',Гродно,Беларусь'
-
-export const mirror = (x) => (x || '').split('').reduce((r, c) => (c + r), '');
-export const camelize = (s, sep = '_') => ((s && s.length && s.split(sep).map((t, i) => (i ? capitalize(t) : t)).join('')) || ``);
-export const snakeCase = (x) => (x || '').replace(/([a-z])([A-Z])/g, '$1_$2');
-export const nope = (x) => x;
-export const humanize = key => ('' + key).split('_').map(capitalize).join(' ');
-export const proper = (s) => capitalize(camelize(s));
 
 export const filterByTags = (data, rtags = []) => data.filter(e => {
   const tags = e.tags || [];
@@ -20,11 +12,13 @@ export const filterByTags = (data, rtags = []) => data.filter(e => {
   }
   return true;
 });
+
 export const filterFn = (filter) => (item) => (item.status !== 'deleted') && Object.keys(filter || {}).reduce((r, k) => {
   const [field, op = 'eq'] = k.split('__');
   const value = filter[k];
   return r && (!value || (op === 'eq' ? item[field] === value : item[field].includes(value)));
 }, true);
+
 export const showCounts = (counts, postfix = '', prefix = '') => {
   if (!counts) { return 'loading...' }
   const { total, actual } = counts;
@@ -33,7 +27,9 @@ export const showCounts = (counts, postfix = '', prefix = '') => {
   if (actual === total) { return total + ' ' + postfix }
   return prefix + " " + actual + ' / ' + total + ' ' + postfix;
 }
-export const pipes = {
+
+Object.pipes = {
+  R: s => Object.R(s) || humanize(lastTail(s)),
   upper: s => ('' + s).toUpperCase(),
   hostOf: s => urlParse(s).target || s,
   date: s => representDate(s),
