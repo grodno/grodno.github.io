@@ -1,20 +1,8 @@
 source ./const.sh
-source ./utils.sh
 
 function fetch() {
     printf "module.exports = " > meta.js
     curl -L $APP_META_URL >> meta.js
-}
-
-function mock() {
-    printf "export default " > web/app/mock.js
-    curl -L $APP_MOCK_URL >> web/app/mock.js
-}
-
-function dzi() {
-    cp web/vendor/dzi/* ../ui-widgets/lib
-    cp web/vendor/dzi/* ../dzi-todomvc/vendor/dzi
-    cp web/vendor/dzi/* ../grodno/public/js/vendor/dzi
 }
 
 function make() {
@@ -40,19 +28,6 @@ function generate() {
         gen $file
     done
     touch version
-}
-
-function install() {
-    nvm i v10.1.0
-    nvm use v10.1.0
-    npm i
-    npm i -g standard
-    npm i -g http-server
-}
-
-function start() {
-    cd web
-    http-server
 }
 
 function install() {

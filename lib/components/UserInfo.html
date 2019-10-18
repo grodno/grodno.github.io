@@ -7,7 +7,7 @@
           <div class="loading"></div>
         </ui:then>
         <ui:else>
-          <ui:fragment ui:if={!info.email}>
+          <ui:fragment ui:if="info.isAnonymous">
             <ui:then>
               <a click="-> user:login" class="anchor" aria-hidden="true">:login</a>
             </ui:then>

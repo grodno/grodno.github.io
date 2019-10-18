@@ -2126,10 +2126,15 @@ var web_dom_iterable = __webpack_require__(37);
  * Objects.
  */
 Object.R = key => Object.resources[key] || (Object.resources[key] = dig(Object.resources, key));
+
+const isSomething = Object.isSomething = a => a !== undef && a !== null;
+const someOr = Object.someOr = function (a) {
+  let def = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  return a === undef || a === null ? def : a;
+};
 /**
  * Checks if argument is empty .
  */
-
 
 const isEmpty = Object.isEmpty = x => {
   if (!x) {
@@ -2149,6 +2154,40 @@ const isEmpty = Object.isEmpty = x => {
 
 
     return Object.keys(x).length === 0;
+  }
+
+  return false;
+};
+const deepEquals = Object.equals = (x, y) => {
+  if (x === y) {
+    return true;
+  }
+
+  if (typeof x !== typeof y) {
+    return false;
+  }
+
+  if (x instanceof Object) {
+    // (arrays)
+    if (Array.isArray(x) && Array.isArray(y)) {
+      return x.length === y.length && !x.find((e, i) => e !== y[i]);
+    } // (maps)
+
+
+    if (x instanceof Map) {
+      if (x.size !== y.size) return false;
+      let eq = true;
+      x.forEach((value, key) => {
+        if (value !== y.get(key)) {
+          eq = false;
+        }
+      });
+      return eq;
+    } // (has no props)
+
+
+    const keys = Object.keys(x);
+    return Object.keys(y).length === keys.length && !keys.find(key => x[key] !== y[key]);
   }
 
   return false;
@@ -2678,48 +2717,51 @@ const parseToDdMmYyyy = date => {
   return date.split('-').reverse().join('-');
 };
 // CONCATENATED MODULE: ./lib/ultis/fn.js
-const undef = Object.undefined;
+const fn_undef = Object.undefined;
 let COUNTER = 1;
-const nope = () => {};
-const fnId = x => x;
-const fnNull = x => null;
-const fnTrue = () => true;
-const fnFalse = () => false;
-const nextId = function nextId() {
+const nope = Function.NOPE = () => {};
+const fnId = Function.ID = x => x;
+const fnNull = Function.NULL = () => null;
+const fnTrue = Function.TRUE = () => true;
+const fnFalse = Function.FALSE = () => false;
+const nextId = Function.nextId = function () {
   let p = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   return p + COUNTER++;
 };
-
-const _curry = (fn, args0, lengthLimit) => {
-  const fx = args => args.length >= lengthLimit ? fn(...args) : _curry(fn, args, lengthLimit - args.length);
-
-  return function () {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return fx([...args0, ...args]);
-  };
+const fnThrow = Function.throw = function (error) {
+  let ErrorType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Error;
+  throw typeof error === 'string' ? new ErrorType(error) : error;
 };
-
-const curry = function curry(f) {
-  for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-    args[_key2 - 1] = arguments[_key2];
-  }
-
-  return _curry(f, args, f.length);
-};
-const compose = function compose() {
-  for (var _len3 = arguments.length, ff = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-    ff[_key3] = arguments[_key3];
+const assert = Function.assert = (b, error, errorType) => b || fnThrow(error, errorType);
+const compose = Function.compose = function () {
+  for (var _len = arguments.length, ff = new Array(_len), _key = 0; _key < _len; _key++) {
+    ff[_key] = arguments[_key];
   }
 
   return x0 => ff.reduceRight((x, f) => f(x), x0);
 };
-const swap = f => (a, b) => f(b, a);
-const isSomething = a => a !== undef && a !== null;
-const someOrNull = a => a === undef || a === null ? null : a;
-const assert = (b, error, errorType) => b || fnThrow(error, errorType);
+const swap = Function.swap = f => (a, b) => f(b, a);
+const curry = Function.curry = (() => {
+  const _curry = (fn, args0, lengthLimit) => {
+    const fx = args => args.length >= lengthLimit ? fn(...args) : _curry(fn, args, lengthLimit - args.length);
+
+    return function () {
+      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      return fx([...args0, ...args]);
+    };
+  };
+
+  return function (f) {
+    for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+      args[_key3 - 1] = arguments[_key3];
+    }
+
+    return _curry(f, args, f.length);
+  };
+})();
 // CONCATENATED MODULE: ./lib/ultis/index.js
 /* concated harmony reexport formatString */__webpack_require__.d(__webpack_exports__, "formatString", function() { return formatString; });
 /* concated harmony reexport capitalize */__webpack_require__.d(__webpack_exports__, "capitalize", function() { return capitalize; });
@@ -2731,7 +2773,10 @@ const assert = (b, error, errorType) => b || fnThrow(error, errorType);
 /* concated harmony reexport snakeCase */__webpack_require__.d(__webpack_exports__, "snakeCase", function() { return snakeCase; });
 /* concated harmony reexport humanize */__webpack_require__.d(__webpack_exports__, "humanize", function() { return humanize; });
 /* concated harmony reexport proper */__webpack_require__.d(__webpack_exports__, "proper", function() { return proper; });
+/* concated harmony reexport isSomething */__webpack_require__.d(__webpack_exports__, "isSomething", function() { return isSomething; });
+/* concated harmony reexport someOr */__webpack_require__.d(__webpack_exports__, "someOr", function() { return someOr; });
 /* concated harmony reexport isEmpty */__webpack_require__.d(__webpack_exports__, "isEmpty", function() { return isEmpty; });
+/* concated harmony reexport deepEquals */__webpack_require__.d(__webpack_exports__, "deepEquals", function() { return deepEquals; });
 /* concated harmony reexport allEmpty */__webpack_require__.d(__webpack_exports__, "allEmpty", function() { return allEmpty; });
 /* concated harmony reexport someEmpty */__webpack_require__.d(__webpack_exports__, "someEmpty", function() { return someEmpty; });
 /* concated harmony reexport dig */__webpack_require__.d(__webpack_exports__, "dig", function() { return dig; });
@@ -2766,12 +2811,11 @@ const assert = (b, error, errorType) => b || fnThrow(error, errorType);
 /* concated harmony reexport fnTrue */__webpack_require__.d(__webpack_exports__, "fnTrue", function() { return fnTrue; });
 /* concated harmony reexport fnFalse */__webpack_require__.d(__webpack_exports__, "fnFalse", function() { return fnFalse; });
 /* concated harmony reexport nextId */__webpack_require__.d(__webpack_exports__, "nextId", function() { return nextId; });
-/* concated harmony reexport curry */__webpack_require__.d(__webpack_exports__, "curry", function() { return curry; });
+/* concated harmony reexport fnThrow */__webpack_require__.d(__webpack_exports__, "fnThrow", function() { return fnThrow; });
+/* concated harmony reexport assert */__webpack_require__.d(__webpack_exports__, "assert", function() { return assert; });
 /* concated harmony reexport compose */__webpack_require__.d(__webpack_exports__, "compose", function() { return compose; });
 /* concated harmony reexport swap */__webpack_require__.d(__webpack_exports__, "swap", function() { return swap; });
-/* concated harmony reexport isSomething */__webpack_require__.d(__webpack_exports__, "isSomething", function() { return isSomething; });
-/* concated harmony reexport someOrNull */__webpack_require__.d(__webpack_exports__, "someOrNull", function() { return someOrNull; });
-/* concated harmony reexport assert */__webpack_require__.d(__webpack_exports__, "assert", function() { return assert; });
+/* concated harmony reexport curry */__webpack_require__.d(__webpack_exports__, "curry", function() { return curry; });
 
 
 

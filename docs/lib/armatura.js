@@ -2445,7 +2445,7 @@ function compileFor(_ref) {
     const fn = !pipes.length ? c => c.connect(key, rr => ({
       $data: rr
     })) : c => c.connect(key, rr => ({
-      $data: pipes.reduce((acc, pk) => c.reduce(acc, pk), rr)
+      $data: pipes.reduce((acc, pk) => c.pipe(acc, pk), rr)
     }));
     (r.inits || (r.inits = [])).push(fn);
   } else {
@@ -2641,7 +2641,7 @@ const REGISTRY = new Map();
 
 const reg = ctr => {
   const ctor = typeof ctr === 'function' ? ctr : Object.assign(function () {}, ctr);
-  const name = ctor.NAME = ctor.NAME || ctor.name || fnName(ctor);
+  const name = ctor.NAME || ctor.name || fnName(ctor);
   const text = ctor.TEMPLATE || ctor.prototype.TEMPLATE;
 
   ctor.$TEMPLATE = () => {
@@ -3721,15 +3721,11 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 class armatura_WebClientAppStub {
   constructor(props, $) {
     Object.assign(this, props);
-    $.ctx = $.rootElement || document.body;
-    $.elt = document.createDocumentFragment();
+    $.elt = $.ctx = $.rootElement || document.body;
   }
 
   render($, render) {
-    runInBrowser(() => {
-      render($);
-      $.ctx.appendChild($.elt);
-    });
+    runInBrowser(() => render($));
   }
 
 }

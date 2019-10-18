@@ -3,7 +3,7 @@ const cacheName = `grodno-${version}`;
 const content = [
     `/`,
     `/index.html`,
-    `/index.js`,
+    // `/index.js`,
     `/lib/mapbox-gl.js`,
     `/css/mapbox-gl.css`,
     `/css/app.css`,

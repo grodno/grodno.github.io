@@ -1,4 +1,4 @@
-import { capitalize, urlParse, representDate, humanize } from 'ultis';
+import { urlParse, representDate } from 'ultis';
 import { translit } from 'mova';
 
 export const grodnify = s => s + ',Гродно,Беларусь'
@@ -29,11 +29,11 @@ export const showCounts = (counts, postfix = '', prefix = '') => {
 }
 
 Object.pipes = {
-  R: s => Object.R(s) || humanize(lastTail(s)),
+  R: s => Object.R(s) || String.humanizeKey(s),
   upper: s => ('' + s).toUpperCase(),
   hostOf: s => urlParse(s).target || s,
   date: s => representDate(s),
-  capitalize,
+  capitalize: String.capitalize,
   serializeParams: x => !x ? '' : Object.keys(x).map(k => `${k}=${x[k]}`).join('&'),
   initials: x => !x ? '' : x.split(' ').slice(0, 2).map(s => s.slice(0, 1).toUpperCase()).join(''),
   not: x => !x,

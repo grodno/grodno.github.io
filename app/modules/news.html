@@ -36,7 +36,7 @@
         </NewsListItem>
         <Toast ui:if={error} message={error.message} />
       </div>
-      <a class="float-right" href="#top" ui:if={counts.actual|isAbove:5}>:naverx</a>
+      <a class="float-right" href="#top" ui:if={counts.actual|ifAbove:5}>:naverx</a>
       <a click="-> news://showMore" data-size="20" ui:if={counts.hasMore}>:pakazac_bolsh</a>
     </div>
   </template>
@@ -59,8 +59,8 @@
             </div>
           </div>
         </Card:header>
-        <img src="/assets/grodno2.svg" height="10" width="10" />
-        <small class="mx-2">{preview|translit2}</small>
+        <img src="/assets/olxrd.png" height="10" width="10" />
+        <small class="mx-2">{preview|translit}</small>
         <!-- <div class="card-footer">
           <button class="btn btn-primary btn-sm">Do</button>
         </div> -->
