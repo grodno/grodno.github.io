@@ -1,5 +1,8 @@
 import 'ultis';
+import './pipes';
+import './res.js';
 import { register } from 'armatura';
+
 import components from 'components';
 import App from './App.html';
 import * as commonServices from 'services';
@@ -12,8 +15,6 @@ import news from './modules/news.html';
 import ads from './modules/ads.html';
 import others from './modules/others.html';
 
-import './pipes';
-import './res.js';
 
 const types = [
   ...loadTemplates(App, main, news, ads, calendar, geomap, others),

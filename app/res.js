@@ -75,30 +75,6 @@ Object.resources = {
     users: 'id, modified_at',
     ads: 'id, modified_at',
   },
-  geojson: {
-    "type": "FeatureCollection",
-    "features": [{
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [23.8234751, 53.6769959]
-      },
-      "properties": {
-        "title": "Mapbox DC",
-        "icon": "monument"
-      }
-    }, {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [23.8244752, 53.6769959]
-      },
-      "properties": {
-        "title": "Mapbox SF",
-        "icon": "monument"
-      }
-    }]
-  },
   /* Enumerations */
   gender: [
     { "id": "male" },

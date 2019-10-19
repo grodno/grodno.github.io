@@ -48,6 +48,10 @@
         <ui:tag tag="{module|capitalize}Page" ui:props={params} />
     </template>
 
+    <template id="PageCaption">
+        <h3 class="s-title badge text-gray my-2" data-badge={badge}>{caption}</h3>
+    </template>
+
     <template id="TopNews">
         <ui:fragment>
             <ResService ui:ref="res" />
@@ -86,5 +90,16 @@
                 <small class="text-gray">:app.disclaimer</small>
             </div>
         </footer>
+    </template>
+
+    <template id="Img">
+        <img src={src} class={class} error="->" data-src="/assets/logo.jpg" />
+    </template>
+
+    <template id="IFrame">
+        <iframe width="100%" height="450" frameborder="0"
+                style="border:0"
+                src={src}
+                allowfullscreen="1"></iframe>`
     </template>
 </body>
