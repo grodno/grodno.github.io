@@ -3,10 +3,10 @@
     <ui:fragment>
       <GSheetsService url=":ads.apiUrl" ui:ref="ads-data" />
       <Collection ui:ref="ads"
-                  data="<- db://ads"
-                  upsert="-> db://upsert/ads"
+                  data="<- db:ads"
+                  upsert="-> db:upsertAds"
                   initials=":ads.initialTags" />
-      <AdsList ui:props="<- ads://info" />
+      <AdsList ui:props="<- ads:info" />
       <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> ads:openAddNew" />
       <AdsUpdateModal ui:props="<- ads:entry" />
       <AdsCreateModal ui:props="<- ads:newEntry" />

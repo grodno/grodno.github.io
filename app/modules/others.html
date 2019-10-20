@@ -2,7 +2,7 @@
   <template id="InfoPage">
     <ui:fragment>
       <Tabs data=":info.tabs" />
-      <Table data="<- db://index/news" columns=":info.columns" value={current} valueChanged={onItemSelected} />
+      <Table data="<- db:index/news" columns=":info.columns" value={current} valueChanged={onItemSelected} />
       <Pagination />
     </ui:fragment>
   </template>
