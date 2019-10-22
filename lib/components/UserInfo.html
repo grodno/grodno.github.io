@@ -45,20 +45,4 @@
       </div>
     </div>
   </template>
-
-  <template id="UserInfo">
-    <div class="ui raised segment">
-      <a class="ui yellow image label">
-        <i class="jp flag"></i>
-        <span>{profile.name}</span>
-        <div class="detail">Citizen</div>
-      </a>
-      <div class="ui divided selection list">
-        <div class="item" each="contact of contacts">
-          <div class="ui {contact.color} horizontal label">{contact.type}</div>
-          <a href={contact.link} target="_blank">{contact.text}</a>
-        </div>
-      </div>
-    </div>
-  </template>
 </body>

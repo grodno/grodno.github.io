@@ -2518,18 +2518,20 @@ const dates_pad = function pad(x) {
 
 const dateLocales = {
   ru: {
-    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-    monthNamesShort: ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+    monthNames: ['', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+    monthNamesShort: ['', 'Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
     dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
     dayNamesShort: ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ']
   }
 };
-const daysInMonth = Date.daysInMonth = (month, year) => Array.from({
-  length: new Date(year, month + 1, 0).getDate()
-}, (_, k) => "".concat(k + 1));
+const daysInMonth = Date.daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 const monthName = Date.monthName = function (m) {
   let mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   return (dateLocales.ru["monthNames".concat(mode)] || dateLocales.ru.monthNames)[m];
+};
+const dateFractions = Date.fractions = function () {
+  let x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  return [x.getFullYear(), x.getMonth(), x.getDate(), x.getHours(), x.getMinutes(), x.getSeconds(), x.getMilliseconds()];
 };
 /* eslint-disable complexity, no-param-reassign */
 
@@ -2611,27 +2613,7 @@ const formatDate = Date.format = function (x) {
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
-  return format.replace('dd', dates_pad(day)).replace('mm', dates_pad(month)).replace('mmm', monthName(month, 'Short')).replace('yyyy', "".concat(year));
-}; // return date in format yyyy-mm-dd
-
-const formatFullDate = x => {
-  if (!x) {
-    return '';
-  }
-
-  const date = toDate(x);
-  return date.toISOString().slice(0, 10);
-};
-const formatDateLong = (x, withTime, tz, withTimezone) => {
-  if (!x) {
-    return '';
-  }
-
-  const date = toDate(x);
-  const visitYear = date.getFullYear();
-  const day = date.getDate();
-  const str = "".concat(day, " ").concat(monthName, " ").concat(visitYear);
-  return withTime ? ["".concat(str), formatTime(date, tz, withTimezone)].join(' в ') : str;
+  return format.replace(/[_]/g, '\n').replace('dd', dates_pad(day)).replace('d', '' + day).replace('mmmm', monthName(month, '')).replace('mmm', monthName(month, 'Short')).replace('mm', dates_pad(month)).replace('yyyy', "".concat(year));
 };
 const representDate = Date.represent = x => {
   if (!x) {
@@ -2660,15 +2642,7 @@ const representDate = Date.represent = x => {
 
   return formatDate(date);
 };
-const formatDateShort = x => {
-  if (!x) {
-    return '';
-  }
-
-  const date = toDate(x);
-  return todayOrTomorrow(date) || "".concat(date.getDate(), " ").concat(getMonthName(date, 'Declination'));
-};
-const formatTime = (x, tz, withTimezone) => {
+const formatTime = Date.formatTime = (x, tz, withTimezone) => {
   if (!x) {
     return '';
   }
@@ -2677,7 +2651,6 @@ const formatTime = (x, tz, withTimezone) => {
   const minutes = date.getMinutes();
   return "".concat(date.getHours(), ":").concat(dates_pad(minutes), " ").concat(withTimezone ? formatTimezone(tz) : '').trim();
 };
-const MinskTimeZoneOffsetMinutes = 3 * 60;
 const getTimeZoneDiffMinutes = tz => tz ? Number(tz) + new Date().getTimezoneOffset() : null;
 const formatTimezone = tzOffset => {
   const toNumber = Number(tzOffset);
@@ -2772,15 +2745,12 @@ const curry = Function.curry = (() => {
 /* concated harmony reexport dateLocales */__webpack_require__.d(__webpack_exports__, "dateLocales", function() { return dateLocales; });
 /* concated harmony reexport daysInMonth */__webpack_require__.d(__webpack_exports__, "daysInMonth", function() { return daysInMonth; });
 /* concated harmony reexport monthName */__webpack_require__.d(__webpack_exports__, "monthName", function() { return monthName; });
+/* concated harmony reexport dateFractions */__webpack_require__.d(__webpack_exports__, "dateFractions", function() { return dateFractions; });
 /* concated harmony reexport parseISO8601String */__webpack_require__.d(__webpack_exports__, "parseISO8601String", function() { return parseISO8601String; });
 /* concated harmony reexport toDate */__webpack_require__.d(__webpack_exports__, "toDate", function() { return toDate; });
 /* concated harmony reexport formatDate */__webpack_require__.d(__webpack_exports__, "formatDate", function() { return formatDate; });
-/* concated harmony reexport formatFullDate */__webpack_require__.d(__webpack_exports__, "formatFullDate", function() { return formatFullDate; });
-/* concated harmony reexport formatDateLong */__webpack_require__.d(__webpack_exports__, "formatDateLong", function() { return formatDateLong; });
 /* concated harmony reexport representDate */__webpack_require__.d(__webpack_exports__, "representDate", function() { return representDate; });
-/* concated harmony reexport formatDateShort */__webpack_require__.d(__webpack_exports__, "formatDateShort", function() { return formatDateShort; });
 /* concated harmony reexport formatTime */__webpack_require__.d(__webpack_exports__, "formatTime", function() { return formatTime; });
-/* concated harmony reexport MinskTimeZoneOffsetMinutes */__webpack_require__.d(__webpack_exports__, "MinskTimeZoneOffsetMinutes", function() { return MinskTimeZoneOffsetMinutes; });
 /* concated harmony reexport getTimeZoneDiffMinutes */__webpack_require__.d(__webpack_exports__, "getTimeZoneDiffMinutes", function() { return getTimeZoneDiffMinutes; });
 /* concated harmony reexport formatTimezone */__webpack_require__.d(__webpack_exports__, "formatTimezone", function() { return formatTimezone; });
 /* concated harmony reexport adjustTimeZone */__webpack_require__.d(__webpack_exports__, "adjustTimeZone", function() { return adjustTimeZone; });

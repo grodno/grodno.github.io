@@ -12,11 +12,11 @@
     </template>
 
     <template id="Button">
-        <button class="btn btn-{mode}"
+        <button class="btn btn-{mode} {class}"
                 data={data}
                 click={action}>
-            <i ui:if={icon} class="icon icon-{icon}"></i>
-            <span data-tooltip={tooltip}>{title}</span>
+            <i ui:if="icon" class="icon icon-{icon} loading:{loading}"></i>
+            <span ui:if="title">{title}</span>
         </button>
     </template>
 

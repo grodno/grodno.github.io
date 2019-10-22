@@ -2289,41 +2289,6 @@ const parseXML = (_s, key) => {
 
   return ctx[0].getChild(0);
 };
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.to-string.js
-var es6_regexp_to_string = __webpack_require__(72);
-
-// CONCATENATED MODULE: ./lib/armatura/utils.js
-
-
-let COUNTER = 1;
-const VALUES = {
-  true: true,
-  false: false,
-  null: null
-};
-const nope = () => {};
-const fnId = x => x;
-const nextId = function nextId() {
-  let p = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-  return p + COUNTER++;
-};
-const methodName = function methodName(x) {
-  let pre = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-
-  if (!x) {
-    return pre;
-  }
-
-  const s = "".concat(x);
-  return pre + s[0].toUpperCase() + s.slice(1);
-};
-const camelize = function camelize(key) {
-  let sep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
-  let jn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ' ';
-  return ('' + key).split(sep).map((s, i) => i ? s[0].toUpperCase() + s.slice(1) : s).join(jn);
-};
-const fnName = ctor => (/^function\s+([\w$]+)\s*\(/.exec(ctor.toString()) || [])[1] || nextId('$C');
-const runInBrowser = fn => window.requestAnimationFrame(() => fn.call(window, document));
 // CONCATENATED MODULE: ./lib/armatura/compile.js
 
 
@@ -2335,9 +2300,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-
-const RE_SINGLE_PLACEHOLDER = /^\{([a-zA-Z0-9.:_$|]+)\}$/;
-const RE_PLACEHOLDER = /\{([a-zA-Z0-9.:_$|]+)\}/g; // Compilation
+const VALUES = {
+  true: true,
+  false: false,
+  null: null
+};
+const RE_SINGLE_PLACEHOLDER = /^\{([^}]+)\}$/;
+const RE_PLACEHOLDER = /\{([^}]+)\}/g; // Compilation
 
 function expression(v) {
   if (v[0] === ':') {
@@ -2376,7 +2345,7 @@ function withPipes(pipes) {
   return !pipes.length ? (c, v) => v : (c, initialValue) => pipes.reduce((r, pk) => c.pipe(r, pk), initialValue);
 }
 
-const assigner = (acc, val, k) => {
+const assignKeyValue = (acc, val, k) => {
   if (k.slice(0, 5) === 'data-') {
     acc['data'] = _objectSpread({}, acc['data'], {
       [k.slice(5)]: val in VALUES ? VALUES[val] : val
@@ -2388,12 +2357,7 @@ const assigner = (acc, val, k) => {
 
 const makeApplicator = function makeApplicator(get) {
   let k = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
-  return (c, acc) => assigner(acc, get(c), k);
-};
-
-const emitter = function emitter(v, k) {
-  let fctr = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : expression(v);
-  return c => c['$' + k] || (c['$' + k] = (data, cb) => c.emit(fctr(c), data, cb));
+  return (c, acc) => assignKeyValue(acc, get(c), k);
 };
 
 const hasSlot = (c, id) => {
@@ -2601,16 +2565,22 @@ function compile(r) {
 
       if (v2 === '<-') {
         const [key, ...pipes] = v.slice(2).split('|').map(s => s.trim());
-        const expr = expression(key);
         const pipec = withPipes(pipes);
-        (r.inits || (r.inits = [])).push(c => c.connect(expr(c), rr => ({
+        (r.inits || (r.inits = [])).push(c => c.connect(key, rr => ({
           [k]: pipec(c, rr)
         })));
       } else if (v2 === '->') {
-        (r.updates || (r.updates = [])).push(makeApplicator(emitter(v.slice(2).trim(), k + ':emitter:' + r.uid), k));
+        const [key, ...pipes] = v.slice(2).split('|').map(s => s.trim());
+        const expr = expression(key);
+        const pipec = withPipes(pipes);
+        const ekey = '$' + v + ':' + r.uid;
+
+        const emitter = c => c[ekey] || (c[ekey] = (data, cb) => c.emit(expr(c), pipec(c, data), cb));
+
+        (r.updates || (r.updates = [])).push((c, acc) => assignKeyValue(acc, emitter(c), k));
       } else {
-        if (!v.includes('{') && v[0] !== ':') {
-          assigner(r.initials || (r.initials = {}), v, k);
+        if (!v.includes('{') && v[0] !== ':' && k.slice(0, 5) !== 'data-') {
+          assignKeyValue(r.initials || (r.initials = {}), v, k);
         } else {
           (r.updates || (r.updates = [])).push(makeApplicator(expression(v), k));
         }
@@ -2635,6 +2605,36 @@ function compileNode(node) {
 
   return compile(node);
 }
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.to-string.js
+var es6_regexp_to_string = __webpack_require__(72);
+
+// CONCATENATED MODULE: ./lib/armatura/utils.js
+
+
+let COUNTER = 1;
+const nope = () => {};
+const fnId = x => x;
+const nextId = function nextId() {
+  let p = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  return p + COUNTER++;
+};
+const methodName = function methodName(x) {
+  let pre = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+  if (!x) {
+    return pre;
+  }
+
+  const s = "".concat(x);
+  return pre + s[0].toUpperCase() + s.slice(1);
+};
+const camelize = function camelize(key) {
+  let sep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
+  let jn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ' ';
+  return ('' + key).split(sep).map((s, i) => i ? s[0].toUpperCase() + s.slice(1) : s).join(jn);
+};
+const fnName = ctor => (/^function\s+([\w$]+)\s*\(/.exec(ctor.toString()) || [])[1] || nextId('$C');
+const runInBrowser = fn => window.requestAnimationFrame(() => fn.call(window, document));
 // CONCATENATED MODULE: ./lib/armatura/register.js
 
 
@@ -2896,9 +2896,13 @@ class component_Component {
             [itemId]: d,
             [itemId + 'Index']: index
           });
+
+          const up = Δ => this.owner.up(Δ);
+
           const $owner = Object.assign(Object.create(this.owner), {
             impl: $ownerImpl,
-            $propFnMap: {}
+            $propFnMap: {},
+            up
           });
           resolveTemplate($owner, {
             tag,
@@ -3118,7 +3122,9 @@ class component_Component {
     const [id, ...args] = key.split(':');
 
     try {
-      const fn = Object.pipes[id];
+      const [id0, ...deep] = id.split('.');
+      const ini = Object.pipes[id0];
+      const fn = deep.length ? deep.reduce((r, e) => r ? r[e] : null, ini) : ini;
       return fn.apply(this.actualOwner.impl, [value, ...args]);
     } catch (ex) {
       console.error('ERROR: Object.pipes.' + id, ex);
