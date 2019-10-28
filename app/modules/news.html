@@ -72,7 +72,7 @@
     <Modal ui:if={open} open={open} title="Add a new record" close={cancel}>
       <Form fields=":news_form" data={data} change="->" />
       <Modal:footer>
-        <Button title=":create_new" mode="primary" data={data} action={submit} />
+        <Button title=":title.create_new" mode="primary" data={data} action={submit} />
       </Modal:footer>
     </Modal>
   </template>
@@ -81,8 +81,8 @@
     <Modal ui:if={open} open={open} title="Edit record (#{id})" close={cancel}>
       <Form fields=":news_form" data={data|mv} change="->" />
       <Modal:footer>
-        <Button title=":update" mode="primary" data={data} action={submit} />
-        <Button title=":delete" mode="danger" action={delete} />
+        <Button title=":title.update" mode="primary" data={data} action={submit} />
+        <Button title=":title.delete" mode="danger" action={delete} />
       </Modal:footer>
     </Modal>
   </template>

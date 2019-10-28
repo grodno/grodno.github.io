@@ -2337,7 +2337,7 @@ function stringInterpolation(v) {
 }
 function placeholder(expr) {
   const [key, ...pipes] = expr.split('|').map(s => s.trim());
-  const initGettr = key[0] === ':' ? (fn => c => c.pipe(fn(c), 'R'))(stringInterpolation(key.slice(1).trim())) : c => c.prop(key);
+  const initGettr = key[0] === ':' ? (fn => c => Object.R(fn(c)))(stringInterpolation(key.slice(1).trim())) : c => c.prop(key);
   const pipec = withPipes(pipes);
   return c => pipec(c, initGettr(c));
 }
@@ -2460,12 +2460,12 @@ function compileIf(_ref2) {
   if (expr.slice(0, 2) === '<-') {
     const [key, ...pipes] = expr.slice(2).split('|').map(s => s.trim());
     const pipec = withPipes(pipes);
-    const applicator = neg ? rr => ({
+    const applicator = neg ? c => rr => ({
       $data: !pipec(c, rr)
-    }) : rr => ({
+    }) : c => rr => ({
       $data: !!pipec(c, rr)
     });
-    (r.inits || (r.inits = [])).push(c => c.connect(key, applicator));
+    (r.inits || (r.inits = [])).push(c => c.connect(key, applicator(c)));
   } else if (expr.slice(0, 5) === 'slot(') {
     const gttr = c => hasSlot(c, expr.slice(5, -1));
 
@@ -3122,9 +3122,7 @@ class component_Component {
     const [id, ...args] = key.split(':');
 
     try {
-      const [id0, ...deep] = id.split('.');
-      const ini = Object.pipes[id0];
-      const fn = deep.length ? deep.reduce((r, e) => r ? r[e] : null, ini) : ini;
+      const fn = Object.R(id);
       return fn.apply(this.actualOwner.impl, [value, ...args]);
     } catch (ex) {
       console.error('ERROR: Object.pipes.' + id, ex);

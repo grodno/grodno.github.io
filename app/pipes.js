@@ -28,8 +28,7 @@ export const showCounts = (counts, postfix = '', prefix = '') => {
   return prefix + " " + actual + ' / ' + total + ' ' + postfix;
 }
 
-Object.pipes = {
-  R: s => Object.R(s) || String.humanizeKey(s),
+export default {
   upper: s => ('' + s).toUpperCase(),
   hostOf: s => urlParse(s).target || s,
   date: s => representDate(s),

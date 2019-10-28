@@ -1,7 +1,7 @@
 import meta from './meta.js'
+import pipes from './pipes';
 
-Object.resources = {
-  ...meta.result,
+Object.R.assign(meta.result, pipes, {
   app: {
     name: 'Algard',
     logo: '/assets/olxrd.png',
@@ -26,6 +26,11 @@ Object.resources = {
       // { name: 'Liudzi', id: 'people', link: '#/people', caption: '' },
       // { name: 'Info', id: 'info', link: '#/info', caption: '' },
     ],
+  },
+  title: {
+    update: 'Abnovitt',
+    create_new: 'Dabavitt',
+    delete: 'Vydalitt',
   },
   media_links: [
     { name: 'S13.ru', id: '//s13.ru' },
@@ -85,97 +90,6 @@ Object.resources = {
     { "id": "married" },
     { "id": "single" }
   ],
-  allergy: [
-    { "id": "penicillin" },
-    { "id": "codeine" }
-  ],
-  risk_factors: [
-    { "id": "smoking" },
-    { "id": "stress" },
-    { "id": "alcohol" },
-    { "id": "weight" }
-  ],
-  specialty: [
-    { "id": "therapist" },
-    { "id": "neurologist" },
-    { "id": "ophtalmologist" },
-    { "id": "pulmonologist" },
-    { "id": "cardiologist" }
-  ],
-  category: [
-    { "id": "first" },
-    { "id": "highest" }
-  ],
-  degree: [
-    { "id": "doctor" },
-    { "id": "docent" },
-    { "id": "professor" }
-  ],
-  status: [
-    { "id": "open" },
-    { "id": "appointed" },
-    { "id": "in_progress" },
-    { "id": "done" },
-    { "id": "confirmed" }
-  ],
-  orderStatus: [
-    { "id": "reserved" },
-    { "id": "cancel" },
-    { "id": "complete" }
-  ],
-  orderType: [
-    { "id": "online" },
-    { "id": "ofline" }
-  ],
-  /* Forms */
-  medician_form: [
-    { "id": "name", "type": "name" },
-    { "id": "specialty", "type": "enum", "typeSpec": "specialty" },
-    { "id": "category", "type": "enum", "typeSpec": "category" },
-    { "id": "degree", "type": "enum", "typeSpec": "degree" },
-    { "id": "tags", "type": "tag" },
-    { "id": "city", "type": "dict", "typeSpec": "city" },
-    { "id": "organization", "shown": "{city}", "type": "ref", "typeSpec": "organization?city={city}" },
-    { "id": "unit", "shown": "{organization}", "type": "ref", "typeSpec": "unit?organization={organization}" }
-  ],
-  organization_form: [
-    { "id": "item", "type": "ref", "typeSpec": "item" },
-    { "id": "type", "type": "enum", "typeSpec": "org_type" },
-    { "id": "address", "type": "ref", "typeSpec": "address" },
-    { "id": "head_of", "type": "ref", "typeSpec": "person" },
-    { "id": "name", "type": "name" },
-    { "id": "parent", "type": "ref", "typeSpec": "unit" },
-    { "id": "weight", "type": "ref", "typeSpec": "person" },
-    { "id": "head_of", "type": "ref", "typeSpec": "person" }
-  ],
-  address_form: [
-    { "id": "city", "type": "dict", "typeSpec": "city" },
-    { "id": "street", "type": "ref", "typeSpec": "unit" },
-    { "id": "country", "type": "dict", "typeSpec": "country" },
-    { "id": "item", "type": "embed", "typeSpec": "item" }
-  ],
-  patient_form: [
-    { "id": "name", "type": "name" },
-    { "id": "birth_date", "type": "dateTime" },
-    { "id": "gender", "type": "enum", "typeSpec": "gender" },
-    { "id": "marital_status", "type": "enum", "typeSpec": "marital_status" },
-    { "id": "emergency_contact", "type": "issuesCriticality" },
-    { "id": "address", "type": "ref", "typeSpec": "address" },
-    { "id": "phone", "type": "issueType" },
-    { "id": "email", "type": "issueName" },
-    { "id": "name", "type": "span" },
-    { "id": "position", "type": "timeAgo" },
-    { "id": "date" },
-    { "id": "medication" },
-    { "id": "appearance" },
-    { "id": "quantity" },
-    { "id": "start_date" },
-    { "id": "end_date" },
-    { "id": "medician", "type": "ref", "typeSpec": "staff" },
-    { "id": "pharmacy" },
-    { "id": "chronic_conditions" },
-    { "id": "risk_factors", "type": "dict", "typeSpec": "risk_factor" },
-    { "id": "allergies", "type": "enum", "typeSpec": "allergy" },
-    { "id": "notes", "type": "note" }
-  ]
-};
+
+
+});

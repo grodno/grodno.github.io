@@ -1,5 +1,4 @@
 import 'ultis';
-import './pipes';
 import './res.js';
 import { register } from 'armatura';
 

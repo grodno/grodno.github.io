@@ -2136,8 +2136,6 @@ var web_dom_iterable = __webpack_require__(38);
 /** ***********************
  * Objects.
  */
-Object.R = key => Object.resources[key] || (Object.resources[key] = dig(Object.resources, key));
-
 const isSomething = Object.isSomething = a => a !== undef && a !== null;
 const someOr = Object.someOr = function (a) {
   let def = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -2233,10 +2231,16 @@ const someEmpty = Object.someEmpty = function () {
  * @param {*} def default value
  */
 
-const dig = Object.dig = (o, steps, def) => {
-  const x = steps.split('.').reduce((r, e) => r ? r[e === '0' ? 0 : e] : r, o);
-  return typeof x === 'undefined' ? def : x;
-};
+const dig = Object.dig = (o, steps) => steps.split('.').reduce((r, e) => r ? r[e] : r, o);
+const R = Object.R = Object.assign(key => R[key] || (R[key] = dig(R, key)), {
+  assign: function assign() {
+    for (var _len3 = arguments.length, objs = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      objs[_key3] = arguments[_key3];
+    }
+
+    return Object.assign(R, ...objs);
+  }
+});
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.sort.js
 var es6_array_sort = __webpack_require__(64);
 
@@ -2613,7 +2617,7 @@ const formatDate = Date.format = function (x) {
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
-  return format.replace(/[_]/g, '\n').replace('dd', dates_pad(day)).replace('d', '' + day).replace('mmmm', monthName(month, '')).replace('mmm', monthName(month, 'Short')).replace('mm', dates_pad(month)).replace('yyyy', "".concat(year));
+  return format.replace(/[_]/g, '\n').replace('hh', dates_pad(date.getHours())).replace('ii', dates_pad(date.getMinutes())).replace('dd', dates_pad(day)).replace('d', '' + day).replace('mmmm', monthName(month, '')).replace('mmm', monthName(month, 'Short')).replace('mm', dates_pad(month)).replace('yyyy', "".concat(year));
 };
 const representDate = Date.represent = x => {
   if (!x) {
@@ -2736,6 +2740,7 @@ const curry = Function.curry = (() => {
 /* concated harmony reexport allEmpty */__webpack_require__.d(__webpack_exports__, "allEmpty", function() { return allEmpty; });
 /* concated harmony reexport someEmpty */__webpack_require__.d(__webpack_exports__, "someEmpty", function() { return someEmpty; });
 /* concated harmony reexport dig */__webpack_require__.d(__webpack_exports__, "dig", function() { return dig; });
+/* concated harmony reexport R */__webpack_require__.d(__webpack_exports__, "R", function() { return R; });
 /* concated harmony reexport histogram */__webpack_require__.d(__webpack_exports__, "histogram", function() { return histogram; });
 /* concated harmony reexport sortBy */__webpack_require__.d(__webpack_exports__, "sortBy", function() { return sortBy; });
 /* concated harmony reexport arrayToHash */__webpack_require__.d(__webpack_exports__, "arrayToHash", function() { return arrayToHash; });

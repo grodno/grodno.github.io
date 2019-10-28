@@ -14,12 +14,12 @@
     <TodoStore ui:ref="todo" />
     <section class="todoapp">
       <Caption title=":title" />
-      <ui:fragment ui:if={<- todo:notEmpty}>
+      <ui:fragment ui:if="<- todo.notEmpty">
         <Main />
         <Filter current="<- todo.filterId">
-          <span class="todo-count"><strong><- todo:itemsLeft</strong><span>:items_left</span></span>
+          <span class="todo-count"><strong><- todo.itemsLeft</strong><span>:items_left</span></span>
           <Filter:right>
-            <button class="clear-completed" ui:if={<- todo:hasCompleted} click="-> todo.purge">:clear_completed</button>
+            <button class="clear-completed" ui:if="<- todo.hasCompleted" click="-> todo.purge">:clear_completed</button>
           </Filter:right>
         </Filter>
       </ui:fragment>
@@ -79,7 +79,7 @@
     <div class="view">
       <input class="toggle" type="checkbox" checked={completed} data-id={id} click="-> todo.inverse"/>
       <label data-editing="true" dblclick="->">{name}</label>
-      <button ui:if={completed} class="destroy" data-id={id} click="-> todo.rm"></button>
+      <button ui:if="completed" class="destroy" data-id={id} click="-> todo.rm"></button>
     </div>
     <input type="text" class="edit" value={name} data-editing="false" data-id={id} enter="-> todo.save" blur="->"/>
   </li>
@@ -91,10 +91,6 @@
   // filters metadata
   const upper = s => ('' + s).toUpperCase()
   const capitalize = s => !s ? '' : s[0].toUpperCase() + s.slice(1);
-  const dig = (o, steps, def) => {
-    const x = steps.split('.').reduce((r, e) => r ? r[e === '0' ? 0 : e] : r, o);
-    return typeof x === 'undefined' ? def : x;
-  };
   const FILTERS = [
     { id: 'all', values: [true, false] },
     { id: 'active', values: [false] },
@@ -111,16 +107,18 @@
     add: ({ items, nextId }, { value }) => !value ? null : { nextId: nextId + 1, items: [].concat({ id: nextId, name: value, completed: false }, items) }
   }
   // static resources
-  Object.R = (R => (key) => R[key] || (R[key] = dig(R, key)))(
-    {
-      title: 'todos',
-      items_left: ' item(s) left',
-      clear_completed: 'Clear completed',
-      hint: 'Double-click to edit a todo',
-      new_todo_hint: 'What needs to be done?',
-      filters: FILTERS,
-    }
-  );
+  const R = {
+    title: 'todos',
+    items_left: ' item(s) left',
+    clear_completed: 'Clear completed',
+    hint: 'Double-click to edit a todo',
+    new_todo_hint: 'What needs to be done?',
+    filters: FILTERS,
+    upper,
+    capitalize
+  };
+
+  Object.R = x => R[x]
 
   // service component
   class TodoStore {
@@ -171,12 +169,7 @@
     .map(e => ({ NAME: e.id, TEMPLATE: e.innerHTML }))
 
   // register components and run 
-  armatura
-    .register(...staticTypes, TodoStore)
-    .run({
-      pipes: { upper, capitalize },
-      resources: Object.R
-    })
+  register(...staticTypes, TodoStore).run()
 </script>
 
 </html>
