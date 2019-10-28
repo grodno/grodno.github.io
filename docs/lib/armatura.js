@@ -3153,7 +3153,7 @@ class component_Component {
   }
 
   connect(key, applicator) {
-    const [type = this.ref, target] = key.split(':');
+    const [type = this.ref, target] = key.split('.');
     const ref = type === 'this' ? this.impl : this.app[type];
 
     if (!ref) {
@@ -3171,13 +3171,13 @@ class component_Component {
   }
 
   emit(key, data, _callback) {
-    if (!key || !key.includes(':')) {
+    if (!key || !key.includes('.')) {
       return this.actualOwner.up(key ? {
         [key]: data
       } : data);
     }
 
-    const [type, target] = key.split(':');
+    const [type, target] = key.split('.');
     const racer = this.raceCondition(type + ':on:' + target);
     const event = {
       type,
@@ -3328,6 +3328,9 @@ const DOM_SETTERS = {
   selected: (e, v) => e.selected = v ? true : null,
   value: (e, v) => e.value = v == null ? '' : v,
   checked: (e, v) => e.checked = !!v,
+  init: function init(e, v) {
+    this.init = () => v(e, this);
+  },
   data: function data(e, v) {
     if (v && e.$dataset) {
       Object.keys(e.$dataset).forEach(k => {

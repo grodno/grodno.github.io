@@ -2,13 +2,13 @@
   <template id="NewsPage">
     <ui:fragment>
       <Collection ui:ref="news"
-                  data="<- db:news"
-                  upsert="-> db:upsertNews"
+                  data="<- db.news"
+                  upsert="-> db.upsertNews"
                   initials=":news.initialTags" />
-      <NewsList ui:props="<- news:info" />
-      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> news:openAddNew" />
-      <NewsUpdateModal ui:props="<- news:entry" />
-      <NewsCreateModal ui:props="<- news:newEntry" />
+      <NewsList ui:props="<- news.info" />
+      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> news.openAddNew" />
+      <NewsUpdateModal ui:props="<- news.entry" />
+      <NewsCreateModal ui:props="<- news.newEntry" />
       <Toast ui:if={error} message={error.message} />
     </ui:fragment>
   </template>
@@ -24,7 +24,7 @@
           <SearchBar ui:props={search} />
         </Box:2>
       </Box>
-      <Chips data={tags} click="-> news:tag" reset={resetTags} />
+      <Chips data={tags} click="-> news.tag" reset={resetTags} />
       <div class="columns">
         <NewsListItem ui:props={item} itemClick={openEntry} ui:for="item of data">
           <ui:loading>
@@ -37,7 +37,7 @@
         <Toast ui:if={error} message={error.message} />
       </div>
       <a class="float-right" href="#top" ui:if={counts.actual|ifAbove:5}>:naverx</a>
-      <a click="-> news://showMore" data-size="20" ui:if={counts.hasMore}>:pakazac_bolsh</a>
+      <a click="-> news.//showMore" data-size="20" ui:if={counts.hasMore}>:pakazac_bolsh</a>
     </div>
   </template>
 

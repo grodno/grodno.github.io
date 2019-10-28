@@ -3,13 +3,13 @@
     <ui:fragment>
       <GSheetsService url=":ads.apiUrl" ui:ref="ads-data" />
       <Collection ui:ref="ads"
-                  data="<- db:ads"
-                  upsert="-> db:upsertAds"
+                  data="<- db.ads"
+                  upsert="-> db.upsertAds"
                   initials=":ads.initialTags" />
-      <AdsList ui:props="<- ads:info" />
-      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> ads:openAddNew" />
-      <AdsUpdateModal ui:props="<- ads:entry" />
-      <AdsCreateModal ui:props="<- ads:newEntry" />
+      <AdsList ui:props="<- ads.info" />
+      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> ads.openAddNew" />
+      <AdsUpdateModal ui:props="<- ads.entry" />
+      <AdsCreateModal ui:props="<- ads.newEntry" />
       <Toast ui:if={error} message={error.message} />
     </ui:fragment>
   </template>
@@ -25,7 +25,7 @@
           <SearchBar ui:props={search} />
         </Box:2>
       </Box>
-      <Chips data={tags} click="-> ads:tag" reset={resetTags} />
+      <Chips data={tags} click="-> ads.tag" reset={resetTags} />
       <div class="columns">
         <AdsListItem ui:props={item} itemClick={openEntry} ui:for="item of data">
           <ui:loading>
@@ -40,7 +40,7 @@
       <Button title=":pakazac_bolsh"
               mode="primary"
               data-size="20"
-              action="-> ads:showMore"
+              action="-> ads.showMore"
               ui:if={counts.hasMore} />
       <a href="#top" ui:if={counts.actual|ifAbove:5}>:naverx</a>
     </div>

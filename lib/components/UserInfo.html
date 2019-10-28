@@ -9,7 +9,7 @@
         <ui:else>
           <ui:fragment ui:if="info.isAnonymous">
             <ui:then>
-              <a click="-> user:login" class="anchor" aria-hidden="true">:login</a>
+              <a click="-> user.login" class="anchor" aria-hidden="true">:login</a>
             </ui:then>
             <ui:else>
               <UserPanel ui:props={info} />
@@ -38,7 +38,7 @@
           <a class="btn btn-link dropdown-toggle" tabindex="0"><i class="icon icon-more-vert"></i></a>
           <ul class="menu">
             <li class="menu-item">
-              <a click="-> user:logout">Vyxod</a>
+              <a click="-> user.logout">Vyxod</a>
             </li>
           </ul>
         </div>

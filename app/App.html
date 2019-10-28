@@ -19,18 +19,18 @@
                             </a>
                         </div>
                         <div class="m-2">
-                            <NavTree data="<- nav:sitemap" />
+                            <NavTree data="<- nav.sitemap" />
                         </div>
                     </div>
                 </Sidebar:aside>
                 <div style="display: flex; flex-direction: column; height: 100vh;">
                     <Navbar logo=":app.logo">
                         <Navbar:right>
-                            <UserBar info="<- user:info" />
+                            <UserBar info="<- user.info" />
                         </Navbar:right>
                     </Navbar>
                     <Container>
-                        <PageRouter ui:props="<- nav:route" />
+                        <PageRouter ui:props="<- nav.route" />
                     </Container>
                     <Footer />
                 </div>

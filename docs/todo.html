@@ -16,30 +16,30 @@
       <Caption title=":title" />
       <ui:fragment ui:if={<- todo:notEmpty}>
         <Main />
-        <Filter current="<- todo:filterId">
+        <Filter current="<- todo.filterId">
           <span class="todo-count"><strong><- todo:itemsLeft</strong><span>:items_left</span></span>
           <Filter:right>
-            <button class="clear-completed" ui:if={<- todo:hasCompleted} click="-> todo:purge">:clear_completed</button>
+            <button class="clear-completed" ui:if={<- todo:hasCompleted} click="-> todo.purge">:clear_completed</button>
           </Filter:right>
         </Filter>
       </ui:fragment>
     </section>
-    <ui:tag tag="<- todo:footerType"/>
+    <ui:tag tag="<- todo.footerType"/>
   </div>
 </script>
 
 <script type="text/x-template" id="Caption">
   <header class="header">
     <h1>{title|upper}</h1>
-    <input type="text" class="new-todo" placeholder=":new_todo_hint" autofocus="true" enter="-> todo:add"/> 
+    <input type="text" class="new-todo" placeholder=":new_todo_hint" autofocus="true" enter="-> todo.add"/> 
   </header>
 </script>
 
 <script type="text/x-template" id="Main">
   <section class="main">
-    <input id="toggle-all" class="toggle-all" type="checkbox" toggle="-> todo:toggle"/>
+    <input id="toggle-all" class="toggle-all" type="checkbox" toggle="-> todo.toggle"/>
     <label for="toggle-all">Mark all as complete</label>
-    <TodoList data="<- todo:shownItems"/>
+    <TodoList data="<- todo.shownItems"/>
   </section>
 </script>
 
@@ -77,11 +77,11 @@
 <script type="text/x-template" id="TodoItem">
   <li class="completed:{completed} editing:{editing}">
     <div class="view">
-      <input class="toggle" type="checkbox" checked={completed} data-id={id} click="-> todo:inverse"/>
+      <input class="toggle" type="checkbox" checked={completed} data-id={id} click="-> todo.inverse"/>
       <label data-editing="true" dblclick="->">{name}</label>
-      <button ui:if={completed} class="destroy" data-id={id} click="-> todo:rm"></button>
+      <button ui:if={completed} class="destroy" data-id={id} click="-> todo.rm"></button>
     </div>
-    <input type="text" class="edit" value={name} data-editing="false" data-id={id} enter="-> todo:save" blur="->"/>
+    <input type="text" class="edit" value={name} data-editing="false" data-id={id} enter="-> todo.save" blur="->"/>
   </li>
 </script>
 
@@ -139,7 +139,7 @@
     // hook on init
     init() {
       // use hash as a filter key. invoke immediately.
-      (onhash => { window.onhashchange = onhash; return onhash })(() => this.$.emit('this:filter', { filterId: window.location.hash.slice(1) || FILTERS[0].id }))()
+      (onhash => { window.onhashchange = onhash; return onhash })(() => this.$.emit('this.filter', { filterId: window.location.hash.slice(1) || FILTERS[0].id }))()
     }
     getShownItems() {
       const { filterId, items } = this.data
