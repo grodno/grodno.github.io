@@ -106,8 +106,7 @@
     toggle: ({ items }, { value }) => ({ items: items.map(e => { e.completed = value; return e }) }),
     add: ({ items, nextId }, { value }) => !value ? null : { nextId: nextId + 1, items: [].concat({ id: nextId, name: value, completed: false }, items) }
   }
-  // static resources
-  const R = {
+  const resources = {
     title: 'todos',
     items_left: ' item(s) left',
     clear_completed: 'Clear completed',
@@ -117,8 +116,6 @@
     upper,
     capitalize
   };
-
-  Object.R = x => R[x]
 
   // service component
   class TodoStore {
@@ -164,12 +161,13 @@
     }
   }
   // load components from templates
-  const staticTypes = ([]).concat([...document.getElementsByTagName('script')])
+  const types = ([]).concat([...document.getElementsByTagName('script')])
     .filter(e => e.id)
     .map(e => ({ NAME: e.id, TEMPLATE: e.innerHTML }))
+    .concat(TodoStore)
 
-  // register components and run 
-  register(...staticTypes, TodoStore).run()
+  // register components types and run 
+  register(types).run({ resources })
 </script>
 
 </html>

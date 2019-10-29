@@ -2337,7 +2337,7 @@ function stringInterpolation(v) {
 }
 function placeholder(expr) {
   const [key, ...pipes] = expr.split('|').map(s => s.trim());
-  const initGettr = key[0] === ':' ? (fn => c => Object.R(fn(c)))(stringInterpolation(key.slice(1).trim())) : c => c.prop(key);
+  const initGettr = key[0] === ':' ? (fn => c => c.resource(fn(c)))(stringInterpolation(key.slice(1).trim())) : c => c.prop(key);
   const pipec = withPipes(pipes);
   return c => pipec(c, initGettr(c));
 }
@@ -2645,7 +2645,7 @@ const REGISTRY = new Map();
 const reg = ctr => {
   const ctor = typeof ctr === 'function' ? ctr : Object.assign(function () {}, ctr);
   const name = ctor.NAME || ctor.name || fnName(ctor);
-  const text = ctor.TEMPLATE || ctor.prototype.TEMPLATE;
+  const text = ctor.TEMPLATE || ctor.template || ctor.prototype.TEMPLATE;
 
   ctor.$TEMPLATE = () => {
     try {
@@ -2667,13 +2667,7 @@ const reg = ctr => {
 reg({
   NAME: 'ui:fragment'
 });
-const registerTypes = function registerTypes() {
-  for (var _len = arguments.length, types = new Array(_len), _key = 0; _key < _len; _key++) {
-    types[_key] = arguments[_key];
-  }
-
-  return types.forEach(reg);
-};
+const registerTypes = types => types.forEach(reg);
 registerTypes.getByTag = REGISTRY.get.bind(REGISTRY);
 // CONCATENATED MODULE: ./lib/armatura/render.js
 
@@ -2854,6 +2848,9 @@ class component_Component {
       }
     } else {
       this.app = this.impl = new Ctor(props, this);
+      this.app.$resources = component_objectSpread({}, props.resources, {
+        app: this.app
+      });
       this.impl.$ = this;
     }
   }
@@ -3122,12 +3119,23 @@ class component_Component {
     const [id, ...args] = key.split(':');
 
     try {
-      const fn = Object.R(id);
+      const fn = this.resource(id);
       return fn.apply(this.actualOwner.impl, [value, ...args]);
     } catch (ex) {
       console.error('ERROR: Object.pipes.' + id, ex);
       return value;
     }
+  }
+
+  resource(key) {
+    const [id, ...deep] = key.split('.');
+    const target = this.app.$resources[id];
+
+    if (!deep.length) {
+      return target;
+    }
+
+    return deep.reduce((r, k) => r ? r[k] : null, target);
   }
   /**
    *  Arrows.
@@ -3581,8 +3589,8 @@ class armatura_WebClientAppStub {
 }
 
 function register() {
-  for (var _len = arguments.length, types = new Array(_len), _key = 0; _key < _len; _key++) {
-    types[_key] = arguments[_key];
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
   }
 
   return {
@@ -3596,14 +3604,14 @@ function register() {
       } = _ref,
           props = _objectWithoutProperties(_ref, ["rootElement", "template", "App", "Element"]);
 
+      const types = [App].concat(...args);
       component_Component.Element = Element;
-      App.TEMPLATE = template || App.TEMPLATE || "<".concat(types[0].NAME, "/>");
-      registerTypes(App, ...types);
-      const options = {
+      App.template = template || App.TEMPLATE || "<".concat(types[1].name || types[1].NAME, "/>");
+      registerTypes(types);
+      const app = new component_Component(App, {
         props,
         rootElement
-      };
-      const app = new component_Component(App, options);
+      });
       app.render();
       app.init();
       return app.impl;

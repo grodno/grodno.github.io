@@ -1,5 +1,5 @@
 import 'ultis';
-import './res.js';
+import resources from './res.js';
 import { register } from 'armatura';
 
 import components from 'components';
@@ -23,7 +23,7 @@ const types = [
 
 let app = {};
 
-const launch = () => { app = register(...types).run(); };
+const launch = () => { app = register(...types).run({ resources }); };
 
 ((hot) => {
   if (!hot) {

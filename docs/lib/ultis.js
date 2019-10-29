@@ -2232,15 +2232,6 @@ const someEmpty = Object.someEmpty = function () {
  */
 
 const dig = Object.dig = (o, steps) => steps.split('.').reduce((r, e) => r ? r[e] : r, o);
-const R = Object.R = Object.assign(key => R[key] || (R[key] = dig(R, key)), {
-  assign: function assign() {
-    for (var _len3 = arguments.length, objs = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-      objs[_key3] = arguments[_key3];
-    }
-
-    return Object.assign(R, ...objs);
-  }
-});
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.sort.js
 var es6_array_sort = __webpack_require__(64);
 
@@ -2624,26 +2615,7 @@ const representDate = Date.represent = x => {
     return '';
   }
 
-  const now = Date.now();
   const date = toDate(x);
-  const ms = date.getTime();
-
-  if (ms > now) {
-    return formatDate(date);
-  }
-
-  if (ms + 60000 > now) {
-    return Object.R('now');
-  }
-
-  if (ms + 12 * 3600000 > now) {
-    return Object.R('today');
-  }
-
-  if (ms + 36 * 3600000 > now) {
-    return Object.R('yesterday');
-  }
-
   return formatDate(date);
 };
 const formatTime = Date.formatTime = (x, tz, withTimezone) => {
@@ -2740,7 +2712,6 @@ const curry = Function.curry = (() => {
 /* concated harmony reexport allEmpty */__webpack_require__.d(__webpack_exports__, "allEmpty", function() { return allEmpty; });
 /* concated harmony reexport someEmpty */__webpack_require__.d(__webpack_exports__, "someEmpty", function() { return someEmpty; });
 /* concated harmony reexport dig */__webpack_require__.d(__webpack_exports__, "dig", function() { return dig; });
-/* concated harmony reexport R */__webpack_require__.d(__webpack_exports__, "R", function() { return R; });
 /* concated harmony reexport histogram */__webpack_require__.d(__webpack_exports__, "histogram", function() { return histogram; });
 /* concated harmony reexport sortBy */__webpack_require__.d(__webpack_exports__, "sortBy", function() { return sortBy; });
 /* concated harmony reexport arrayToHash */__webpack_require__.d(__webpack_exports__, "arrayToHash", function() { return arrayToHash; });
