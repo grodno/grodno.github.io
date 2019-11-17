@@ -2,8 +2,8 @@
 
   <template id="MapPage">
     <div style="position: relative;">
-      <Mapbox />
-      <!-- <GeoService ui:ref="geo" /> -->
+      <GeomapService ui:ref="geomap" />
+      <Mapbox data="<- geomap.data"/>
     </div>
   </template>
 

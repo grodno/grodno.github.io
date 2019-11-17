@@ -3,10 +3,11 @@
   "version": "3.0.1",
   "description": "grodno.co",
   "keywords": [
-    "grodno"
+    "grodno",
+    "Algard"
   ],
   "author": {
-    "name": "Aliaksandr Litskevich",
+    "name": "Alex Litskeviq",
     "email": "alitskevich@gmail.com"
   },
   "private": true,
@@ -29,9 +30,10 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "babel-eslint": "^10.0.2",
+    "core-js": "^3.4.1",
     "dexie": "^2.0.4",
     "eslint-config-airbnb": "^18.0.1",
-    "firebase": "^6.2.4",
+    "firebase": "^6.6.2",
     "html-webpack-plugin": "^3.2.0",
     "moment": "^2.18.1"
   },
@@ -42,7 +44,6 @@
     "babel-loader": "^8.0.6",
     "body-parser": "^1.15.1",
     "cookie-parser": "^1.4.1",
-    "core-js": "^2.4.1",
     "css-loader": "^0.28.1",
     "eslint": "^3.14.0",
     "express": "^4.13.4",

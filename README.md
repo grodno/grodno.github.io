@@ -1,6 +1,6 @@
 
-## Install
-    git clone https://???.git
-    npm i
-    npm start
+# Grodno.co
+
+ Sait ob mestcy Algard na race Kronan.
+
 

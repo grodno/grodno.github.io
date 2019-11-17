@@ -1,4 +1,4 @@
-const version = "0.1.13";
+const version = "0.1.14";
 const cacheName = `grodno-${version}`;
 const content = [
     `/`,
@@ -12,7 +12,6 @@ const content = [
     `/css/spectre-icons.min.css`,
     `/assets/olxrd.png`,
     `/assets/view.png`,
-    'https://fonts.gstatic.com/s/nunito/v11/XRXV3I6Li01BKofINeaBTMnFcQ.woff2'
 ]
 self.addEventListener('install', event => {
     event.waitUntil(caches.open(cacheName)
@@ -29,14 +28,6 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         caches.open(cacheName)
             .then(cache => cache.match(event.request, { ignoreSearch: true }))
-            .then(response => response || fetch(event.request).then((r) => {
-                if (!r.status || r.status >= 400) {
-                    const url = event.request.referrer + 'assets/logo.jpg'
-                    // console.log('sw fetch', url);
-                    return fetch(url)
-                }
-                return r;
-            }))
-
+            .then(response => response || fetch(event.request))
     );
 });
