@@ -24,7 +24,7 @@ export default {
     { name: 'Naviny', id: 'news', link: '#/news', description: 'Naviny na dobu' },
     { name: 'Objavy', id: 'ads', link: '#/ads', description: 'Objavy Pryvatye' },
     { name: 'Mapa', id: 'map', link: '#/map', description: 'Na Miaste' },
-    // { name: 'Calendar', id: 'calendar', link: '#/calendar', caption: '' },
+    { name: 'Afisha', id: 'afisha', link: '#/afisha', caption: '' },
     // { name: 'Liudzi', id: 'people', link: '#/people', caption: '' },
     // { name: 'Info', id: 'info', link: '#/info', caption: '' },
   ],
@@ -58,6 +58,10 @@ export default {
     caption: 'Naviny',
     initialTags: 'asoba,gramadstva,dabrabyt,axtung,adukacya,biznes',
   },
+  afisha: {
+    caption: 'afisha',
+    initialTags: 'kino,event,theatre,concerts,exhibition,party',
+  },
   ads: {
     caption: 'Pryvatnye objavy',
     initialTags: 'apartments,service,tools,cars,interior',
@@ -81,6 +85,7 @@ export default {
     news: 'id, modified_at',
     users: 'id, modified_at',
     ads: 'id, modified_at',
+    event: 'id, modified_at',
   },
   /* Enumerations */
   gender: [

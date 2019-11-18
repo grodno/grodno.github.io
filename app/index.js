@@ -12,11 +12,12 @@ import calendar from './modules/calendar.html';
 import geomap from './modules/map.html';
 import news from './modules/news.html';
 import ads from './modules/ads.html';
+import afisha from './modules/afisha.html';
 import others from './modules/others.html';
 
 
 const types = [
-  ...loadTemplates(App, main, news, ads, calendar, geomap, others),
+  ...loadTemplates(App, main, news, ads, calendar, geomap, afisha, others),
   ...components,
   ...Object.values(commonServices),
 ]

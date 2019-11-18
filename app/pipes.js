@@ -37,7 +37,7 @@ export default {
   initials: x => !x ? '' : x.split(' ').slice(0, 2).map(s => s.slice(0, 1).toUpperCase()).join(''),
   not: x => !x,
   translit,
-  mv: obj => Object.keys(obj).reduce((r, k) => { if (typeof r[k] === 'string') { r[k + '_mv'] = 1; r[k] = translit(r[k]) }; return r }, obj),
+  mv: obj => Object.keys(obj).reduce((r, k) => { if (typeof r[k] === 'string') { r[k + '_mv'] = 1; r[k] = translit(r[k]) } return r }, obj),
   rest: x => x ? x.slice(1) : [],
   limit: x => x ? x.slice(0, 50) : [],
   ifAbove: (x, limit = 0) => +x > +limit ? x : '',
@@ -48,6 +48,9 @@ export default {
   },
   preview(s) {
     return s;
+  },
+  html: function(s) {
+    return s.replace(/<[\/a-z ]+>/g,' ').replace(/&[a-z0-9]+;/g,' ');
   },
   preview2(s) {
     const val = '' + (s || '');

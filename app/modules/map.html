@@ -2,7 +2,7 @@
 
   <template id="MapPage">
     <div style="position: relative;">
-      <GeomapService ui:ref="geomap" />
+      <GeomapService ui:ref="geomap" db=":app.firebase" />
       <Mapbox data="<- geomap.data"/>
     </div>
   </template>

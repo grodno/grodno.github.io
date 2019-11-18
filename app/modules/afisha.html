@@ -1,0 +1,90 @@
+<body id="app">
+  <template id="AfishaPage">
+    <ui:fragment>
+      <Collection ui:ref="afisha"
+                  data="<- db.event"
+                  upsert="-> db.upsertAfisha"
+                  initials=":afisha.initialTags" />
+      <AfishaList ui:props="<- afisha.info" />
+      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> afisha.openAddNew" />
+      <AfishaUpdateModal ui:props="<- afisha.entry" />
+      <AfishaCreateModal ui:props="<- afisha.newEntry" />
+      <Toast ui:if={error} message={error.message} />
+    </ui:fragment>
+  </template>
+
+  <template id="AfishaList">
+    <div class="container bg-gray" style="max-width:940px;">
+      <a name="top"></a>
+      <Box>
+        <Box:1>
+          <PageCaption caption=":afisha.caption" badge={counts|counts} />
+        </Box:1>
+        <Box:2>
+          <SearchBar ui:props={search} />
+        </Box:2>
+      </Box>
+      <Chips data={tags} click="-> afisha.tag" reset={resetTags} />
+      <div class="columns">
+        <AfishaListItem ui:props={item} itemClick={openEntry} ui:for="item of data">
+          <ui:loading>
+            <div class="column col-9 col-sm-12 loading"></div>
+          </ui:loading>
+          <ui:empty>
+            <h6 class="column col-9 col-sm-12">Nic nema</h6>
+          </ui:empty>
+        </AfishaListItem>
+        <Toast ui:if={error} message={error.message} />
+      </div>
+      <a class="float-right" href="#top" ui:if={counts.actual|ifAbove:5}>:naverx</a>
+      <a click="-> afisha.//showMore" data-size="20" ui:if={counts.hasMore}>:pakazac_bolsh</a>
+    </div>
+  </template>
+
+  <template id="AfishaListItem">
+    <div class="column col-12 col-sm-12 my-2">
+      <Card>
+        <Card:header>
+          <div class="tile">
+            <div class="tile-icon" data-id={id} click={itemClick}>
+              <Avatar image={image} initial={subject|initials} />
+            </div>
+            <div class="tile-content">
+              <h5 class="tile-title" data-id={id} click={itemClick}>{subject|translit}</h5>
+              <div>
+                <small class="text-gray">{modified_at|date}</small>
+                <small class="text-gray mx-1"><a href={link} target="_blank">{link|hostOf}</a></small>
+                <!-- <small class="text-gray" ui:if={tags}>({tags})</small> -->
+              </div>
+            </div>
+          </div>
+        </Card:header>
+        <img src="/assets/olxrd.png" height="10" width="10" />
+        <small class="mx-2">{descr|translit|html}</small>
+        <!-- <div class="card-footer">
+          <button class="btn btn-primary btn-sm">Do</button>
+        </div> -->
+      </Card>
+    </div>
+  </template>
+
+  <template id="AfishaCreateModal">
+    <Modal ui:if={open} open={open} title="Add a new record" close={cancel}>
+      <Form fields=":afisha_form" data={data} change="->" />
+      <Modal:footer>
+        <Button title=":title.create_new" mode="primary" data={data} action={submit} />
+      </Modal:footer>
+    </Modal>
+  </template>
+
+  <template id="AfishaUpdateModal">
+    <Modal ui:if={open} open={open} title="Edit record (#{id})" close={cancel}>
+      <Form fields=":afisha_form" data={data|mv} change="->" />
+      <Modal:footer>
+        <Button title=":title.update" mode="primary" data={data} action={submit} />
+        <Button title=":title.delete" mode="danger" action={delete} />
+      </Modal:footer>
+    </Modal>
+  </template>
+
+</body>
