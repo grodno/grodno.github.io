@@ -25,6 +25,7 @@ export default {
     { name: 'Objavy', id: 'ads', link: '#/ads', description: 'Objavy Pryvatye' },
     { name: 'Mapa', id: 'map', link: '#/map', description: 'Na Miaste' },
     { name: 'Afisha', id: 'afisha', link: '#/afisha', caption: '' },
+    { name: 'Znajdz', id: 'findyou', link: '#/findyou', caption: '' },
     // { name: 'Liudzi', id: 'people', link: '#/people', caption: '' },
     // { name: 'Info', id: 'info', link: '#/info', caption: '' },
   ],
@@ -62,6 +63,10 @@ export default {
     caption: 'afisha',
     initialTags: 'kino,event,theatre,concerts,exhibition,party',
   },
+  findyou: {
+    caption: 'findyou',
+    initialTags: 'male,female',
+  },
   ads: {
     caption: 'Pryvatnye objavy',
     initialTags: 'apartments,service,tools,cars,interior',
@@ -86,6 +91,7 @@ export default {
     users: 'id, modified_at',
     ads: 'id, modified_at',
     event: 'id, modified_at',
+    findme: 'id, modified_at',
   },
   /* Enumerations */
   gender: [

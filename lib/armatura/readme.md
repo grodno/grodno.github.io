@@ -9,47 +9,51 @@ It is
  - reactive and functional oriented
  - non-obtrusive, platform-independent
  - easy to learn and get started. 
- - well-suited to develop wide range of applications
+ - born-for-dom, also well-suited to develop wide range of modular component-based applications.
 
 ## Audience	
 
-- Newbie, amateurs, students - to dig into easy and fast.
+- Newbie, amateurs, students - to dig into IT world easy and fast.
 - Professional developers, start-upers - to adopt, simplify and unify their creatures using one single declarative language.
 
 # Glossary
 
-`Program` it is formal presciption given to some runtime engine to perform some data trasformation tasks on some input data, correlated over the time in given context.
+`Program` it is formal presciption 
+ - given to some runtime engine 
+ - to perform some trasformation tasks 
+ - on some input data, 
+ - correlated over the time 
+ - in given context.
 
-`Object-oriented programming` - an approach to creation of programs, that relies on concept of composable black-boxed components interacting with each others.
+`Object-oriented programming` - an approach to creation of programs, that relies on concept of _composable black-boxed components interacting with each others_.
 
-`Component` is a separate program entity(instance), that 
-  - _continuous_: has life-time phases and events over the time: from creation, initalization, update to destroy
-  - _stateful_: behave depending on its current private state
-  - _reliable_: communicate with others as defined per its public interface 
-  - _composable_: can be composed with others.
+`Component` is a separate *runtime* entity(instance), that 
+  - _continuous_: has life-time phases over the time - such as creation, initalization, update, render, destroy.
+  - _stateful_: behaves depending on its own current state
+  - _reliable_: communicates with others as defined per its public interface
+  - _composable_: can be composed with others - contain and be contained.
 
-`Class` is a programmatic description of components instances that are the same in its type and behavior.
+`Class` is a *design-time* programmatic definition of type and behavior, that can be used by runtime to instantiate such components.
 
 `Property` of key/value pair, that exclusively owned by some component instance - only the owner can address his property by its key and has read/write access to its value.
 
 `State` is a set of component properties, that can be initialized and changed over the time. State is usually black-boxed, but some props can be published for read/write from ouside.
 
-`Behavior` is a specification of certain limitations and rules, that restricts both own state mutation and reaction on public methods invocations based on its current state, input messages and context.
+`Behavior` is a specification, that certainly defines both own state mutation and reaction on external impact depending on on its current state or context.
 
-`Interface` is set of methods names, including its signatures and expected results, that can be appied to given component from outside.
+`Interface` is *design-time* programmatic definition of set of methods names with its signatures, that are applicable to given component from outside.
 
-`Type` is set of limitations on property keys and possible values can be assigned to props of component.
+`Type` is a specification, that defined set of keys and possible values can form component state.
 
-`Composition` is a parent-child many to-one relationship between Components. Composition strongly affects life-time and scope of components that they can interact with.
+`Composition` is a parent-child and owner-content relations between Components. Composition strongly affects life-time and scope of components that they can interact with.
 
 `Template` is a text of formal language, that allows describe component composition and property bindig in a declarative way - focused on `what we want instead of how to do`
 
-`Property binding` is a dependency made on given component property,that enforces runtime to instantly update the property value with result of some expression on current state.
+`Property binding` is a dependency made on given component property,that enforces instant updates of the property value with result of some expression on current state.
 
 - `Property propagation` is kind of one-way binding that pass property values unchanged from container component to its content.
 
-`Hook` is method to be called at some specific event happens in component life-time. 
-
+`Hook` is method to be called at some specific event happens in component life-time.
 	
 # Get Started and Launch
 
@@ -90,20 +94,17 @@ It is
 ## Control flow 
 
  - x:if	
-	- x:else
+	- <x:else>
 	- slot()
  - x:for	
-	- x:empty
-	- x:loading
+	- <x:empty>
+	- <x:loading>
 
- - x:fragment
+ - <x:fragment>
 
 ## Reference
 
-- attribute `x:ref="id"`	
-
-	interpolation
-	spreading
+Use `x:ref="id"` attribute to make global-scope reference to a component.	
 	
 ## Slots
 
@@ -181,7 +182,7 @@ Left arrow allows hot subscription to specifed property of refered component
 
 __syntax__ `targetProp="<-ref.prop|pipes"`
 
-### Right arrows: emit event
+## Right arrows: events emitters
 
 Right arrow create a function that emits event emit to specified 
 event handler passing data payload. 
@@ -192,10 +193,13 @@ __syntax__
     
     < ... actionProp="-> ref.action|dataPipes" data-key={} data={..} >
 
-__cases__
+- `-> this.action` use keyword `this` to refer to owner component
+
+## Right arrows: owner updaters
+
+
 - `->` updates owner component with data
 - `-> prop` updates givem prop of owner component with data
-- `-> this.action` use keyword `this` to refer to owner component
 
 	
 ## Custom components 
@@ -210,16 +214,16 @@ Component code has reference to its context `this.$` and may invoke some of its 
 ```javascript
 class Comp1 {
 
-    TEMPLATE(){
+    TEMPLATE() {
         return '<...>'
     }
 
-    constructor(initialProps, $ctx) {
+    constructor(initialProps, $) {
         // not need to assign initialProps here
         // all the initials props will be passed into $.up() just after
     }
     // life-cycle hooks
-    init($)	 {
+    init($) {
         // use defer() here if needed
         $.defer(()=> this.close())
 
@@ -228,7 +232,7 @@ class Comp1 {
             prop1:'',
         }
     }
-    done(){
+    done() {
         // rare need to override.
         // use $.defer(fn) in the most cases.
     }	
@@ -237,14 +241,32 @@ class Comp1 {
     }
 
     //    getters/setters	
-    getPropPlusOne(){
+    getPropPlusOne() {
         // can be promise as well
         return this.prop + 1 
     }	
     setPropPlusOne(val) {
         this.prop = val -1
     }
-    someMethodDemonstratingContextUsages(){
+    
+    // action events handler
+    onSomeAction(data, This) {
+        
+        if (asynch) {
+            return promise.then(()=>delta)
+        }
+        // state update delta object
+        return {
+            prop: data.value,
+            propPromise: This.fetchProp(),
+            '...': Promise.resolve({
+                prop: 'val2'
+            })
+        }
+    }
+
+    // logic
+    someMethodDemonstratingContextUsages() {
         // reference to this instance context.
         const $ = this.$;
         // update its props state programmatically:
@@ -268,20 +290,5 @@ class Comp1 {
         $.emit('other.action', data);
         // get global resource programmatically
         const res = $.resource('other.key');
-    }
-    // action events handler
-    onSomeAction(data, This) {
-        
-        if (asynch) {
-            return promise.then(()=>delta)
-        }
-        // state update delta object
-        return {
-            prop: data.value,
-            propPromise: This.fetchProp(),
-            '...': Promise.resolve({
-                prop: 'val2'
-            })
-        }
     }
 }
