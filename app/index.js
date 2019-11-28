@@ -1,6 +1,6 @@
 import 'ultis';
 import resources from './res.js';
-import { register } from 'armatura';
+import { launch } from 'armatura';
 
 import components from 'components';
 import App from './App.html';
@@ -25,19 +25,19 @@ const types = [
 
 let app = {};
 
-const launch = () => { app = register(...types).run({ resources }); };
+const run = () => { app = launch({types, resources }); };
 
 ((hot) => {
   if (!hot) {
-    launch();
+    run();
     return;
   }
 
-  hot.dispose(data => app.done());
+  hot.dispose(() => app.done());
   hot.accept();
 
   if (!hot.data) {
-    launch();
+    run();
     return;
   }
 

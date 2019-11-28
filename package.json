@@ -15,7 +15,6 @@
   "scripts": {
     "start": "node webpack-dev-server",
     "build": "node run-build",
-    "build:armatura": "node run-build-armatura && cp docs/lib/armatura.js ~/aimd-dma-client/vendor/armatura/index.js",
     "build:ultis": "node run-build-ultis && cp docs/lib/ultis.js ~/docman/vendor/utils/index.js",
     "test": "mocha -w --compilers js:babel-register src/**/*.test.js"
   },
