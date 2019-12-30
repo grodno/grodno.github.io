@@ -1,5 +1,4 @@
 <body id="app">
-
     <template id="Top">
         <ui:fragment>
             <Firebase ui:ref="firebase" config=":firebaseConfig" />
@@ -9,8 +8,8 @@
             <UserService ui:ref="user" />
             <SWRunner />
             <GARunner account="UA-3066107-3" />
-            <Sidebar>
-                <Sidebar:aside>
+            <ViewPort>
+                <ViewPort:aside>
                     <div class="bg-secondary" style="height: 100vh; width:200px">
                         <div class="text-center">
                             <a href="#/main">
@@ -18,33 +17,25 @@
                             </a>
                         </div>
                         <div class="m-2">
-                            <NavTree data="<- nav.sitemap" />
+                            <NavTree data=":sitemap" />
                         </div>
                     </div>
-                </Sidebar:aside>
-                <div style="display: flex; flex-direction: column; height: 100vh;">
-                    <Navbar logo=":logo">
-                        <Navbar:right>
-                            <UserBar info="<- user.info" />
-                        </Navbar:right>
-                    </Navbar>
-                    <Container>
-                        <PageRouter ui:props="<- nav.route" />
-                    </Container>
-                    <Footer />
-                </div>
-            </Sidebar>
+                </ViewPort:aside>
+                <Navbar logo=":logo">
+                    <UserBar info="<- user.info" />
+                </Navbar>
+                <PageRouter ui:props="<- nav.route" />
+                <Footer />
+            </ViewPort>
         </ui:fragment>
     </template>
 
-    <template id="Container">
-        <div class=" bg-gray" style="flex: 1;">
-            <ui:slot />
-        </div>
-    </template>
 
     <template id="PageRouter">
-        <ui:tag tag="{module|capitalize}Page" ui:props={params} />
+        <div class="bg-gray" style="flex: 1;">
+            <ui:tag tag="{target|capitalize}Page" ui:props={params} />
+        </div>
+
     </template>
 
     <template id="PageCaption">

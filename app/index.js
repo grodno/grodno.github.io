@@ -1,11 +1,10 @@
 import 'ultis';
 import resources from './res.js';
-import { launch } from 'armatura';
+import { launch, loadTemplates, commonTypes } from 'armatura';
 
 import components from 'components';
 import App from './App.html';
 import * as commonServices from 'services';
-import { loadTemplates } from 'components/support.js';
 
 import main from './modules/main.html';
 import calendar from './modules/calendar.html';
@@ -16,30 +15,19 @@ import afisha from './modules/afisha.html';
 import findyou from './modules/findyou.html';
 import others from './modules/others.html';
 
-
 const types = [
-  ...loadTemplates(App, main, news, ads, calendar, geomap, afisha,findyou, others),
+  ...commonTypes,
   ...components,
+  ...loadTemplates(App, main, news, ads, calendar, geomap, afisha, findyou, others),
   ...Object.values(commonServices),
 ]
 
-let app = {};
-
-const run = () => { app = launch({types, resources }); };
+const run = () => { window.app = launch({ template: '<Top/>', types, resources }); };
 
 ((hot) => {
-  if (!hot) {
-    run();
-    return;
+  if (hot) {
+    hot.dispose((data) => window.app.$.done(data));
+    hot.accept();
   }
-
-  hot.dispose(() => app.done());
-  hot.accept();
-
-  if (!hot.data) {
-    run();
-    return;
-  }
-
-  window.firebase.app().delete().then(launch);
+  run();
 })(typeof module === 'undefined' ? null : module.hot);

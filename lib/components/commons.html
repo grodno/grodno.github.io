@@ -1,0 +1,120 @@
+<body>
+    <template id="Hero">
+        <div class="hero bg-dark p-0">
+            <div class="hero-body px-2">
+                <h1>{title}</h1>
+            </div>
+        </div>
+    </template>
+    <template id="SearchBar">
+        <div class="form-autocomplete">
+            <!-- autocomplete input container -->
+            <div class="form-autocomplete-input form-input input-sm has-icon-right">
+                <div class="input-group input-inline">
+                    <input class="form-input" type="search"
+                           placeholder=":kluq_poshuku"
+                           keypress={input}
+                           value={value} />
+                </div>
+                <i class="form-icon icon icon-cross c-hand" data-value=""
+                   click={enter}
+                   ui:if={value}></i>
+            </div>
+            <ul class="menu" ui:if={suggestions}>
+                <li class="menu-item" ui:for="item of suggestions" data-value={item.id} click={enter}>
+                    <a>
+                        <div class="tile tile-centered">
+                            <div class="tile-icon">
+                            </div>
+                            <div class="tile-content">
+                                {item.name}
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </template>
+
+    <template id="Box">
+        <div class="container bg-gray">
+            <div class="columns">
+                <div class="column col-6 col-sm-12">
+                    <ui:slot id="1" />
+                </div>
+                <div class="column col-6 col-sm-12 my-2">
+                    <ui:slot id="2" />
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="Sidebar">
+        <div class="off-canvas off-canvas-sidebar-show">
+            <a class="off-canvas-toggle btn btn-primary btn-action show-lg bg-red"
+               href="#sidebar">
+                <i class="icon icon-menu" />
+            </a>
+            <div id="sidebar" class="off-canvas-sidebar" ui:if="slot(aside)">
+                <div class="fixed">
+                    <ui:slot id="aside" />
+                </div>
+            </div>
+            <a class="off-canvas-overlay" href="#"></a>
+            <div class="off-canvas-content">
+                <ui:slot />
+            </div>
+        </div>
+    </template>
+
+    <template id="Chips">
+        <div class="sticky bg-gray py-2" style="z-index: 2;">
+            <div class="ui mini labels">
+                <span class="chip c-hand {tag.selected|then:bg-success} {tag.selected|not|then:bg-secondary} {tag.count|then:badge}"
+                      data-badge={tag.count|ifAbove:3}
+                      data-id={tag.id}
+                      click={click}
+                      ui:for="tag of data">
+                    <span>{tag.name}<small ui:if={tag.selected2}>{tag.count}</small></span>
+                </span>
+                <span ui:if="reset" class="chip c-hand bg-gray" click={reset}>
+                    <span>x</span>
+                </span>
+            </div>
+        </div>
+    </template>
+
+    <template id="Tree">
+        <div class="ui list tree">
+            <div ui:for="item of data" click={update} class="item {itemClass}" data-value={item.id}>
+                <i class="icon folder"></i>
+                <div class="content">
+                    <li click={update} data-value={id}>
+                        <div class="header">{name}</div>
+                        <div class="description">{dname}</div>
+                    </li>
+                    <Tree ui:if={item.children} data={item.children} />
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="Breadcrumbs">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item" ui:for="step in path">
+                <a href="#module/{step.id}">{step.name}</a>
+            </li>
+            <li class="breadcrumb-item" ui:if={modes.length}>
+                <div class="dropdown">
+                    <a class="btn btn-link dropdown-toggle" tabindex="0">{current.name}<i
+                           class="icon icon-caret"></i></a>
+                    <ul class="menu">
+                        <li class="menu-item" ui:for="li in modes">
+                            <a href="#module/{step.id}/mode/{li.id}">{li.name}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </template>
+</body>

@@ -50,10 +50,10 @@ export default {
     ]
   },
   news_form: [
-    { id: 'subject', type: 'name' },
-    { id: 'preview', type: 'text' },
-    { id: 'body', type: 'text' },
-    { id: 'tags', type: 'text' }
+    { id: 'subject', type: 'textarea', name: "Subject" },
+    { id: 'preview', type: 'textarea', name: "Preview" },
+    { id: 'body', type: 'textarea', name: "Body" },
+    { id: 'tags', type: 'text', name: "Tags" }
   ],
   news: {
     caption: 'Naviny',

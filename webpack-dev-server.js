@@ -12,8 +12,6 @@ var commons = require('./ops/webpack.config.js');
 var config = {
   entry: {
     index: [
-      'webpack-dev-server/client?http://localhost:8089',
-      'webpack/hot/only-dev-server',
       './app/index.js'
     ]
   },
