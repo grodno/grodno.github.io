@@ -1,4 +1,3 @@
-import 'ultis';
 import resources from './res.js';
 import { launch, loadTemplates, commonTypes } from 'armatura';
 

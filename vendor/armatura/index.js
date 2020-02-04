@@ -371,7 +371,7 @@ function () {
     Object.assign(this, props, {
       ref: $.ref,
       lookupService: function lookupService(ref) {
-        return $.app[ref];
+        return $.app ? $.app[ref] : null;
       },
       up: function up() {
         return $.up.apply($, arguments);
@@ -650,12 +650,13 @@ var pad = function pad(x) {
 };
 
 var dayNames = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+var dayNamesShort = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 var dateLocales = {
   ru: {
     monthNames: ['', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
     monthNamesShort: ['', 'Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
-    dayNamesShort: ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'],
-    dayNames: dayNames
+    dayNames: dayNames,
+    dayNamesShort: dayNamesShort
   }
 };
 var daysInMonth = Date.daysInMonth = function (month, year) {
@@ -710,8 +711,8 @@ Date.narrow = function (x) {
     return null;
   }
 
-  if (type === 'number') {
-    return new Date(x);
+  if (type === 'number' || +x == x) {
+    return new Date(+x);
   }
 
   if (type === 'object') {
@@ -732,8 +733,46 @@ Date.narrow = function (x) {
   }
 
   return Date.parseISO8601String(x);
-}; // return date in format dd.mm.yyyy
+};
 
+var FORMATTERS = {
+  hh: function hh(date) {
+    return pad(date.getHours());
+  },
+  ii: function ii(date) {
+    return pad(date.getMinutes());
+  },
+  hi: function hi(date) {
+    return pad(date.getHours()) + ':' + pad(date.getMinutes());
+  },
+  dd: function dd(date) {
+    return pad(date.getDate());
+  },
+  w: function w(date) {
+    return '' + dayNames[date.getDay()];
+  },
+  ww: function ww(date) {
+    return '' + dayNamesShort[date.getDay()];
+  },
+  d: function d(date) {
+    return '' + date.getDate();
+  },
+  mmmm: function mmmm(date) {
+    return monthName(date.getMonth() + 1, '');
+  },
+  mmm: function mmm(date) {
+    return monthName(date.getMonth() + 1, 'Short');
+  },
+  mm: function mm(date) {
+    return pad(date.getMonth() + 1);
+  },
+  yyyy: function yyyy(date) {
+    return "".concat(date.getFullYear());
+  },
+  ll: function ll(date) {
+    return "".concat(date.getTime());
+  }
+}; // return date repesentation in given format dd.mm.yyyy
 
 Date.format = function (x) {
   var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'dd.mm.yyyy';
@@ -743,25 +782,10 @@ Date.format = function (x) {
   }
 
   var date = Date.narrow(x);
-
-  if (!date) {
-    return '';
-  }
-
-  var day = date.getDate();
-  var month = date.getMonth() + 1;
-  var year = date.getFullYear();
-  return format.replace(/[_]/g, '\n').replace('hh', pad(date.getHours())).replace('ii', pad(date.getMinutes())).replace('t', pad(date.getHours()) + ':' + pad(date.getMinutes())).replace('dd', pad(day)).replace('dow', '' + dayNames[date.getDay()]).replace('d', '' + day).replace('mmmm', monthName(month, '')).replace('mmm', monthName(month, 'Short')).replace('mm', pad(month)).replace('yyyy', "".concat(year));
-};
-
-Date.formatTime = function (x) {
-  if (!x) {
-    return '';
-  }
-
-  var date = Date.narrow(x);
-  var minutes = date.getMinutes();
-  return "".concat(date.getHours(), ":").concat(pad(minutes));
+  return !date ? '' : format.replace(/[_]/g, '\n').replace(/[hidwmyl]+/g, function (key) {
+    var fn = FORMATTERS[key];
+    return fn ? fn(date) : key;
+  });
 };
 
 Date.firstOfWeek = function (d) {
@@ -785,7 +809,7 @@ var formatTimezone = function formatTimezone(tzOffset) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<body>\n\n\n    <template id=\"Icon\">\n        <i class=\"fa{bundle|or:s} fa-{type} {class}\" data={data} click={click}></i>\n    </template>\n\n    <template id=\"Img\">\n        <img src={src|equals:*|then:@default:@src} alt={alt} class=\"img {class}\" style={style} />\n    </template>\n\n    <template id=\"Avatar\">\n        <figure class=\"avatar {large|then:avatar-lg}\">\n            <Img src={src} alt={alt}\n                 default=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" />\n        </figure>\n    </template>\n\n    <template id=\"Button\">\n        <button class=\"btn btn-{mode} {primary|then:btn-primary} {disabled|or:@busy|then:disabled} {class} {large|then:btn-lg} {link|then:btn-link} c-hand\"\n                style=\"white-space:nowrap;{style}\"\n                data={data}\n                click={action|track:@trackId:@title}>\n            <i ui:if=\"{busy}\" class=\"loading mx-2\"></i>\n            <Icon ui:if=\"icon\" bundle={iconBundle} type={icon} class=\"mx-2\" />\n            <span ui:if=\"title\">{title}</span>\n        </button>\n    </template>\n\n    <template id=\"BigRedButton\">\n        <button class=\"btn2 {tooltip|then:tooltip} tooltip-left fixed bg-primary circle c-hand {class}\"\n                style=\"border:none; right:1.5rem; bottom:1.5rem; width: 2.5rem; height: 2.5rem; z-index:5;\"\n                data={data} data-tooltip={tooltip|or:} click={action|track:@trackId:big}>\n            <Icon type={icon|or:plus} />\n        </button>\n    </template>\n\n    <template id=\"NavLink\">\n        <a data-value={href} click=\"-> nav.hash\" class=\"c-hand {class}\">\n            <ui:slot />\n        </a>\n    </template>\n\n    <template id=\"Popover\">\n        <div class=\"popover popover-right\">\n            <ui:slot />\n            <div class=\"popover-container\">\n                <div class=\"card\">\n                    <div class=\"card-header\">\n                        <ui:slot id=\"body\" />\n                    </div>\n                </div>\n            </div>\n        </div>\n    </template>\n\n    <template id=\"Modal\">\n        <div class=\"modal modal {open|then:active}\">\n            <a class=\"modal-overlay\" aria-label=\"Close\" data={data} click={close}></a>\n            <div class=\"modal-container\">\n                <div class=\"modal-header\">\n                    <a class=\"btn btn-clear float-right\" aria-label=\":close\" data={data} click={close}></a>\n                    <div class=\"modal-title h5\" ui:if={title}>{title}</div>\n                    <ui:slot id=\"header\" />\n                </div>\n                <div class=\"modal-body\" style=\"max-height: 70vh;\">\n                    <div class=\"content\">\n                        <ui:slot />\n                    </div>\n                </div>\n                <div class=\"modal-footer\">\n                    <ui:slot id=\"footer\" />\n                </div>\n            </div>\n        </div>\n    </template>\n\n    <template id=\"Tabs\">\n        <ul class=\"tab tab-block\">\n            <li class=\"tab-item {item.id|equals:@value|then:active} c-hand\" ui:for=\"item of data\">\n                <a data-id={item.id} click={action}>{item.name}</a>\n            </li>\n        </ul>\n    </template>\n\n</body>");
+/* harmony default export */ __webpack_exports__["default"] = ("<body>\n\n\n    <template id=\"Icon\">\n        <i class=\"fa{bundle|or:s} fa-{type} {class}\" style={style} data={data} click={click}></i>\n    </template>\n\n    <template id=\"Img\">\n        <img src={src|equals:*|then:@default:@src} alt={alt} class=\"img {class}\" style={style} />\n    </template>\n\n    <template id=\"Avatar\">\n        <figure class=\"avatar {large|then:avatar-lg}\">\n            <Img src={src}\n                 alt={alt}\n                 default=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" />\n        </figure>\n    </template>\n\n    <template id=\"Button\">\n        <button class=\"btn btn-{mode} {primary|then:btn-primary} {disabled|or:@busy|then:disabled} {class} {large|then:btn-lg} {link|then:btn-link} c-hand\"\n                style=\"white-space:nowrap; overflow: hidden; text-overflow: ellipsis;{style}\"\n                data={data}\n                click={action|track:@trackId:@title}>\n            <i ui:if=\"{busy}\" class=\"loading mx-2\"></i>\n            <Icon ui:if=\"icon\" bundle={iconBundle} type={icon} class=\"mx-2\" />\n            <span ui:if=\"title\">{title}</span>\n        </button>\n    </template>\n\n    <template id=\"BigRedButton\">\n        <button class=\"btn2 {tooltip|then:tooltip} tooltip-left fixed bg-primary circle c-hand {class}\"\n                style=\"border:none; right:1.5rem; bottom:1.5rem; width: 2.5rem; height: 2.5rem; z-index:5;\"\n                data={data} data-tooltip={tooltip|or:} click={action|track:@trackId:big}>\n            <Icon type={icon|or:plus} />\n        </button>\n    </template>\n\n    <template id=\"NavLink\">\n        <a data-value={href} click=\"-> nav.hash\" class=\"c-hand {class}\">\n            <ui:slot />\n        </a>\n    </template>\n\n    <template id=\"Popover\">\n        <div class=\"popover popover-right\">\n            <ui:slot />\n            <div class=\"popover-container\">\n                <div class=\"card\">\n                    <div class=\"card-header\">\n                        <ui:slot id=\"body\" />\n                    </div>\n                </div>\n            </div>\n        </div>\n    </template>\n\n    <template id=\"Modal\">\n        <div class=\"modal modal {open|then:active}\">\n            <a class=\"modal-overlay\" aria-label=\"Close\" data={data} click={close}></a>\n            <div class=\"modal-container\">\n                <div class=\"modal-header\">\n                    <a class=\"btn btn-clear float-right\" aria-label=\":close\" data={data} click={close}></a>\n                    <div class=\"modal-title h5\" ui:if={title}>{title}</div>\n                    <ui:slot id=\"header\" />\n                </div>\n                <div class=\"modal-body\" style=\"max-height: 70vh;\">\n                    <div class=\"content\">\n                        <ui:slot />\n                    </div>\n                </div>\n                <div class=\"modal-footer\">\n                    <ui:slot id=\"footer\" />\n                </div>\n            </div>\n        </div>\n    </template>\n\n    <template id=\"Tabs\">\n        <ul class=\"tab tab-block\">\n            <li class=\"tab-item {item.id|equals:@value|then:active} c-hand\" ui:for=\"item of data\">\n                <a data-id={item.id} click={action}>{item.name}</a>\n            </li>\n        </ul>\n    </template>\n\n</body>");
 
 /***/ }),
 
@@ -798,7 +822,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<body id=\"app\">\n    <template id=\"FieldItem\">\n        <div class=\"columns form-group has-error:{error} {class}\">\n            <div class=\" col-4 col-sm-12\">\n                <label class=\"form-label\" for=\"input-example-1\">\n                    {caption}\n                    <sup ui:if={required}\n                         class=\"text-error\">✱</sup>\n                </label>\n            </div>\n            <div class=\"col-8 col-sm-12\">\n                <ui:slot />\n                <p class=\"form-input-hint\" ui:if={error}>{error}</p>\n            </div>\n        </div>\n    </template>\n\n    <template id=\"TextField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <input class=\"form-input\"\n                   type=\"text\"\n                   disabled={disabled}\n                   placeholder={placeholder|or:@caption}\n                   value={value}\n                   change={onChange}>\n        </FieldItem>\n    </template>\n\n    <template id=\"DateField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <input class=\"form-input\"\n                   disabled={disabled}\n                   type=\"date\"\n                   placeholder={caption}\n                   value={value}\n                   change={onChange}>\n        </FieldItem>\n    </template>\n\n    <template id=\"DateTimeField\">\n        <FieldItem caption=\"{caption}\" error={error} required={required}>\n            <input class=\"form-input\"\n                   disabled={disabled}\n                   type=\"datetime-local\"\n                   placeholder={caption}\n                   value={value|date:yyyy-mm-ddTt}\n                   change={onChange}>\n        </FieldItem>\n    </template>\n\n    <template id=\"NumberField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <input class=\"form-input\"\n                   disabled={disabled}\n                   type=\"number\"\n                   placeholder={caption}\n                   value={value}\n                   change={onChange}>\n        </FieldItem>\n    </template>\n\n    <template id=\"TextareaField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <textarea\n                      class=\"form-input\"\n                      style=\"min-height: 15vw\"\n                      disabled={disabled} placeholder={caption} rows=\"3\" change={onChange} value={value}></textarea>\n        </FieldItem>\n    </template>\n\n    <template id=\"SwitchField\">\n        <div class=\"form-group\">\n            <div class=\"col-sm-12\">\n                <label class=\"form-switch\">\n                    <span>{caption}</span>\n                    <input type=\"checkbox\" toggle={onChange} data={data} checked={value|not|not}>\n                    <i class=\"form-icon\"></i>\n                </label>\n            </div>\n        </div>\n    </template>\n\n    <template id=\"EnumField\">\n        <FieldItem caption={caption} class={class} error={error} required={required}>\n            <Select class=\"form-select\"\n                    change={onChange}\n                    value={value|or:@defaultValue}\n                    data={data}\n                    options=\":enums.{typeSpec}\"\n                    emptyCaption={emptyCaption}\n                    disabled={disabled} />\n        </FieldItem>\n    </template>\n\n    <template id=\"SelectField\">\n        <FieldItem caption={caption} class={class} error={error} required={required}>\n            <Select class=\"form-select\"\n                    change={onChange}\n                    value={value|or:@defaultValue}\n                    data={data}\n                    options={options}\n                    emptyCaption={emptyCaption}\n                    disabled={disabled} />\n        </FieldItem>\n    </template>\n\n    <template id=\"RadioField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <RadioGroup change={onChange}\n                        value={value} data={data} options=\":enums.{typeSpec}\"\n                        disabled={disabled} />\n        </FieldItem>\n    </template>\n\n    <template id=\"ReferenceField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <Loader from=\"-> references.{typeSpec}Search\"\n                    data-value={keyword.value|orDataPropValueByKey:keyword}\n                    trigger={keyword.value}\n                    into=\"->options\" />\n            <Loader from=\"-> references.{typeSpec}Entry\" data-id={value} trigger={value} into=\"->entry\" />\n            <ReferenceInput change={onChange}\n                            value={value} entry={entry.data}\n                            onKeyword=\"->keyword\" keyword={keyword.value|orDataPropValueByKey:keyword}\n                            onSelectMenuItem=\"->entry\"\n                            options={options.data}\n                            disabled={disabled} />\n        </FieldItem>\n    </template>\n\n    <template id=\"RemoteEnumField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <Loader from=\"-> references.{typeSpec}Enum\" data={data} into=\"->options\" />\n            <Select class=\"form-select\" change={onChange} value={value} data={options.data} disabled={disabled} />\n        </FieldItem>\n    </template>\n\n</body>");
+/* harmony default export */ __webpack_exports__["default"] = ("<body id=\"app\">\n    <template id=\"FieldItem\">\n        <div class=\"columns form-group {error|then:has-error} {class}\">\n            <div class=\" col-4 col-sm-12\">\n                <label class=\"form-label\" for=\"input-example-1\">\n                    {caption}\n                    <sup ui:if={required}\n                         class=\"text-error\">✱</sup>\n                </label>\n            </div>\n            <div class=\"col-8 col-sm-12\">\n                <ui:slot />\n                <p class=\"form-input-hint\" ui:if={error}>{error}</p>\n            </div>\n        </div>\n    </template>\n\n    <template id=\"TextField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <input class=\"form-input\"\n                   type=\"text\"\n                   disabled={disabled}\n                   placeholder={placeholder|or:@caption}\n                   value={value}\n                   change={onChange}>\n        </FieldItem>\n    </template>\n\n    <template id=\"DateField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <input class=\"form-input\"\n                   disabled={disabled}\n                   type=\"date\"\n                   placeholder={caption}\n                   value={value}\n                   change={onChange}>\n        </FieldItem>\n    </template>\n\n    <template id=\"DateTimeField\">\n        <FieldItem caption=\"{caption}\" error={error} required={required}>\n            <input class=\"form-input\"\n                   disabled={disabled}\n                   type=\"datetime-local\"\n                   placeholder={caption}\n                   value={value|date:yyyy-mm-ddTt}\n                   change={onChange}>\n        </FieldItem>\n    </template>\n\n    <template id=\"NumberField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <input class=\"form-input\"\n                   disabled={disabled}\n                   type=\"number\"\n                   placeholder={caption}\n                   value={value}\n                   change={onChange}>\n        </FieldItem>\n    </template>\n\n    <template id=\"TextareaField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <textarea\n                      class=\"form-input\"\n                      style=\"min-height: 15vw\"\n                      disabled={disabled} placeholder={caption} rows=\"3\" change={onChange} value={value}></textarea>\n        </FieldItem>\n    </template>\n\n    <template id=\"SwitchField\">\n        <div class=\"form-group\">\n            <div class=\"col-sm-12\">\n                <label class=\"form-switch\">\n                    <span>{caption}</span>\n                    <input type=\"checkbox\" toggle={onChange} data={data} checked={value|not|not}>\n                    <i class=\"form-icon\"></i>\n                </label>\n            </div>\n        </div>\n    </template>\n\n    <template id=\"EnumField\">\n        <FieldItem caption={caption} class={class} error={error} required={required}>\n            <Select class=\"form-select\"\n                    change={onChange}\n                    value={value|or:@defaultValue}\n                    data={data}\n                    options=\":enums.{typeSpec}\"\n                    emptyCaption={emptyCaption}\n                    disabled={disabled} />\n        </FieldItem>\n    </template>\n\n    <template id=\"SelectField\">\n        <FieldItem caption={caption} class={class} error={error} required={required}>\n            <Select class=\"form-select\"\n                    change={onChange}\n                    value={value|or:@defaultValue}\n                    data={data}\n                    options={options}\n                    emptyCaption={emptyCaption}\n                    disabled={disabled} />\n        </FieldItem>\n    </template>\n\n    <template id=\"RadioField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <RadioGroup change={onChange}\n                        value={value} data={data} options=\":enums.{typeSpec}\"\n                        disabled={disabled} />\n        </FieldItem>\n    </template>\n\n    <template id=\"ReferenceField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <Loader from=\"-> references.{typeSpec}Search\"\n                    data-value={keyword.value|orDataPropValueByKey:keyword}\n                    trigger={keyword.value}\n                    into=\"->options\" />\n            <Loader from=\"-> references.{typeSpec}Entry\" data-id={value} trigger={value} into=\"->entry\" />\n            <ReferenceInput change={onChange}\n                            value={value} entry={entry.data}\n                            onKeyword=\"->keyword\" keyword={keyword.value|orDataPropValueByKey:keyword}\n                            onSelectMenuItem=\"->entry\"\n                            options={options.data}\n                            disabled={disabled} />\n        </FieldItem>\n    </template>\n\n    <template id=\"RemoteEnumField\">\n        <FieldItem caption={caption} error={error} required={required}>\n            <Loader from=\"-> references.{typeSpec}Enum\" data={data} into=\"->options\" />\n            <Select class=\"form-select\" change={onChange} value={value} data={options.data} disabled={disabled} />\n        </FieldItem>\n    </template>\n\n</body>");
 
 /***/ }),
 
@@ -1462,6 +1486,10 @@ String.format = function (template, params) {
   return "".concat(template || '').replace(/\{([\S]+)\}/i, function (_, key) {
     return (params && params[key]) != null ? params[key] : '';
   });
+};
+
+String.wrap = function (x, template) {
+  return !x ? '' : "".concat(template || '*').replace('*', x);
 };
 
 function capitalize(x) {
@@ -2713,7 +2741,7 @@ function () {
         }
 
         var result = method.call(ref, event, ref, ref.$);
-        this.log(type + ':' + methodName(target, 'on'), result, event, ref);
+        this.log(type + ':' + methodName(target, 'on'), result, data, ref);
 
         if (result) {
           ref.$.up(result);
@@ -2946,7 +2974,7 @@ var DOM_SETTERS = {
     var data = _objectSpread({}, e.$dataset);
 
     var hs = !v ? null : function (ev) {
-      data.started = true;
+      data.active = true;
       data.x = ev.pageX || ev.changedTouches[0].screenX;
       data.y = ev.pageY || ev.changedTouches[0].screenY;
       return false;
@@ -2955,15 +2983,14 @@ var DOM_SETTERS = {
     this.setAttribute('touch:mousedown', hs);
     var h = !v ? function () {
       return null;
-    } : function (_final) {
+    } : function (stop) {
       return function (ev) {
-        if (data.started) {
-          data.started = !_final;
+        if (data.active) {
+          data.active = !stop;
           data.xx = ev.pageX || ev.changedTouches[0].screenX;
           data.yy = ev.pageY || ev.changedTouches[0].screenY;
           data.dx = data.xx - data.x;
           data.dy = data.yy - data.y;
-          data["final"] = _final;
 
           _this8.$attributes.touch(data, ev);
         }
@@ -3056,30 +3083,24 @@ var DOM_VALUE_COMPARATORS = {
 var Element =
 /*#__PURE__*/
 function () {
-  function Element() {
-    var attrs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var $ = arguments.length > 1 ? arguments[1] : undefined;
-
+  function Element(attrs, $) {
     _classCallCheck(this, Element);
 
     this.elt = $.elt = $.tag === '#text' ? document.createTextNode('') : document.createElement($.tag);
-    this.$attributes = {};
-    this.$ = this.elt.$ = $;
     this.applyAttributes(attrs);
   }
 
   _createClass(Element, [{
     key: "done",
     value: function done() {
-      var e = this.elt;
-      var lstnrs = this.$listeners;
-
-      if (lstnrs) {
-        Object.keys(lstnrs).forEach(function (k) {
-          return e.removeEventListener(k, lstnrs[k]);
-        });
-        this.$listeners = null;
-      }
+      var e = this.elt; // const lstnrs = this.listeners;
+      // if (lstnrs) {
+      //   Object.keys(lstnrs).forEach((fn, key) => {
+      //     const [akey, ekey = akey] = key.split(':');
+      //     e.removeEventListener(ekey, fn);
+      //   });
+      //   this.listeners = null;
+      // }
 
       var p = e.parentElement;
 
@@ -3128,14 +3149,15 @@ function () {
     }
   }, {
     key: "applyAttributes",
-    value: function applyAttributes(theirs) {
+    value: function applyAttributes() {
+      var theirs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var mines = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.$attributes || {};
       var e = this.elt;
-      var mines = this.$attributes;
 
       for (var key in theirs) {
         if (Object.prototype.hasOwnProperty.call(theirs, key) && !(DOM_VALUE_COMPARATORS[key] || DOM_VALUE_COMPARATORS._)(e, theirs[key], mines[key])) {
           var value = theirs[key];
-          var setter = DOM_SETTERS[key]; // console.log('setAttribute' + this.$.tag, key, value)
+          var setter = DOM_SETTERS[key];
 
           if (setter) {
             setter.call(this, e, value);

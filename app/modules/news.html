@@ -24,7 +24,8 @@
           <SearchBar ui:props={search} />
         </Box:2>
       </Box>
-      <Chips data={tags} click="-> news.tag" reset={resetTags} />
+      <Chips data={tags} click="-> news.tag" reset={resetTags}
+             style="margin-left: -1rem;margin-right: -1rem;padding-left: 1rem;padding-right: 1rem;" />
       <div class="columns">
         <NewsListItem ui:props={item} itemClick={openEntry} ui:for="item of data">
           <ui:loading>
@@ -37,7 +38,7 @@
         <Toast ui:if={error} message={error.message} />
       </div>
       <a class="float-right" href="#top" ui:if={counts.actual|ifAbove:5}>:naverx</a>
-      <a click="-> news.//showMore" data-size="20" ui:if={counts.hasMore}>:pakazac_bolsh</a>
+      <a click="-> news.showMore" data-size="20" ui:if={counts.hasMore}>:pakazac_bolsh</a>
     </div>
   </template>
 
@@ -70,7 +71,7 @@
 
   <template id="NewsCreateModal">
     <Modal ui:if={open} open={open} title="Add a new record" close={cancel}>
-      <Form fields=":news_form" data={data} change="->" />
+      <Form fields=":news_form" data={data} change="->data" />
       <Modal:footer>
         <Button title=":title.create_new" mode="primary" data={data} action={submit} />
       </Modal:footer>
@@ -79,7 +80,7 @@
 
   <template id="NewsUpdateModal">
     <Modal ui:if={open} open={open} title="Edit record (#{id})" close={cancel}>
-      <Form fields=":news_form" data={data|mv} change="->" />
+      <Form fields=":news_form" data={data|mv} change="->data" />
       <Modal:footer>
         <Button title=":title.update" mode="primary" data={data} action={submit} />
         <Button title=":title.delete" mode="danger" action={delete} />

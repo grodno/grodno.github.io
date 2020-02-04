@@ -8,18 +8,9 @@
             <UserService ui:ref="user" />
             <SWRunner />
             <GARunner account="UA-3066107-3" />
-            <ViewPort>
+            <ViewPort caption=":name">
                 <ViewPort:aside>
-                    <div class="bg-secondary" style="height: 100vh; width:200px">
-                        <div class="text-center">
-                            <a href="#/main">
-                                <h3 class="p-2 ">:name</h3>
-                            </a>
-                        </div>
-                        <div class="m-2">
-                            <NavTree data=":sitemap" />
-                        </div>
-                    </div>
+                    <NavTree data=":sitemap" />
                 </ViewPort:aside>
                 <Navbar logo=":logo">
                     <UserBar info="<- user.info" />
