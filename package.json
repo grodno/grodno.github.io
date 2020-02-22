@@ -16,7 +16,8 @@
     "start": "node webpack-dev-server",
     "build": "node run-build",
     "build:ultis": "node run-build-ultis && cp docs/lib/ultis.js ~/docman/vendor/utils/index.js",
-    "test": "mocha -w --compilers js:babel-register src/**/*.test.js"
+    "test": "mocha -w --compilers js:babel-register src/**/*.test.js",
+    "arrmaturize": "npm --prefix ~/arrmatura run build && cp ~/arrmatura/docs/index.js vendor/arrmatura.js && cp  ~/arrmatura/docs/index.js.map vendor/arrmatura.js.map"
   },
   "repository": {
     "type": "git",

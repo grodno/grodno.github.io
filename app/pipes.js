@@ -1,6 +1,6 @@
 import { urlParse, representDate } from 'ultis';
 import { translit } from 'mova';
-import { commonPipes } from 'armatura';
+import { commonPipes } from 'arrmatura';
 
 
 export const grodnify = s => s + ',Гродно,Беларусь'

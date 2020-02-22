@@ -1,5 +1,5 @@
 import resources from './res.js';
-import { launch, loadTemplates, commonTypes } from 'armatura';
+import { launch, loadTemplates, commonTypes } from 'arrmatura';
 
 import components from 'components';
 import App from './App.html';
