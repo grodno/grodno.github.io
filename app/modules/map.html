@@ -1,13 +1,13 @@
 <body>
 
-  <template id="MapPage">
+  <component id="MapPage">
     <div style="position: relative;">
       <GeomapService ui:ref="geomap" db=":app.firebase" />
       <Mapbox data="<- geomap.data"/>
     </div>
-  </template>
+  </component>
 
-  <template id="PlacesListItem">
+  <component id="PlacesListItem">
     <div class="column col-4 col-sm-12" data-modal="true" click={assign}>
       <div class="card">
         <div class="card-image">
@@ -22,15 +22,15 @@
         <a href={item.link} target="_blank">More...</a>
       </Modal>
     </div>
-  </template>
+  </component>
 
-  <template id="PlacesList">
+  <component id="PlacesList">
     <div class="columns">
       <PlacesListItem item={item} ui:for="item of data" />
     </div>
-  </template>
+  </component>
 
-  <template id="RoutesList">
+  <component id="RoutesList">
     <div class="columns" style="max-width:350px;">
       <div class="column col-12 col-sm-12 mt-1" ui:for="item of data">
         <div class="card">
@@ -53,5 +53,5 @@
         </div>
       </div>
     </div>
-  </template>
+  </component>
 </body>

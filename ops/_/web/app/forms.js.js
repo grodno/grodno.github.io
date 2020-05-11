@@ -6,7 +6,7 @@ const output = () => `
 ${header('Application forms.')}
 
   ${meta.forms.map(e => `export class ${capitalize(e.id)}Form extends Form{
-    TEMPLATE() {
+    component() {
       return /*html*/ \`
       <ui:fragment>
       ${fromForm(e)}

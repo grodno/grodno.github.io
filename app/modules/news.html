@@ -1,91 +1,128 @@
-<body id="app">
-  <template id="NewsPage">
-    <ui:fragment>
-      <Collection ui:ref="news"
-                  data="<- db.news"
-                  upsert="-> db.upsertNews"
-                  initials=":news.initialTags" />
-      <NewsList ui:props="<- news.info" />
-      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> news.openAddNew" />
-      <NewsUpdateModal ui:props="<- news.entry" />
-      <NewsCreateModal ui:props="<- news.newEntry" />
-      <Toast ui:if={error} message={error.message} />
-    </ui:fragment>
-  </template>
+<component id="NewsPage">
+  <Collection
+    ui:ref="news"
+    data="<- db.news"
+    upsert="-> db.upsertNews"
+    initials=":news.initialTags"
+  />
+  <NewsList ui:props="<- news.info" />
+  <BigRedButton
+    data=":AddNewRecordData"
+    tooltip="tool"
+    action="-> news.openAddNew"
+  />
+  <NewsUpdateModal ui:props="<- news.entry" />
+  <NewsCreateModal ui:props="<- news.newEntry" />
+  <Toast ui:if="{error}" message="{error.message}" />
+</component>
 
-  <template id="NewsList">
-    <div class="container bg-gray" style="max-width:940px;">
-      <a name="top"></a>
-      <Box>
-        <Box:1>
-          <PageCaption caption=":news.caption" badge={counts|counts} />
-        </Box:1>
-        <Box:2>
-          <SearchBar ui:props={search} />
-        </Box:2>
-      </Box>
-      <Chips data={tags} click="-> news.tag" reset={resetTags}
-             style="margin-left: -1rem;margin-right: -1rem;padding-left: 1rem;padding-right: 1rem;" />
-      <div class="columns">
-        <NewsListItem ui:props={item} itemClick={openEntry} ui:for="item of data">
-          <ui:loading>
-            <div class="column col-9 col-sm-12 loading"></div>
-          </ui:loading>
-          <ui:empty>
-            <h6 class="column col-9 col-sm-12">Nic nema</h6>
-          </ui:empty>
-        </NewsListItem>
-        <Toast ui:if={error} message={error.message} />
-      </div>
-      <a class="float-right" href="#top" ui:if={counts.actual|ifAbove:5}>:naverx</a>
-      <a click="-> news.showMore" data-size="20" ui:if={counts.hasMore}>:pakazac_bolsh</a>
+<component id="NewsList">
+  <div class="container bg-gray" style="max-width: 940px;">
+    <a name="top"></a>
+    <Box>
+      <Box:1>
+        <PageCaption caption=":news.caption" badge="{counts|counts}" />
+      </Box:1>
+      <Box:2>
+        <SearchBar ui:props="{search}" />
+      </Box:2>
+    </Box>
+    <Chips
+      data="{tags}"
+      click="-> news.tag"
+      reset="{resetTags}"
+      style="
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      "
+    />
+    <div class="columns">
+      <NewsListItem
+        ui:props="{item}"
+        itemClick="{openEntry}"
+        ui:for="item of data"
+      >
+        <ui:loading>
+          <div class="column col-9 col-sm-12 loading"></div>
+        </ui:loading>
+        <ui:empty>
+          <h6 class="column col-9 col-sm-12">Nic nema</h6>
+        </ui:empty>
+      </NewsListItem>
+      <Toast ui:if="{error}" message="{error.message}" />
     </div>
-  </template>
+    <a class="float-right" href="#top" ui:if="{counts.actual|ifAbove:5}"
+      >:naverx</a
+    >
+    <a click="-> news.showMore" data-size="20" ui:if="{counts.hasMore}"
+      >:pakazac_bolsh</a
+    >
+  </div>
+</component>
 
-  <template id="NewsListItem">
-    <div class="column col-12 col-sm-12 my-2">
-      <Card>
-        <Card:header>
-          <div class="tile">
-            <div class="tile-icon" data-id={id} click={itemClick}>
-              <Avatar image={image} initial={subject|initials} />
-            </div>
-            <div class="tile-content">
-              <h5 class="tile-title" data-id={id} click={itemClick}>{subject|translit}</h5>
-              <div>
-                <small class="text-gray">{modified_at|date}</small>
-                <small class="text-gray mx-1"><a href={link} target="_blank">{link|hostOf}</a></small>
-                <!-- <small class="text-gray" ui:if={tags}>({tags})</small> -->
-              </div>
+<component id="NewsListItem">
+  <div class="column col-12 col-sm-12 my-2">
+    <Card>
+      <Card:header>
+        <div class="tile">
+          <div class="tile-icon" data-id="{id}" click="{itemClick}">
+            <Avatar image="{image}" initial="{subject|initials}" />
+          </div>
+          <div class="tile-content">
+            <h5 class="tile-title" data-id="{id}" click="{itemClick}">
+              {subject|translit}
+            </h5>
+            <div>
+              <small class="text-gray">{modified_at|date}</small>
+              <small class="text-gray mx-1"
+                ><a href="{link}" target="_blank">{link|hostOf}</a></small
+              >
+              <small class="text-gray" ui:if="{tags}">({tags})</small>
             </div>
           </div>
-        </Card:header>
-        <img src="/assets/olxrd.png" height="10" width="10" />
-        <small class="mx-2">{preview|translit}</small>
-        <!-- <div class="card-footer">
+        </div>
+      </Card:header>
+      <img src="/assets/olxrd.png" height="10" width="10" />
+      <small class="mx-2">{preview|translit}</small>
+      <!-- <div class="card-footer">
           <button class="btn btn-primary btn-sm">Do</button>
         </div> -->
-      </Card>
-    </div>
-  </template>
+    </Card>
+  </div>
+</component>
 
-  <template id="NewsCreateModal">
-    <Modal ui:if={open} open={open} title="Add a new record" close={cancel}>
-      <Form fields=":news_form" data={data} change="->data" />
-      <Modal:footer>
-        <Button title=":title.create_new" mode="primary" data={data} action={submit} />
-      </Modal:footer>
-    </Modal>
-  </template>
+<component id="NewsCreateModal">
+  <Modal ui:if="{open}" open="{open}" title="Add a new record" close="{cancel}">
+    <form fields=":news_form" data="{data}" change="->data" />
+    <Modal:footer>
+      <button
+        title=":title.create_new"
+        mode="primary"
+        data="{data}"
+        action="{submit}"
+      />
+    </Modal:footer>
+  </Modal>
+</component>
 
-  <template id="NewsUpdateModal">
-    <Modal ui:if={open} open={open} title="Edit record (#{id})" close={cancel}>
-      <Form fields=":news_form" data={data|mv} change="->data" />
-      <Modal:footer>
-        <Button title=":title.update" mode="primary" data={data} action={submit} />
-        <Button title=":title.delete" mode="danger" action={delete} />
-      </Modal:footer>
-    </Modal>
-  </template>
-
-</body>
+<component id="NewsUpdateModal">
+  <Modal
+    ui:if="{open}"
+    open="{open}"
+    title="Edit record (#{id})"
+    close="{cancel}"
+  >
+    <form fields=":news_form" data="{data|mv}" change="->data" />
+    <Modal:footer>
+      <button
+        title=":title.update"
+        mode="primary"
+        data="{data}"
+        action="{submit}"
+      />
+      <button title=":title.delete" mode="danger" action="{delete}" />
+    </Modal:footer>
+  </Modal>
+</component>

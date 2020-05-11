@@ -3,11 +3,8 @@ module.exports = {
       "browser": true,
       "es6": true
   },
-  "extends": "eslint:recommended",
+  "extends": "standard",
   "globals": {
-      "module": "readonly",
-      "Atomics": "readonly",
-      "SharedArrayBuffer": "readonly"
   },
   "parserOptions": {
       "ecmaVersion": 2018,

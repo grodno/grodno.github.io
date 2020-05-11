@@ -1,5 +1,5 @@
 <body>
-  <template id="MainPage">
+  <component id="MainPage">
     <div class="grid-lg px-2" style="background-image2:url(assets/view.png);background-size: cover;height:100%">
       <div class="columns">
         <div class="column col-12">
@@ -31,14 +31,14 @@
       </Card>
     </div>
 
-  </template>
+  </component>
 
-  <template id="MainCard">
+  <component id="MainCard">
     <div class="my-1">
       <Card title={name} subtitle={caption} link={link} style="background-color: rgb(248, 218, 234)">
         <span>{description|subject|translit}</span>
       </Card>
     </div>
-  </template>
+  </component>
 
 </body>

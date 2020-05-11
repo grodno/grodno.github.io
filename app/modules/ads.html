@@ -1,33 +1,43 @@
 <body id="app">
-  <template id="AdsPage">
+  <component id="AdsPage">
     <ui:fragment>
       <GSheetsService url=":ads.apiUrl" ui:ref="ads-data" />
-      <Collection ui:ref="ads"
-                  data="<- db.ads"
-                  upsert="-> db.upsertAds"
-                  initials=":ads.initialTags" />
+      <Collection
+        ui:ref="ads"
+        data="<- db.ads"
+        upsert="-> db.upsertAds"
+        initials=":ads.initialTags"
+      />
       <AdsList ui:props="<- ads.info" />
-      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> ads.openAddNew" />
+      <BigRedButton
+        data=":AddNewRecordData"
+        tooltip="tool"
+        action="-> ads.openAddNew"
+      />
       <AdsUpdateModal ui:props="<- ads.entry" />
       <AdsCreateModal ui:props="<- ads.newEntry" />
-      <Toast ui:if={error} message={error.message} />
+      <Toast ui:if="{error}" message="{error.message}" />
     </ui:fragment>
-  </template>
+  </component>
 
-  <template id="AdsList">
-    <div class="container bg-gray" style="max-width:940px;">
+  <component id="AdsList">
+    <div class="container bg-gray" style="max-width: 940px;">
       <a name="top"></a>
       <Box>
         <Box:1>
-          <PageCaption caption=":ads.caption" badge={counts|counts} />
+          <PageCaption caption=":ads.caption" badge="{counts|counts}" />
         </Box:1>
         <Box:2>
-          <SearchBar ui:props={search} />
+          <SearchBar ui:props="{search}" />
         </Box:2>
       </Box>
-      <Chips data={tags} click="-> ads.tag" reset={resetTags} />
+      <Chips data="{tags}" click="-> ads.tag" reset="{resetTags}" />
       <div class="columns">
-        <AdsListItem ui:props={item} itemClick={openEntry} ui:for="item of data">
+        <AdsListItem
+          ui:props="{item}"
+          itemClick="{openEntry}"
+          ui:for="item of data"
+        >
           <ui:loading>
             <div class="column col-12 loading"></div>
           </ui:loading>
@@ -35,32 +45,38 @@
             <h6 class="column col-12">Nic nema</h6>
           </ui:empty>
         </AdsListItem>
-        <Toast ui:if={error} message={error.message} />
+        <Toast ui:if="{error}" message="{error.message}" />
       </div>
-      <Button title=":pakazac_bolsh"
-              mode="primary"
-              data-size="20"
-              action="-> ads.showMore"
-              ui:if={counts.hasMore} />
-      <a href="#top" ui:if={counts.actual|ifAbove:5}>:naverx</a>
+      <button
+        title=":pakazac_bolsh"
+        mode="primary"
+        data-size="20"
+        action="-> ads.showMore"
+        ui:if="{counts.hasMore}"
+      />
+      <a href="#top" ui:if="{counts.actual|ifAbove:5}">:naverx</a>
     </div>
-  </template>
+  </component>
 
-  <template id="AdsListItem">
+  <component id="AdsListItem">
     <div class="column col-6 col-sm-12 my-2">
       <Card>
         <Card:header>
           <div class="tile">
-            <div class="tile-icon" data-id={id} click={itemClick}>
-              <Avatar image={image} initial={subject|initials} />
+            <div class="tile-icon" data-id="{id}" click="{itemClick}">
+              <Avatar image="{image}" initial="{subject|initials}" />
             </div>
             <div class="tile-content">
-              <h5 class="tile-title" data-id={id} click={itemClick}>{subject|translit}</h5>
+              <h5 class="tile-title" data-id="{id}" click="{itemClick}">
+                {subject|translit}
+              </h5>
               <div>
                 <small class="text-gray">{modified_at|date}</small>
-                <small class="text-gray mx-1"><a href={link} target="_blank">link</a></small>
+                <small class="text-gray mx-1"
+                  ><a href="{link}" target="_blank">link</a></small
+                >
                 <small class="text-gray">{boardName}</small>
-                <small class="text-gray" ui:if={tags}>({tags})</small>
+                <small class="text-gray" ui:if="{tags}">({tags})</small>
               </div>
             </div>
           </div>
@@ -72,25 +88,44 @@
         </div> -->
       </Card>
     </div>
-  </template>
+  </component>
 
-  <template id="AdsCreateModal">
-    <Modal ui:if={open} open={open} title="Add a new record" close={cancel}>
-      <Form fields=":news_form" data={data} change="->" />
+  <component id="AdsCreateModal">
+    <Modal
+      ui:if="{open}"
+      open="{open}"
+      title="Add a new record"
+      close="{cancel}"
+    >
+      <form fields=":news_form" data="{data}" change="->" />
       <Modal:footer>
-        <Button title=":title.create_new" mode="primary" data={data} action={submit} />
+        <button
+          title=":title.create_new"
+          mode="primary"
+          data="{data}"
+          action="{submit}"
+        />
       </Modal:footer>
     </Modal>
-  </template>
+  </component>
 
-  <template id="AdsUpdateModal">
-    <Modal ui:if={open} open={open} title="Edit record (#{id})" close={cancel}>
-      <Form fields=":news_form" data={data} change="->" />
+  <component id="AdsUpdateModal">
+    <Modal
+      ui:if="{open}"
+      open="{open}"
+      title="Edit record (#{id})"
+      close="{cancel}"
+    >
+      <form fields=":news_form" data="{data}" change="->" />
       <Modal:footer>
-        <Button title=":title.update" mode="primary" data={data} action={submit} />
-        <Button title=":title.delete" mode="danger" action={delete} />
+        <button
+          title=":title.update"
+          mode="primary"
+          data="{data}"
+          action="{submit}"
+        />
+        <button title=":title.delete" mode="danger" action="{delete}" />
       </Modal:footer>
     </Modal>
-  </template>
-
+  </component>
 </body>

@@ -1,32 +1,42 @@
 <body id="app">
-  <template id="FindyouPage">
+  <component id="FindyouPage">
     <ui:fragment>
-      <Collection ui:ref="findyou"
-                  data="<- db.findme"
-                  upsert="-> db.upsertFindYou"
-                  initials=":findyou.initialTags" />
+      <Collection
+        ui:ref="findyou"
+        data="<- db.findme"
+        upsert="-> db.upsertFindYou"
+        initials=":findyou.initialTags"
+      />
       <FindYouList ui:props="<- findyou.info" />
-      <BigRedButton data=":AddNewRecordData" tooltip="tool" action="-> findyou.openAddNew" />
+      <BigRedButton
+        data=":AddNewRecordData"
+        tooltip="tool"
+        action="-> findyou.openAddNew"
+      />
       <FindYouUpdateModal ui:props="<- findyou.entry" />
       <FindYouCreateModal ui:props="<- findyou.newEntry" />
-      <Toast ui:if={error} message={error.message} />
+      <Toast ui:if="{error}" message="{error.message}" />
     </ui:fragment>
-  </template>
+  </component>
 
-  <template id="FindYouList">
-    <div class="container bg-gray" style="max-width:940px;">
+  <component id="FindYouList">
+    <div class="container bg-gray" style="max-width: 940px;">
       <a name="top"></a>
       <Box>
         <Box:1>
-          <PageCaption caption=":findyou.caption" badge={counts|counts} />
+          <PageCaption caption=":findyou.caption" badge="{counts|counts}" />
         </Box:1>
         <Box:2>
-          <SearchBar ui:props={search} />
+          <SearchBar ui:props="{search}" />
         </Box:2>
       </Box>
-      <Chips data={tags} click="-> findyou.tag" reset={resetTags} />
+      <Chips data="{tags}" click="-> findyou.tag" reset="{resetTags}" />
       <div class="columns">
-        <FindYouListItem ui:props={item} itemClick={openEntry} ui:for="item of data">
+        <FindYouListItem
+          ui:props="{item}"
+          itemClick="{openEntry}"
+          ui:for="item of data"
+        >
           <ui:loading>
             <div class="column col-9 col-sm-12 loading"></div>
           </ui:loading>
@@ -34,27 +44,35 @@
             <h6 class="column col-9 col-sm-12">Nic nema</h6>
           </ui:empty>
         </FindYouListItem>
-        <Toast ui:if={error} message={error.message} />
+        <Toast ui:if="{error}" message="{error.message}" />
       </div>
-      <a class="float-right" href="#top" ui:if={counts.actual|ifAbove:5}>:naverx</a>
-      <a click="-> findyou.//showMore" data-size="20" ui:if={counts.hasMore}>:pakazac_bolsh</a>
+      <a class="float-right" href="#top" ui:if="{counts.actual|ifAbove:5}"
+        >:naverx</a
+      >
+      <a click="-> findyou.//showMore" data-size="20" ui:if="{counts.hasMore}"
+        >:pakazac_bolsh</a
+      >
     </div>
-  </template>
+  </component>
 
-  <template id="FindYouListItem">
+  <component id="FindYouListItem">
     <div class="column col-12 col-sm-12 my-2">
       <Card>
         <Card:header>
           <div class="tile">
-            <div class="tile-icon" data-id={id} click={itemClick}>
-              <Avatar image={photoUrl} initial={subject|initials} />
+            <div class="tile-icon" data-id="{id}" click="{itemClick}">
+              <Avatar image="{photoUrl}" initial="{subject|initials}" />
             </div>
             <div class="tile-content">
-              <h5 class="tile-title" data-id={id} click={itemClick}>{subject|translit}</h5>
+              <h5 class="tile-title" data-id="{id}" click="{itemClick}">
+                {subject|translit}
+              </h5>
               <div>
                 <small class="text-gray">{modified_at|date}</small>
-                <small class="text-gray mx-1"><a href={link} target="_blank">{link|hostOf}</a></small>
-                <small class="text-gray" ui:if={tags}>({tags})</small>
+                <small class="text-gray mx-1"
+                  ><a href="{link}" target="_blank">{link|hostOf}</a></small
+                >
+                <small class="text-gray" ui:if="{tags}">({tags})</small>
               </div>
             </div>
           </div>
@@ -66,25 +84,44 @@
         </div> -->
       </Card>
     </div>
-  </template>
+  </component>
 
-  <template id="FindYouCreateModal">
-    <Modal ui:if={open} open={open} title="Add a new record" close={cancel}>
-      <Form fields=":findyou_form" data={data} change="->" />
+  <component id="FindYouCreateModal">
+    <Modal
+      ui:if="{open}"
+      open="{open}"
+      title="Add a new record"
+      close="{cancel}"
+    >
+      <form fields=":findyou_form" data="{data}" change="->" />
       <Modal:footer>
-        <Button title=":title.create_new" mode="primary" data={data} action={submit} />
+        <button
+          title=":title.create_new"
+          mode="primary"
+          data="{data}"
+          action="{submit}"
+        />
       </Modal:footer>
     </Modal>
-  </template>
+  </component>
 
-  <template id="FindYouUpdateModal">
-    <Modal ui:if={open} open={open} title="Edit record (#{id})" close={cancel}>
-      <Form fields=":findyou_form" data={data|mv} change="->" />
+  <component id="FindYouUpdateModal">
+    <Modal
+      ui:if="{open}"
+      open="{open}"
+      title="Edit record (#{id})"
+      close="{cancel}"
+    >
+      <form fields=":findyou_form" data="{data|mv}" change="->" />
       <Modal:footer>
-        <Button title=":title.update" mode="primary" data={data} action={submit} />
-        <Button title=":title.delete" mode="danger" action={delete} />
+        <button
+          title=":title.update"
+          mode="primary"
+          data="{data}"
+          action="{submit}"
+        />
+        <button title=":title.delete" mode="danger" action="{delete}" />
       </Modal:footer>
     </Modal>
-  </template>
-
+  </component>
 </body>

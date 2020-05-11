@@ -1,6 +1,6 @@
 <body>
 
-  <template id="CalendarPage">
+  <component id="CalendarPage">
     <div>
       <div class="container pt-1 bg-gray" style="max-width:940px;">
         <div class="columns">
@@ -22,10 +22,10 @@
         <PlacesSelectorList data="<- filteredPlaces" sortBy="created_at" />
       </div>
     </div>
-  </template>
+  </component>
 
 
-  <template id="AsideAdmin">
+  <component id="AsideAdmin">
     <div class="panel" style="height: 100%;">
       <div class="panel-header">
         <a class="btn btn-clear show-lg" style="float: right!important" href="#"></a>
@@ -41,9 +41,9 @@
       <div class="panel-footer">
       </div>
     </div>
-  </template>
+  </component>
 
-  <template id="SubmitForm">
+  <component id="SubmitForm">
     <form class="form-horizontal" method="POST" target="submitted"
           action="https://script.google.com/macros/s/AKfycbygqpzU57bxZAW48Mo8nFxodJmy9_WFwiG7XizFmxY/dev">
       <div class="form-group">
@@ -86,9 +86,9 @@
       </div>
       <iframe name="submitted" width="100%" height="15" frameborder="0"></iframe>
     </form>
-  </template>
+  </component>
 
-  <template id="PlacesList2">
+  <component id="PlacesList2">
     <div class="timeline">
 
       <div class="timeline-item" id="timeline-example-2" ui: each="item of data">
@@ -112,15 +112,15 @@
         </div>
       </div>
     </div>
-  </template>
+  </component>
 
-  <template id="PlacesSelectorList">
+  <component id="PlacesSelectorList">
     <div class="columns">
       <PlacesSelectorListItem item={item} ui:for="item of data"/>
     </div>
-  </template>
+  </component>
 
-  <template id="PlacesSelectorListItem">
+  <component id="PlacesSelectorListItem">
     <div class="column col-4 col-sm-12">
       <div class="card">
         <div class="card-image" data-modal="true" click={assign}>
@@ -140,5 +140,5 @@
       <a href={item.link} target="_blank">More...</a>
       </Modal>
     </div>
-  </template  >
+  </component  >
   </body >

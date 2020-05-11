@@ -7,73 +7,58 @@ module.exports = {
     rules: [
       {
         test: /(\.jpg|\.jpeg|\.png|\.eot|\.ttf|\.svg|\.woff|\.woff2)$/,
-        loader: 'file-loader?name=assets/[name]-[sha1:hash].[ext]'
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          {
-            loader: 'style-loader'
-          },
-          {
-            loader: 'css-loader'
-          },
-          {
-            loader: 'fast-sass-loader',
-            options: {
-              outputStyle: 'expanded',
-              includePaths: [path.resolve(__dirname, './src/styles')]
-            }
-          }
-
-        ]
+        loader: "file-loader?name=assets/[name]-[sha1:hash].[ext]",
       },
       {
         test: /\.html$/,
-        loader: 'raw-loader'
+        loader: "raw-loader",
+      },
+      {
+        test: /\.css$/,
+        loader: "css-loader",
       },
       {
         test: /\.js$/,
         exclude: /(node_modules|vendor)/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: "babel-loader",
             options: {
-              cacheDirectory: true
-            }
-          }
-        ]
-      }
-    ]
+              cacheDirectory: true,
+            },
+          },
+        ],
+      },
+    ],
   },
   resolve: {
-    modules: ['node_modules', 'vendor', 'lib'],
+    modules: ["node_modules", "lib"],
   },
   optimization: {
     splitChunks: {
-      chunks: 'all',
+      chunks: "all",
       minSize: 30000,
       maxSize: 0,
       minChunks: 1,
       maxAsyncRequests: 5,
       maxInitialRequests: 3,
-      automaticNameDelimiter: '~',
+      automaticNameDelimiter: "~",
       name: true,
       cacheGroups: {
         vendors: {
           test: /[\\/](web_modules|node_modules|modules)[\\/]/,
           priority: -10,
 
-          name: 'vendors',
-          chunks: 'all'
+          name: "vendors",
+          chunks: "all",
         },
         default: {
           minChunks: 2,
           priority: -20,
-          reuseExistingChunk: true
-        }
-      }
+          reuseExistingChunk: true,
+        },
+      },
     },
-    runtimeChunk: true
-  }
+    runtimeChunk: true,
+  },
 };

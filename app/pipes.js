@@ -1,7 +1,6 @@
 import { urlParse, representDate } from 'ultis';
 import { translit } from 'mova';
-import { commonPipes } from 'arrmatura';
-
+import { commons } from 'arrmatura';
 
 export const grodnify = s => s + ',Гродно,Беларусь'
 
@@ -31,7 +30,7 @@ export const showCounts = (counts, postfix = '', prefix = '') => {
 }
 
 export default {
-  ...commonPipes,
+  ...commons.pipes,
 
   upper: s => ('' + s).toUpperCase(),
   hostOf: s => urlParse(s).target || s,
